@@ -1,91 +1,165 @@
-/* --- Reset & base --- */
-* {
-  margin: 0;
-  padding: 0;
-  box-sizing: border-box;
+:root{
+  --bg:#000;
+  --cyan:#31ffda;
+  --teal:#00b3a6;
+  --muted:#ffffffcc;
+  --glass: rgba(255,255,255,0.04);
 }
 
-body, html {
-  height: 200%; /* Permet le scroll vers le bas */
-  background-color: #000;
-  font-family: 'Arial', sans-serif;
-  overflow-x: hidden;
-  color: white;
+*{box-sizing:border-box}
+html,body{
+  height:100%;
+  margin:0;
+  font-family:Inter, ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial;
+  background:var(--bg);
+  color:#fff;
+  -webkit-font-smoothing:antialiased;
+  -moz-osx-font-smoothing:grayscale;
 }
 
-/* --- Canvas Three.js --- */
-canvas#bg {
-  position: fixed;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
-  z-index: -1;
+#hero{
+  position:relative;
+  height:100vh;
+  width:100%;
+  overflow: hidden;
+  display:flex;
+  align-items:center;
+  justify-content:center;
 }
 
-/* --- Logo --- */
-#logo {
-  position: fixed;
-  top: 20px;
-  left: 50%;
-  transform: translateX(-50%);
-  width: 120px;
-  z-index: 10;
+/* Topbar / logo */
+#topbar{
+  position:absolute;
+  top:18px;
+  left:50%;
+  transform:translateX(-50%);
+  z-index:20;
+  display:flex;
+  align-items:center;
+  gap:12px;
 }
 
-#logo img {
-  width: 100%;
-  animation: pulseGlow 2s infinite alternate;
+#logo{
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  pointer-events:none;
 }
 
-/* --- Titre futuriste --- */
-#title {
-  position: fixed;
-  top: 50%;
-  left: 50%;
-  transform: translate(-50%, -50%);
-  font-size: 4rem;
-  background: linear-gradient(90deg, #00ffcc, #00aaff);
-  -webkit-background-clip: text;
-  -webkit-text-fill-color: transparent;
-  text-shadow: 0 0 10px #00ffcc, 0 0 20px #00aaff;
-  animation: pulseGlow 2s infinite alternate;
-  z-index: 5;
+/* Glow + pulse for logo */
+.glow-pulse{
+  filter: drop-shadow(0 0 18px rgba(18,255,230,0.14)) drop-shadow(0 0 30px rgba(0,200,180,0.06));
+  animation: logoPulse 2.6s ease-in-out infinite;
+}
+@keyframes logoPulse{
+  0%{transform:scale(0.98)}
+  50%{transform:scale(1.04) rotate(-1deg)}
+  100%{transform:scale(0.98)}
 }
 
-/* --- Sous-titre --- */
-#subtitle {
-  position: fixed;
-  top: 60%;
-  left: 50%;
-  transform: translateX(-50%);
-  font-size: 1.5rem;
-  color: rgba(255,255,255,0.7);
-  z-index: 5;
+/* Canvas full-cover */
+#canvas-wrap{
+  position:absolute;
+  inset:0;
+  z-index:0;
+}
+canvas{
+  width:100%;
+  height:100%;
+  display:block;
 }
 
-/* --- Info section --- */
-#info {
-  position: relative;
-  margin-top: 120vh;
-  padding: 40px;
-  text-align: center;
-  font-size: 1.2rem;
+/* Overlay title & subtitle */
+#overlay{
+  position:relative;
+  z-index:10;
+  text-align:center;
+  pointer-events:none;
+  padding:0 20px;
 }
 
-/* --- Animations --- */
-.fade-in {
-  opacity: 0;
-  animation: fadeIn 2s forwards;
+#title{
+  font-size:clamp(36px,9vw,120px);
+  letter-spacing:6px;
+  margin:0;
+  line-height:0.95;
+  color:transparent;
+  -webkit-text-stroke:1px rgba(255,255,255,0.02);
+  background: linear-gradient(90deg, var(--cyan), var(--teal));
+  -webkit-background-clip:text;
+  background-clip:text;
+  text-shadow:
+    0 0 20px rgba(50,255,220,0.18),
+    0 0 50px rgba(0,150,140,0.08);
+  filter:drop-shadow(0 0 28px rgba(18,255,230,0.08));
+  animation: neonPulse 2.4s ease-in-out infinite;
 }
 
-@keyframes fadeIn {
-  to { opacity: 1; }
+/* Neon glow pulse */
+@keyframes neonPulse{
+  0%{text-shadow:0 0 10px rgba(50,255,220,0.06),0 0 30px rgba(0,150,140,0.03)}
+  50%{text-shadow:0 0 24px rgba(50,255,220,0.28),0 0 64px rgba(0,150,140,0.18)}
+  100%{text-shadow:0 0 10px rgba(50,255,220,0.06),0 0 30px rgba(0,150,140,0.03)}
 }
 
-@keyframes pulseGlow {
-  0% { filter: drop-shadow(0 0 5px #00ffcc);}
-  50% { filter: drop-shadow(0 0 20px #00aaff);}
-  100% { filter: drop-shadow(0 0 5px #00ffcc);}
+#subtitle{
+  margin-top:10px;
+  color:var(--muted);
+  opacity:0.95;
+  font-size:clamp(14px,2.3vw,18px);
 }
 
+/* Scroll hint */
+#scroll-hint{
+  margin-top:26px;
+  opacity:0.8;
+  font-size:18px;
+  animation: float 2.2s ease-in-out infinite;
+}
+@keyframes float{
+  0%{transform:translateY(0)}
+  50%{transform:translateY(8px)}
+  100%{transform:translateY(0)}
+}
+
+/* Content below hero */
+main#content{
+  background: linear-gradient(180deg, rgba(255,255,255,0.01), transparent);
+  color:#eafbf7;
+  padding:40px 18px;
+  max-width:1000px;
+  margin:0 auto;
+}
+
+.card{
+  background:linear-gradient(180deg, rgba(255,255,255,0.02), rgba(255,255,255,0.01));
+  border-radius:12px;
+  padding:22px;
+  margin:18px 0;
+  box-shadow:0 6px 20px rgba(0,0,0,0.6);
+  backdrop-filter: blur(6px) saturate(120%);
+}
+
+.card.small{font-size:13px; text-align:center; opacity:0.9}
+
+/* Fade-in utility with delays */
+.fade-in{
+  opacity:0;
+  transform: translateY(6px);
+  animation: fadeInUp 0.9s forwards cubic-bezier(.2,.9,.2,1);
+}
+.delay-1{animation-delay:0.3s}
+.delay-2{animation-delay:0.6s}
+.delay-3{animation-delay:0.9s}
+.delay-4{animation-delay:1.2s}
+.delay-5{animation-delay:1.5s}
+.delay-6{animation-delay:1.8s}
+
+@keyframes fadeInUp{
+  to{opacity:1; transform:translateY(0)}
+}
+
+/* Accessibility: reduce motion preference */
+@media (prefers-reduced-motion: reduce) {
+  .glow-pulse, #title, #scroll-hint { animation: none }
+}
