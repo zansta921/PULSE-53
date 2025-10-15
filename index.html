@@ -8,20 +8,24 @@
 </head>
 <body>
   <div id="hero">
+    <!-- Fond fixe (image) -->
     <div class="hero-bg" aria-hidden="true"></div>
+
     <header id="topbar">
       <div id="logo" aria-hidden="true">
-        <!-- Logo SVG inline -->
-        <svg viewBox="0 0 200 200" width="72" height="72" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Logo Bryan Maison">
+        <!-- Logo externe si fourni (assets/logo.png) -->
+        <img id="logo-img" src="./assets/logo.png" alt="Logo Bryan Maison" style="display:none" />
+
+        <!-- Fallback SVG (sera utilisé si logo.png absent) -->
+        <svg id="logo-svg" viewBox="0 0 200 200" width="72" height="72" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Logo Bryan Maison">
           <defs>
             <radialGradient id="g" cx="30%" cy="30%">
               <stop offset="0%" stop-color="#9fffd6"/>
               <stop offset="50%" stop-color="#12ffff"/>
               <stop offset="100%" stop-color="#004b3a"/>
             </radialGradient>
-            <filter id="f"><feGaussianBlur stdDeviation="6" result="b"/><feMerge><feMergeNode in="b"/><feMergeNode in="SourceGraphic"/></feMerge></filter>
           </defs>
-          <circle cx="100" cy="100" r="62" fill="url(#g)" opacity="0.18" filter="url(#f)"/>
+          <circle cx="100" cy="100" r="62" fill="url(#g)" opacity="0.18"/>
           <g fill="#cffff0" transform="translate(56,46)">
             <path d="M40 0 L70 0 Q95 0 95 22 Q95 36 80 44 Q95 52 95 76 Q95 98 70 98 L40 98 Q17 98 17 76 L17 22 Q17 0 40 0 Z" fill="#b7fff0" opacity="0.95"/>
           </g>
@@ -46,9 +50,9 @@
     <section class="card">
       <h2>Ce que vous voyez</h2>
       <ul>
-        <li>Fond fixe inspiré d'une image d'ADN (place l'image dans assets/bg-dna.jpg).</li>
-        <li>Logo lumineux, titre néon, animations en CSS (fade-in).</li>
-        <li>Page scrollable pour lire les explications.</li>
+        <li>Fond fixe (image d'ADN).</li>
+        <li>Logo fluorescent (image ou SVG fallback).</li>
+        <li>Titre néon et fade-in d'introduction.</li>
       </ul>
     </section>
 
