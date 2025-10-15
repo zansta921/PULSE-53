@@ -5,49 +5,30 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>PULSE-53</title>
   <link rel="stylesheet" href="style.css" />
-  <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@700;900&display=swap" rel="stylesheet">
 </head>
 <body>
-  <!-- Fond animé -->
-  <canvas id="background"></canvas>
-
   <!-- Logo lumineux -->
- <img src="logo.png" alt="Logo PULSE-53" class="logo fade-in" />
-
-  <!-- Titre et sous-titre -->
-  <div class="title fade-in">
-    <h1>PULSE-53</h1>
-    <p>L'ÉQUILIBRE DU VIVANT</p>
+  <div id="logo" class="fade-in">
+    <img src="logo.png" alt="Logo PULSE-53">
   </div>
 
-  <!-- SECTION EXPLICATIVE -->
-  <section class="content fade-in">
-    <h2>Présentation</h2>
-    <p>
-      Le projet <strong>PULSE-53</strong> explore la dynamique du <strong>p53</strong>, souvent surnommé
-      « le gardien du génome ». Cette protéine joue un rôle essentiel dans la
-      surveillance cellulaire, l’arrêt du cycle, la réparation de l’ADN et l’apoptose.
-      Notre objectif est de <em>comprendre et modéliser</em> ses oscillations, ses
-      interactions et ses effets dans des conditions physiologiques et pathologiques.
-    </p>
+  <!-- Titre futuriste -->
+  <h1 id="title" class="fade-in">PULSE-53</h1>
 
-    <h2>Objectifs</h2>
-    <ul>
-      <li>Modéliser les oscillations de p53 de manière réaliste et interactive</li>
-      <li>Visualiser la régulation moléculaire en 3D</li>
-      <li>Créer une interface scientifique immersive</li>
-    </ul>
+  <!-- Sous-titre -->
+  <h2 id="subtitle" class="fade-in">Projet inspiré par l'éléphant, la tortue et l'axolotl</h2>
 
-    <h2>Pourquoi ce projet ?</h2>
-    <p>
-      En combinant la <strong>biologie moléculaire</strong> et des <strong>technologies immersives</strong>,
-      nous voulons offrir une vision intuitive et dynamique des mécanismes régulateurs
-      fondamentaux. Cette approche peut ouvrir de nouvelles perspectives pour la
-      recherche, l’enseignement et la vulgarisation scientifique.
-    </p>
+  <!-- Canvas Three.js -->
+  <canvas id="bg"></canvas>
+
+  <!-- Explications + contact -->
+  <section id="info" class="fade-in">
+    <p>Créateur : Bryan Maison</p>
+    <p>Email : <a href="mailto:maisonbryan92@gmail.com">maisonbryan92@gmail.com</a></p>
+    <p>Le projet PULSE-53 représente un univers futuriste où la protéine p53 s’échappe de l’ADN pour symboliser la régulation et la protection cellulaire.</p>
   </section>
 
-<script src="three.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/three@0.155.0/build/three.min.js"></script>
   <script src="script.js"></script>
 </body>
 </html>
