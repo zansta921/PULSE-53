@@ -68,6 +68,16 @@
   </main>
 
   <!-- module JS : main.js importe Three.js via CDN -->
+<script async src="https://ga.jspm.io/npm:es-module-shims@1.5.1/dist/es-module-shims.js" crossorigin="anonymous"></script>
+<script type="importmap">
+{
+  "imports": {
+    "three": "https://unpkg.com/three@0.152.0/build/three.module.js",
+    "three/examples/jsm/": "https://unpkg.com/three@0.152.0/examples/jsm/"
+  }
+}
+</script>
+
   <script type="module" src="./main.js"></script>
   <script src="script.js" defer></script>
 </body>
