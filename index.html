@@ -4,29 +4,22 @@
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width,initial-scale=1" />
   <title>PULSE-53 — Bryan Maison</title>
-  <link rel="stylesheet" href="styles.css" />
-  <!-- Three.js will be imported inside main.js as a module -->
+  <!-- IMPORTANT: chemin relatif explicite vers le CSS -->
+  <link rel="stylesheet" href="./styles.css" />
 </head>
 <body>
   <div id="hero">
-    <header id="topbar" class="fade-in delay-1">
-      <!-- Logo SVG (inline so it's always visible without extra assets) -->
-      <div id="logo" aria-hidden="true" class="glow-pulse fade-in delay-1">
-        <!-- Simple luminous emblem: stylised "B" inside a glowing ring -->
-        <svg viewBox="0 0 200 200" width="80" height="80" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Logo Bryan Maison">
+    <header id="topbar">
+      <div id="logo" aria-hidden="true">
+        <!-- Logo SVG inline -->
+        <svg viewBox="0 0 200 200" width="72" height="72" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Logo Bryan Maison">
           <defs>
             <radialGradient id="g" cx="30%" cy="30%">
               <stop offset="0%" stop-color="#9fffd6"/>
               <stop offset="50%" stop-color="#12ffff"/>
               <stop offset="100%" stop-color="#004b3a"/>
             </radialGradient>
-            <filter id="f">
-              <feGaussianBlur stdDeviation="6" result="b"/>
-              <feMerge>
-                <feMergeNode in="b"/>
-                <feMergeNode in="SourceGraphic"/>
-              </feMerge>
-            </filter>
+            <filter id="f"><feGaussianBlur stdDeviation="6" result="b"/><feMerge><feMergeNode in="b"/><feMergeNode in="SourceGraphic"/></feMerge></filter>
           </defs>
           <circle cx="100" cy="100" r="62" fill="url(#g)" opacity="0.18" filter="url(#f)"/>
           <g fill="#cffff0" transform="translate(56,46)">
@@ -36,48 +29,37 @@
       </div>
     </header>
 
-    <!-- Three.js canvas container -->
-    <div id="canvas-wrap" class="fade-in delay-2">
+    <!-- Canvas container -->
+    <div id="canvas-wrap">
       <canvas id="bg-canvas"></canvas>
     </div>
 
-    <!-- Overlay text -->
     <div id="overlay">
-      <h1 id="title" class="neon fade-in delay-3">PULSE-53</h1>
-      <p id="subtitle" class="sub fade-in delay-4">
-        Une exploration visuelle du p53 — pulsations, particules et ADN en mouvement.
-      </p>
-      <div id="scroll-hint" class="fade-in delay-5">⤓ Descendre</div>
+      <h1 id="title">PULSE-53</h1>
+      <p id="subtitle">Une exploration visuelle du p53 — pulsations, particules et ADN en mouvement.</p>
+      <div id="scroll-hint">⤓ Descendre</div>
     </div>
   </div>
 
-  <!-- Scrollable content, accessible and readable -->
-  <main id="content" class="fade-in delay-6">
+  <main id="content">
     <section class="card">
       <h2>À propos</h2>
-      <p>
-        Créateur : Bryan Maison — maisonbryan92@gmail.com
-      </p>
-      <p>
-        PULSE-53 est né d'une idée inspirée par l'éléphant, la tortue et l'axolotl — des symboles de mémoire, longévité,
-        et régénération. Ce projet visualise la protéine p53 à travers une double hélice d'ADN lumineuse et des particules fluorescentes.
-      </p>
+      <p>Créateur : Bryan Maison — <a href="mailto:maisonbryan92@gmail.com">maisonbryan92@gmail.com</a></p>
+      <p>PULSE-53 est né d'une idée inspirée par l'éléphant, la tortue et l'axolotl — mémoire, longévité et régénération.</p>
     </section>
 
     <section class="card">
       <h2>Ce que vous voyez</h2>
       <ul>
-        <li>Fond noir animé, esthétique futuriste.</li>
-        <li>Double hélice d'ADN verte et bleue en 3D, orientée en diagonale (haut-gauche → bas-droite) et tournant lentement.</li>
-        <li>Particules « p53 » qui s’échappent et se dissipent avec brillance.</li>
-        <li>Logo lumineux au centre haut avec effet de pulsation et fade-in d'entrée.</li>
-        <li>Titre "PULSE-53" en néon dégradé bleu/vert, avec ombre lumineuse animée.</li>
+        <li>Double hélice d'ADN en 3D, orientée en diagonale et tournante.</li>
+        <li>Particules fluorescentes représentant p53.</li>
+        <li>Logo lumineux, titre néon, animations de fade-in.</li>
       </ul>
     </section>
 
     <section class="card">
       <h2>Contact</h2>
-      <p>Pour collaborations ou questions : <a href="mailto:maisonbryan92@gmail.com">maisonbryan92@gmail.com</a></p>
+      <p>Email : <a href="mailto:maisonbryan92@gmail.com">maisonbryan92@gmail.com</a></p>
     </section>
 
     <footer class="card small">
@@ -85,6 +67,7 @@
     </footer>
   </main>
 
-  <script type="module" src="main.js"></script>
+  <!-- main.js en module. Le fichier importera Three.js depuis un CDN (voir main.js) -->
+  <script type="module" src="./main.js"></script>
 </body>
 </html>
