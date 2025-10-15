@@ -1,7 +1,7 @@
 html, body {
   margin: 0;
   padding: 0;
-  overflow: hidden;
+  overflow-x: hidden;
   background: black;
   height: 100%;
   font-family: 'Orbitron', sans-serif;
@@ -33,14 +33,13 @@ html, body {
 
 /* --- LOGO --- */
 .logo {
-  position: fixed;
-  top: 30px;
-  left: 50%;
-  transform: translateX(-50%);
+  position: relative;
+  display: block;
+  margin: 40px auto 0 auto;
   width: 160px;
-  z-index: 2;
   filter: drop-shadow(0 0 12px #00ffff) drop-shadow(0 0 30px #00ffcc);
-  animation: glowLogo 4s ease-in-out infinite, fadeIn 2s ease forwards;
+  animation: glowLogo 4s ease-in-out infinite;
+  z-index: 2;
 }
 
 @keyframes glowLogo {
@@ -50,10 +49,8 @@ html, body {
 
 /* --- TITRE --- */
 .title {
-  position: fixed;
-  top: 55%;
-  left: 50%;
-  transform: translate(-50%, -50%);
+ position: relative;
+  margin-top: 40px;
   text-align: center;
   z-index: 3;
 }
