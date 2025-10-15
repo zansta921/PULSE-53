@@ -5,13 +5,16 @@
   --muted:#ffffffcc;
 }
 
+/* Base */
 *{box-sizing:border-box}
 html,body{height:100%;margin:0;background:var(--bg);color:#fff;font-family:Inter,Arial,Helvetica,sans-serif}
 a{color:var(--cyan)}
 
+/* Hero */
 #hero{position:relative;height:100vh;overflow:hidden;display:flex;align-items:center;justify-content:center}
 
-/* Background: fixed image + dark overlay. Place your DNA image at assets/bg-dna.jpg */
+/* Background: fixed image + dark overlay.
+   Place your DNA image in assets/bg-dna.jpg */
 .hero-bg{
   position:absolute;inset:0;z-index:0;
   background-color:#000;
@@ -20,33 +23,67 @@ a{color:var(--cyan)}
   background-position: center center;
   background-repeat: no-repeat;
   background-attachment: fixed;
-  filter: none; /* keep static, no animations */
 }
-/* fallback gradient if image is missing */
-.no-image .hero-bg{background-image: linear-gradient(135deg,#001218 0%, #002a36 50%, #001018 100%)}
 
-/* subtle vignette and dark overlay to keep text readable */
+/* Vignette overlay to keep text readable */
 .hero-bg::after{
-  content:'';
-  position:absolute;inset:0;
+  content:'';position:absolute;inset:0;
   background:linear-gradient(180deg, rgba(0,0,0,0.35), rgba(0,0,0,0.6));
   pointer-events:none;
 }
 
 /* Topbar/logo */
-#topbar{position:absolute;top:18px;left:50%;transform:translateX(-50%);z-index:20}
-#logo{pointer-events:none;filter:drop-shadow(0 0 18px rgba(18,255,230,0.14))}
+#topbar{position:absolute;top:18px;left:50%;transform:translateX(-50%);z-index:22}
+#logo{pointer-events:none;display:flex;align-items:center;justify-content:center;position:relative}
 
-/* Overlay (text) */
-#overlay{position:relative;z-index:10;text-align:center;pointer-events:none;padding:0 20px}
-#title{font-size:clamp(36px,9vw,120px);margin:0;letter-spacing:6px;color:transparent;background:linear-gradient(90deg,var(--cyan),var(--teal));-webkit-background-clip:text;background-clip:text;text-shadow:0 0 20px rgba(50,255,220,0.18);opacity:0;transform:translateY(6px);transition:opacity 900ms ease, transform 900ms ease}
+/* External logo image styles (fluorescent/pulse) */
+#logo-img{
+  width:96px;height:auto;border-radius:14px;display:block;
+  filter: drop-shadow(0 12px 40px rgba(18,255,230,0.12));
+  transform:scale(0.98);opacity:0;transition:opacity 600ms ease, transform 900ms cubic-bezier(.2,.9,.2,1);
+}
+
+/* Glow effect behind logo using pseudo element on the #logo wrapper */
+#logo.has-external::after{
+  content:'';position:absolute;left:50%;top:8px;transform:translateX(-50%);width:220px;height:220px;border-radius:40px;z-index:-1;
+  background:radial-gradient(circle at 30% 30%, rgba(50,255,220,0.5), rgba(0,180,150,0.15) 40%, rgba(0,0,0,0) 65%);
+  filter: blur(28px);
+  animation: logoGlow 2.6s ease-in-out infinite;
+  opacity:0.95;
+}
+@keyframes logoGlow{
+  0%{transform:translateX(-50%) scale(0.98)}
+  50%{transform:translateX(-50%) scale(1.06)}
+  100%{transform:translateX(-50%) scale(0.98)}
+}
+
+/* Fallback SVG appearance */
+#logo-svg{width:72px;height:72px;opacity:0;transform:scale(0.98);transition:opacity 600ms ease, transform 900ms cubic-bezier(.2,.9,.2,1);filter:drop-shadow(0 12px 40px rgba(18,255,230,0.12))}
+
+/* Overlay text & neon title */
+#overlay{position:relative;z-index:20;text-align:center;pointer-events:none;padding:0 20px}
+#title{
+  font-size:clamp(36px,9vw,120px);margin:0;letter-spacing:6px;color:transparent;
+  background:linear-gradient(90deg,var(--cyan),var(--teal));
+  -webkit-background-clip:text;background-clip:text;
+  text-shadow:0 0 20px rgba(50,255,220,0.18);
+  opacity:0;transform:translateY(6px);transition:opacity 900ms ease, transform 900ms ease;
+}
+/* subtle neon pulse to keep it alive */
+@keyframes neonPulse{
+  0%{text-shadow:0 0 10px rgba(50,255,220,0.06),0 0 30px rgba(0,150,140,0.03)}
+  50%{text-shadow:0 0 24px rgba(50,255,220,0.28),0 0 64px rgba(0,150,140,0.18)}
+  100%{text-shadow:0 0 10px rgba(50,255,220,0.06),0 0 30px rgba(0,150,140,0.03)}
+}
+#title.pulse{animation: neonPulse 2.8s ease-in-out infinite}
 #subtitle{margin-top:10px;color:var(--muted);opacity:0;transform:translateY(6px);transition:opacity 900ms ease 200ms, transform 900ms ease 200ms}
 #scroll-hint{margin-top:26px;opacity:0;transition:opacity 900ms ease 400ms}
 
-/* When JavaScript sets .visible on body, show elements */
+/* show when JS sets .visible on body */
 body.visible #title, body.visible #subtitle, body.visible #scroll-hint{opacity:1;transform:none}
+body.visible #logo-img, body.visible #logo-svg{opacity:1;transform:none}
 
-/* Content below */
+/* content below */
 main#content{padding:40px 18px;max-width:1000px;margin:0 auto;background:transparent}
 .card{background:rgba(255,255,255,0.02);border-radius:12px;padding:22px;margin:18px 0;box-shadow:0 6px 20px rgba(0,0,0,0.6)}
 .card.small{font-size:13px;text-align:center;opacity:0.9}
