@@ -8,15 +8,14 @@
 </head>
 <body>
   <div id="hero">
-    <!-- Fond fixe (image) -->
     <div class="hero-bg" aria-hidden="true"></div>
 
     <header id="topbar">
       <div id="logo" aria-hidden="true">
-        <!-- Logo externe si fourni (assets/logo.png) -->
-        <img id="logo-img" src="./assets/logo.png" alt="Logo Bryan Maison" style="display:none" />
+        <!-- Si tu ajoutes assets/logo.png il sera affiché automatiquement -->
+        <img id="logo-img" src="./assets/logo.png" alt="Logo Bryan Maison" />
 
-        <!-- Fallback SVG (sera utilisé si logo.png absent) -->
+        <!-- SVG fallback : visible par défaut -->
         <svg id="logo-svg" viewBox="0 0 200 200" width="72" height="72" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Logo Bryan Maison">
           <defs>
             <radialGradient id="g" cx="30%" cy="30%">
@@ -50,9 +49,8 @@
     <section class="card">
       <h2>Ce que vous voyez</h2>
       <ul>
-        <li>Fond fixe (image d'ADN).</li>
-        <li>Logo fluorescent (image ou SVG fallback).</li>
-        <li>Titre néon et fade-in d'introduction.</li>
+        <li>Fond fixe (image d'ADN si uploadée dans assets/bg-dna.jpg).</li>
+        <li>Logo fluorescent (assets/logo.png si présent, sinon SVG fallback).</li>
       </ul>
     </section>
 
