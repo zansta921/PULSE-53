@@ -32,11 +32,11 @@ html, body {
 .logo {
   position: relative;
   display: block;
-  margin: 40px auto 0 auto;
-  width: 160px;
+  margin: 50px auto;
+  max-width: 300px;
   filter: drop-shadow(0 0 12px #00ffff) drop-shadow(0 0 30px #00ffcc);
   animation: glowLogo 4s ease-in-out infinite;
-  z-index: 2;
+  z-index: 10;
 }
 
 @keyframes glowLogo {
