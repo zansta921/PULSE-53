@@ -1,4 +1,4 @@
-// main.js (module) — utilise Three.js via CDN adapté au navigateur
+// main.js (module) — Three.js import via CDN pour navigateur
 import * as THREE from 'https://unpkg.com/three@0.152.0/build/three.module.js';
 import { OrbitControls } from 'https://unpkg.com/three@0.152.0/examples/jsm/controls/OrbitControls.js';
 
@@ -21,13 +21,11 @@ const rim = new THREE.DirectionalLight(0xaffff0, 0.9);
 rim.position.set(-5, 10, 10);
 scene.add(rim);
 
-// Group for helix
 const group = new THREE.Group();
 scene.add(group);
 
-// Simple helix made of spheres (fallback simple, visible)
-const strandRadius = 0.08;
-const sphereGeo = new THREE.SphereGeometry(strandRadius, 10, 10);
+// Helix (sphères pour robustesse)
+const sphereGeo = new THREE.SphereGeometry(0.08, 12, 12);
 const matA = new THREE.MeshStandardMaterial({ color: 0x2fe8a8, emissive: 0x063f30, roughness: 0.4 });
 const matB = new THREE.MeshStandardMaterial({ color: 0x66d7ff, emissive: 0x041b2b, roughness: 0.4 });
 
@@ -45,7 +43,6 @@ for (let i = 0; i < instances; i++) {
   helixPositions.push({ xA, y, zA, xB, zB, angle });
 }
 
-// create meshes (non-instanced for reliability)
 for (let i = 0; i < instances; i++) {
   const p = helixPositions[i];
   const scale = 0.7 + (i / instances) * 0.9;
@@ -59,7 +56,7 @@ for (let i = 0; i < instances; i++) {
   group.add(mB);
 }
 
-// Particles (simple Points system)
+// Particules simples
 const particleCount = 600;
 const pGeo = new THREE.BufferGeometry();
 const positions = new Float32Array(particleCount * 3);
@@ -119,7 +116,6 @@ function animate() {
   const breath = 1 + Math.sin(t * 1.4) * 0.02;
   group.scale.set(breath, breath, breath);
 
-  // spawn particles
   lastSpawn += dt;
   if (lastSpawn > 0.01) {
     const spawnCount = 1 + Math.floor(Math.random() * 3);
@@ -127,7 +123,6 @@ function animate() {
     lastSpawn = 0;
   }
 
-  // update particles
   for (let i = 0; i < particleCount; i++) {
     if (lifetimes[i] > 0) {
       positions[i*3+0] += velocities[i*3+0];
@@ -143,7 +138,6 @@ function animate() {
   }
   pGeo.attributes.position.needsUpdate = true;
 
-  // camera parallax on scroll
   const scrollY = window.scrollY || window.pageYOffset;
   const maxShift = 0.6;
   const shift = Math.min(scrollY / window.innerHeight, 1) * maxShift;
