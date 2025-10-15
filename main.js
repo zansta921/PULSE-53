@@ -151,3 +151,6 @@ function animate() {
 animate();
 
 console.log('Three.js chargé — rendu initialisé');
+
+import * as THREE from "three";
+import { OrbitControls } from "three/examples/jsm/controls/OrbitControls.js";
