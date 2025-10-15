@@ -1,0 +1,72 @@
+<!doctype html>
+<html lang="fr">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>PULSE-53 — Bryan Maison</title>
+  <!-- Chemin relatif explicite vers le CSS -->
+  <link rel="stylesheet" href="./styles.css" />
+</head>
+<body>
+  <div id="hero">
+    <header id="topbar">
+      <div id="logo" aria-hidden="true">
+        <!-- Logo SVG inline -->
+        <svg viewBox="0 0 200 200" width="72" height="72" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Logo Bryan Maison">
+          <defs>
+            <radialGradient id="g" cx="30%" cy="30%">
+              <stop offset="0%" stop-color="#9fffd6"/>
+              <stop offset="50%" stop-color="#12ffff"/>
+              <stop offset="100%" stop-color="#004b3a"/>
+            </radialGradient>
+            <filter id="f"><feGaussianBlur stdDeviation="6" result="b"/><feMerge><feMergeNode in="b"/><feMergeNode in="SourceGraphic"/></feMerge></filter>
+          </defs>
+          <circle cx="100" cy="100" r="62" fill="url(#g)" opacity="0.18" filter="url(#f)"/>
+          <g fill="#cffff0" transform="translate(56,46)">
+            <path d="M40 0 L70 0 Q95 0 95 22 Q95 36 80 44 Q95 52 95 76 Q95 98 70 98 L40 98 Q17 98 17 76 L17 22 Q17 0 40 0 Z" fill="#b7fff0" opacity="0.95"/>
+          </g>
+        </svg>
+      </div>
+    </header>
+
+    <div id="canvas-wrap">
+      <canvas id="bg-canvas" aria-hidden="true"></canvas>
+    </div>
+
+    <div id="overlay">
+      <h1 id="title">PULSE-53</h1>
+      <p id="subtitle">Une exploration visuelle du p53 — pulsations, particules et ADN en mouvement.</p>
+      <div id="scroll-hint">⤓ Descendre</div>
+    </div>
+  </div>
+
+  <main id="content">
+    <section class="card">
+      <h2>À propos</h2>
+      <p>Créateur : Bryan Maison — <a href="mailto:maisonbryan92@gmail.com">maisonbryan92@gmail.com</a></p>
+      <p>PULSE-53 est né d'une idée inspirée par l'éléphant, la tortue et l'axolotl — mémoire, longévité et régénération.</p>
+    </section>
+
+    <section class="card">
+      <h2>Ce que vous voyez</h2>
+      <ul>
+        <li>Double hélice d'ADN en 3D, orientée en diagonale et tournante.</li>
+        <li>Particules fluorescentes représentant p53.</li>
+        <li>Logo lumineux, titre néon, animations de fade-in.</li>
+      </ul>
+    </section>
+
+    <section class="card">
+      <h2>Contact</h2>
+      <p>Email : <a href="mailto:maisonbryan92@gmail.com">maisonbryan92@gmail.com</a></p>
+    </section>
+
+    <footer class="card small">
+      <p>© Bryan Maison — Inspiré par l'éléphant, la tortue et l'axolotl</p>
+    </footer>
+  </main>
+
+  <!-- module JS : main.js importe Three.js via CDN -->
+  <script type="module" src="./main.js"></script>
+</body>
+</html>
