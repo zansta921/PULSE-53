@@ -1,0 +1,57 @@
+:root{
+  --bg:#000;
+  --cyan:#31ffda;
+  --teal:#00b3a6;
+  --muted:#ffffffcc;
+}
+
+*{box-sizing:border-box}
+html,body{height:100%;margin:0;background:var(--bg);color:#fff;font-family:Inter,Arial,Helvetica,sans-serif}
+a{color:var(--cyan)}
+
+#hero{position:relative;height:100vh;overflow:hidden;display:flex;align-items:center;justify-content:center}
+
+/* Background: fixed image + dark overlay. Place your DNA image at assets/bg-dna.jpg */
+.hero-bg{
+  position:absolute;inset:0;z-index:0;
+  background-color:#000;
+  background-image: url('./assets/bg-dna.jpg');
+  background-size: cover;
+  background-position: center center;
+  background-repeat: no-repeat;
+  background-attachment: fixed;
+  filter: none; /* keep static, no animations */
+}
+/* fallback gradient if image is missing */
+.no-image .hero-bg{background-image: linear-gradient(135deg,#001218 0%, #002a36 50%, #001018 100%)}
+
+/* subtle vignette and dark overlay to keep text readable */
+.hero-bg::after{
+  content:'';
+  position:absolute;inset:0;
+  background:linear-gradient(180deg, rgba(0,0,0,0.35), rgba(0,0,0,0.6));
+  pointer-events:none;
+}
+
+/* Topbar/logo */
+#topbar{position:absolute;top:18px;left:50%;transform:translateX(-50%);z-index:20}
+#logo{pointer-events:none;filter:drop-shadow(0 0 18px rgba(18,255,230,0.14))}
+
+/* Overlay (text) */
+#overlay{position:relative;z-index:10;text-align:center;pointer-events:none;padding:0 20px}
+#title{font-size:clamp(36px,9vw,120px);margin:0;letter-spacing:6px;color:transparent;background:linear-gradient(90deg,var(--cyan),var(--teal));-webkit-background-clip:text;background-clip:text;text-shadow:0 0 20px rgba(50,255,220,0.18);opacity:0;transform:translateY(6px);transition:opacity 900ms ease, transform 900ms ease}
+#subtitle{margin-top:10px;color:var(--muted);opacity:0;transform:translateY(6px);transition:opacity 900ms ease 200ms, transform 900ms ease 200ms}
+#scroll-hint{margin-top:26px;opacity:0;transition:opacity 900ms ease 400ms}
+
+/* When JavaScript sets .visible on body, show elements */
+body.visible #title, body.visible #subtitle, body.visible #scroll-hint{opacity:1;transform:none}
+
+/* Content below */
+main#content{padding:40px 18px;max-width:1000px;margin:0 auto;background:transparent}
+.card{background:rgba(255,255,255,0.02);border-radius:12px;padding:22px;margin:18px 0;box-shadow:0 6px 20px rgba(0,0,0,0.6)}
+.card.small{font-size:13px;text-align:center;opacity:0.9}
+
+/* Accessibility */
+@media (prefers-reduced-motion: reduce) {
+  * { animation: none !important; transition: none !important; }
+}

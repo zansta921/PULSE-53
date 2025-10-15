@@ -4,12 +4,11 @@
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width,initial-scale=1" />
   <title>PULSE-53 — Bryan Maison</title>
-  <!-- Chemin relatif explicite vers le CSS -->
-  <link rel="stylesheet" href="styles.css" />
-  <script src="https://cdjns.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+  <link rel="stylesheet" href="./styles.css" />
 </head>
 <body>
   <div id="hero">
+    <div class="hero-bg" aria-hidden="true"></div>
     <header id="topbar">
       <div id="logo" aria-hidden="true">
         <!-- Logo SVG inline -->
@@ -30,10 +29,6 @@
       </div>
     </header>
 
-    <div id="canvas-wrap">
-      <canvas id="bg-canvas" aria-hidden="true"></canvas>
-    </div>
-
     <div id="overlay">
       <h1 id="title">PULSE-53</h1>
       <p id="subtitle">Une exploration visuelle du p53 — pulsations, particules et ADN en mouvement.</p>
@@ -51,9 +46,9 @@
     <section class="card">
       <h2>Ce que vous voyez</h2>
       <ul>
-        <li>Double hélice d'ADN en 3D, orientée en diagonale et tournante.</li>
-        <li>Particules fluorescentes représentant p53.</li>
-        <li>Logo lumineux, titre néon, animations de fade-in.</li>
+        <li>Fond fixe inspiré d'une image d'ADN (place l'image dans assets/bg-dna.jpg).</li>
+        <li>Logo lumineux, titre néon, animations en CSS (fade-in).</li>
+        <li>Page scrollable pour lire les explications.</li>
       </ul>
     </section>
 
@@ -67,18 +62,6 @@
     </footer>
   </main>
 
-  <!-- module JS : main.js importe Three.js via CDN -->
-<script async src="https://ga.jspm.io/npm:es-module-shims@1.5.1/dist/es-module-shims.js" crossorigin="anonymous"></script>
-<script type="importmap">
-{
-  "imports": {
-    "three": "https://unpkg.com/three@0.152.0/build/three.module.js",
-    "three/examples/jsm/": "https://unpkg.com/three@0.152.0/examples/jsm/"
-  }
-}
-</script>
-
-  <script type="module" src="./main.js"></script>
-  <script src="script.js" defer></script>
+  <script type="module" src="./script.js"></script>
 </body>
 </html>
