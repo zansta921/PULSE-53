@@ -1,56 +1,53 @@
 <!DOCTYPE html>
 <html lang="fr">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>PULSE-53 | L'Équilibre du Vivant</title>
-  <link rel="stylesheet" href="style.css">
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>PULSE-53</title>
+  <link rel="stylesheet" href="style.css" />
+  <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@700;900&display=swap" rel="stylesheet">
 </head>
 <body>
-  <header>
-    <div class="logo-container">
-      <img src="logo.jpg" alt="PULSE-53 Logo" class="logo">
-    </div>
+  <!-- Fond animé -->
+  <canvas id="background"></canvas>
+
+  <!-- Logo lumineux -->
+  <img src="logo.png" alt="Logo PULSE-53" class="logo fade-in" />
+
+  <!-- Titre et sous-titre -->
+  <div class="title fade-in">
     <h1>PULSE-53</h1>
-    <p class="slogan">L'Équilibre du Vivant</p>
-    <nav>
-      <a href="#presentation">Présentation</a>
-      <a href="#objectifs">Objectifs</a>
-      <a href="#resultats">Résultats</a>
-      <a href="#contact">Contact</a>
-    </nav>
-  </header>
+    <p>L'ÉQUILIBRE DU VIVANT</p>
+  </div>
 
-  <section id="presentation">
-    <h2>Présentation du projet</h2>
-    <p>Le projet PULSE-53 explore les dynamiques biologiques et la régulation fine de la protéine p53, un élément essentiel dans l'équilibre cellulaire et la prévention des dérèglements tumoraux.</p>
-  </section>
+  <!-- SECTION EXPLICATIVE -->
+  <section class="content fade-in">
+    <h2>Présentation</h2>
+    <p>
+      Le projet <strong>PULSE-53</strong> explore la dynamique du <strong>p53</strong>, souvent surnommé
+      « le gardien du génome ». Cette protéine joue un rôle essentiel dans la
+      surveillance cellulaire, l’arrêt du cycle, la réparation de l’ADN et l’apoptose.
+      Notre objectif est de <em>comprendre et modéliser</em> ses oscillations, ses
+      interactions et ses effets dans des conditions physiologiques et pathologiques.
+    </p>
 
-  <section id="objectifs">
     <h2>Objectifs</h2>
     <ul>
-      <li>Comprendre les oscillations de p53 dans différents contextes cellulaires</li>
-      <li>Modéliser les dynamiques de régulation</li>
-      <li>Ouvrir la voie à des stratégies thérapeutiques innovantes</li>
+      <li>Modéliser les oscillations de p53 de manière réaliste et interactive</li>
+      <li>Visualiser la régulation moléculaire en 3D</li>
+      <li>Créer une interface scientifique immersive</li>
     </ul>
+
+    <h2>Pourquoi ce projet ?</h2>
+    <p>
+      En combinant la <strong>biologie moléculaire</strong> et des <strong>technologies immersives</strong>,
+      nous voulons offrir une vision intuitive et dynamique des mécanismes régulateurs
+      fondamentaux. Cette approche peut ouvrir de nouvelles perspectives pour la
+      recherche, l’enseignement et la vulgarisation scientifique.
+    </p>
   </section>
 
-  <section id="resultats">
-    <h2>Résultats</h2>
-    <p>Des modèles oscillatoires précis ont permis de mettre en évidence de nouvelles fenêtres d’intervention thérapeutique potentielles.</p>
-    <a href="PULSE53_MEMOIRE.pdf" class="btn" target="_blank">📄 Télécharger le mémoire</a>
-  </section>
-
-  <section id="contact">
-    <h2>Contact</h2>
-    <p>Pour toute question ou collaboration :</p>
-    <a href="mailto:tonemail@example.com" class="contact-btn">📩 Me contacter</a>
-  </section>
-
-  <footer>
-    <p>&copy; 2025 — PULSE-53. Tous droits réservés.</p>
-  </footer>
-
+  <script src="three.min.js"></script>
   <script src="script.js"></script>
 </body>
 </html>
