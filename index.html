@@ -12,10 +12,9 @@
 
     <header id="topbar">
       <div id="logo" aria-hidden="true">
-        <!-- Si tu ajoutes assets/logo.png il sera affiché automatiquement -->
-        <img src"logo.png" alt="logo PULSE-53" class="logo-fluo" />
-
-        <!-- SVG fallback : visible par défaut -->
+        <!-- Logo externe si présent -->
+        <img id="logo-img" src="./assets/logo.png" alt="logo PULSE-53" class="logo-fluo" />
+        <!-- SVG fallback -->
         <svg id="logo-svg" viewBox="0 0 200 200" width="72" height="72" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Logo Bryan Maison">
           <defs>
             <radialGradient id="g" cx="30%" cy="30%">
