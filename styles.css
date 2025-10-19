@@ -29,18 +29,7 @@ a{color:var(--cyan)}
   pointer-events:none;
 }
 
-/* Topbar/logo */
-#topbar{position:absolute;top:18px;left:50%;transform:translateX(-50%);z-index:22}
-#logo{pointer-events:none;display:flex;align-items:center;justify-content:center;position:relative}
 
-/* External logo fluorescent */
-#logo-img{
-  width:96px;height:auto;border-radius:14px;
-  display:none;opacity:0;transform:scale(0.92);
-  filter:drop-shadow(0 0 22px rgba(18,255,230,0.4)) brightness(1.1);
-  transition:opacity 900ms ease, transform 900ms cubic-bezier(.2,.9,.2,1);
-  animation:glowCycle 4s ease-in-out infinite;
-}
 
 /* Animation fluide de lumière */
 @keyframes glowCycle {
@@ -49,20 +38,56 @@ a{color:var(--cyan)}
   100% { filter:drop-shadow(0 0 12px rgba(18,255,230,0.2)) brightness(1.0); }
 }
 
-/* Effet au survol : pulsation */
+/* Topbar/logo */
+#topbar{position:absolute;top:18px;left:50%;transform:translateX(-50%);z-index:22}
+#logo{
+  /* important : permettre les events souris pour déclencher le :hover */
+  pointer-events:auto;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  position:relative;
+}
+
+/* Logo externe fluorescent — visible par défaut, puis animé au hover */
+#logo-img{
+  width:96px;
+  height:auto;
+  border-radius:14px;
+  display:block;           /* visible par défaut (le JS pourra ajouter .has-external) */
+  opacity:0;               /* on animera l'opacité à l'entrée (body.visible) */
+  transform:scale(0.98);
+  filter:drop-shadow(0 0 22px rgba(18,255,230,0.4)) brightness(1.05);
+  transition:opacity 600ms ease, transform 400ms cubic-bezier(.2,.9,.2,1), filter 300ms ease;
+  will-change: transform, filter;
+  cursor:default;
+}
+
+/* apparition lors du 'load' (ton script ajoute body.visible) */
+body.visible #logo-img{
+  opacity:1;
+  transform:scale(1);
+}
+
+/* hover : pulsation unique au survol */
 #logo-img:hover {
-  animation: hoverPulse 0.8s ease-in-out;
+  animation: hoverPulse 0.9s ease-in-out;
   cursor: pointer;
 }
 @keyframes hoverPulse {
-  0% { transform: scale(1); filter:drop-shadow(0 0 20px rgba(50,255,220,0.3)); }
-  50% { transform: scale(1.08); filter:drop-shadow(0 0 40px rgba(50,255,220,0.6)); }
-  100% { transform: scale(1); filter:drop-shadow(0 0 20px rgba(50,255,220,0.3)); }
+  0%   { transform: scale(1);   filter: drop-shadow(0 0 20px rgba(50,255,220,0.3)); }
+  40%  { transform: scale(1.14); filter: drop-shadow(0 0 72px rgba(50,255,220,0.75)); }
+  70%  { transform: scale(1.06); filter: drop-shadow(0 0 44px rgba(50,255,220,0.55)); }
+  100% { transform: scale(1);   filter: drop-shadow(0 0 20px rgba(50,255,220,0.3)); }
 }
 
-/* Glow pseudo element */
+/* halo sous le logo quand img présente */
 #logo.has-external::after{
-  content:'';position:absolute;left:50%;top:8px;transform:translateX(-50%);
+  content:'';
+  position:absolute;
+  left:50%;
+  top:8px;
+  transform:translateX(-50%);
   width:220px;height:220px;border-radius:40px;z-index:-1;
   background:radial-gradient(circle at 30% 30%, rgba(50,255,220,0.45), rgba(0,180,150,0.12) 40%, rgba(0,0,0,0) 65%);
   filter:blur(28px);
@@ -70,55 +95,10 @@ a{color:var(--cyan)}
   opacity:0.95;
 }
 @keyframes logoGlow{
-  0%{transform:translateX(-50%) scale(0.98)}
-  50%{transform:translateX(-50%) scale(1.06)}
-  100%{transform:translateX(-50%) scale(0.98)}
+  0%{ transform:translateX(-50%) scale(0.98) }
+  50%{ transform:translateX(-50%) scale(1.06) }
+  100%{ transform:translateX(-50%) scale(0.98) }
 }
-/* Effet de pulsation au survol */
-#logo-img:hover {
-  animation: hoverPulse 0.9s ease-in-out;
-  cursor: pointer;
-}
-
-@keyframes hoverPulse {
-  0% { transform: scale(1); filter: drop-shadow(0 0 20px rgba(50,255,220,0.3)); }
-  50% { transform: scale(1.12); filter: drop-shadow(0 0 60px rgba(50,255,220,0.7)); }
-  100% { transform: scale(1); filter: drop-shadow(0 0 20px rgba(50,255,220,0.3)); }
-}
-
-
-/* Fallback SVG visible par défaut */
-#logo-svg{width:72px;height:72px;opacity:1;filter:drop-shadow(0 12px 40px rgba(18,255,230,0.12));transition:opacity 600ms ease, transform 900ms cubic-bezier(.2,.9,.2,1)}
-
-/* Overlay */
-#overlay{position:relative;z-index:20;text-align:center;pointer-events:none;padding:0 20px}
-#title{
-  font-size:clamp(36px,9vw,120px);
-  margin:0;letter-spacing:6px;color:transparent;
-  background:linear-gradient(90deg,var(--cyan),var(--teal));
-  -webkit-background-clip:text;background-clip:text;
-  text-shadow:0 0 20px rgba(50,255,220,0.18);
-  opacity:0;transform:translateY(20px);
-  transition:opacity 1s ease, transform 1s ease;
-  animation:fadeUp 1.2s ease forwards;
-}
-#subtitle{
-  margin-top:10px;color:var(--muted);opacity:0;transform:translateY(20px);
-  animation:fadeUp 1.4s ease forwards;
-  animation-delay:0.5s;
-}
-#scroll-hint{
-  margin-top:26px;opacity:0;
-  animation:fadeUp 1.4s ease forwards;
-  animation-delay:1s;
-}
-
-/* Fade-in animation */
-@keyframes fadeUp {
-  from { opacity:0; transform:translateY(20px); }
-  to { opacity:1; transform:translateY(0); }
-}
-
 /* When JS sets .visible */
 body.visible #logo-img{display:block;opacity:1;transform:scale(1);}
 
