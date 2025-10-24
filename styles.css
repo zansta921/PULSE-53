@@ -3,7 +3,7 @@
   --cyan: #31ffda;
   --teal: #00b3a6;
   --highlight: #12ffff;
-  --muted: #ffffffcc;
+  --muted: #ffffffaa;
   --title-font: 'Orbitron', sans-serif;
 }
 
@@ -29,8 +29,8 @@ a{color:var(--cyan);}
   animation:loaderPulse 1.5s infinite alternate;
 }
 @keyframes loaderPulse{
-  0%{text-shadow:0 0 10px var(--highlight);}
-  100%{text-shadow:0 0 35px var(--highlight),0 0 50px var(--teal);}
+  0%{text-shadow:0 0 8px var(--highlight);}
+  100%{text-shadow:0 0 20px var(--highlight);}
 }
 
 /* Hero */
@@ -65,54 +65,24 @@ a{color:var(--cyan);}
   font-size:5rem;
   color:var(--cyan);
   text-transform:uppercase;
-  letter-spacing:0.2em;
+  letter-spacing:0.15em;
   position:relative;
   cursor:pointer;
-  background:linear-gradient(90deg, var(--cyan), var(--teal), var(--highlight));
+  background:linear-gradient(90deg, var(--cyan), var(--teal));
   -webkit-background-clip:text;
   -webkit-text-fill-color:transparent;
-  text-shadow:
-    0 0 5px var(--cyan),
-    0 0 10px var(--cyan),
-    0 0 20px var(--teal),
-    0 0 40px var(--teal),
-    0 0 80px var(--highlight);
-  animation: neonPulse 2s infinite alternate;
+  text-shadow:0 0 4px var(--cyan), 0 0 8px var(--teal);
+  animation: neonPulse 3s infinite alternate ease-in-out;
   transition: transform 0.3s ease, text-shadow 0.3s ease;
 }
-
 #title:hover {
-  transform: scale(1.08) rotate(-1deg);
-  text-shadow:
-    0 0 10px var(--cyan),
-    0 0 25px var(--cyan),
-    0 0 40px var(--teal),
-    0 0 70px var(--teal),
-    0 0 120px var(--highlight);
+  transform: scale(1.05);
+  text-shadow:0 0 6px var(--cyan), 0 0 14px var(--teal);
 }
-
 @keyframes neonPulse {
-  0% {
-    text-shadow: 0 0 5px var(--cyan),
-                 0 0 10px var(--cyan),
-                 0 0 20px var(--teal),
-                 0 0 40px var(--teal),
-                 0 0 80px var(--highlight);
-  }
-  50% {
-    text-shadow: 0 0 10px var(--cyan),
-                 0 0 20px var(--cyan),
-                 0 0 35px var(--teal),
-                 0 0 60px var(--teal),
-                 0 0 120px var(--highlight);
-  }
-  100% {
-    text-shadow: 0 0 5px var(--cyan),
-                 0 0 10px var(--cyan),
-                 0 0 20px var(--teal),
-                 0 0 40px var(--teal),
-                 0 0 80px var(--highlight);
-  }
+  0% { text-shadow:0 0 3px var(--cyan),0 0 6px var(--teal); }
+  50% { text-shadow:0 0 6px var(--cyan),0 0 12px var(--teal); }
+  100% { text-shadow:0 0 3px var(--cyan),0 0 6px var(--teal); }
 }
 
 /* Subtitle */
@@ -122,7 +92,7 @@ a{color:var(--cyan);}
   color:var(--muted);
 }
 
-/* Logo */
+/* Logo PNG */
 #logo{
   position:absolute;
   top:20px;
@@ -133,24 +103,24 @@ a{color:var(--cyan);}
 #logo-img{
   width:100px;
   height:auto;
-  filter:drop-shadow(0 0 25px var(--cyan));
-  transition: transform 0.5s ease, filter 0.5s ease;
+  filter:drop-shadow(0 0 15px var(--cyan));
+  transition: transform 0.4s ease, filter 0.4s ease;
   cursor:pointer;
-  animation: logoGlow 2.5s infinite alternate;
+  animation: logoGlow 3s infinite alternate ease-in-out;
 }
 #logo-img:hover{
-  transform: rotate(10deg) scale(1.1);
-  filter:drop-shadow(0 0 50px var(--highlight));
+  transform: rotate(5deg) scale(1.05);
+  filter:drop-shadow(0 0 25px var(--teal));
 }
 @keyframes logoGlow{
-  0%{filter: drop-shadow(0 0 20px var(--cyan)); transform: scale(0.98);}
-  50%{filter: drop-shadow(0 0 45px var(--highlight)); transform: scale(1.05);}
-  100%{filter: drop-shadow(0 0 20px var(--cyan)); transform: scale(0.98);}
+  0%{filter: drop-shadow(0 0 10px var(--cyan)); transform: scale(0.98);}
+  50%{filter: drop-shadow(0 0 20px var(--teal)); transform: scale(1.02);}
+  100%{filter: drop-shadow(0 0 10px var(--cyan)); transform: scale(0.98);}
 }
 
 /* Main content */
 main#content{padding:40px 18px;max-width:1000px;margin:0 auto;background:transparent;}
-.card{background:rgba(255,255,255,0.02);border-radius:12px;padding:22px;margin:18px 0;box-shadow:0 6px 20px rgba(0,0,0,0.6);}
+.card{background:rgba(255,255,255,0.02);border-radius:12px;padding:22px;margin:18px 0;box-shadow:0 6px 20px rgba(0,0,0,0.4);}
 .card.small{font-size:13px;text-align:center;opacity:0.9;}
 
 /* Fallback si pas de bg ADN */
