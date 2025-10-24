@@ -1,18 +1,14 @@
 window.addEventListener('DOMContentLoaded', () => {
-  // apparition globale (titre, logo, etc.)
-  requestAnimationFrame(() => {
-    document.body.classList.add('visible');
-    const title = document.getElementById('title');
-    if (title) title.classList.add('pulse');
-  });
+  // Affiche titre et logo
+  document.body.classList.add('visible');
 
-  // vérification fond ADN
+  // Vérification fond ADN
   const bgCheck = new Image();
   bgCheck.onload = () => {};
   bgCheck.onerror = () => document.body.classList.add('no-image');
   bgCheck.src = 'assets/bg-dna.jpg';
 
-  // vérification logo PNG
+  // Vérification logo PNG
   const logoPath = 'assets/logo.png';
   const logoTest = new Image();
   logoTest.onload = () => {
@@ -24,7 +20,4 @@ window.addEventListener('DOMContentLoaded', () => {
     if (logoImg) logoImg.style.display = 'none';
   };
   logoTest.src = logoPath;
-});
-window.addEventListener('DOMContentLoaded', () => {
-  document.body.classList.add('visible'); // déclenche les transitions
 });
