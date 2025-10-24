@@ -15,40 +15,44 @@
 
   <!-- Section Héros -->
   <section id="hero">
-    <canvas id="starfield"></canvas>
+    <canvas id="starfield" aria-hidden="true"></canvas>
 
     <header id="topbar">
       <img id="logo-img" src="logo.png" alt="Logo PULSE-53" />
     </header>
 
-    <div id="overlay">
+    <div id="overlay" class="parallax-layer" data-speed="0.22">
       <h1 id="title">PULSE-53</h1>
       <p id="subtitle">Une exploration visuelle du p53 — pulsations, particules et ADN en mouvement.</p>
     </div>
 
-    <img src="silhouette.png" id="silhouette" alt="biologiste regardant le ciel" />
+    <img src="silhouette.png" id="silhouette" alt="biologiste regardant le ciel" class="parallax-layer" data-speed="0.6" />
+
+    <button id="goInfo" aria-label="Voir les informations">En savoir plus ↑</button>
   </section>
 
   <!-- Section Informations -->
-  <main id="info">
-    <div class="section">
+  <main id="content">
+    <section class="card" id="about">
       <h2>À propos</h2>
       <p>Créateur : Bryan Maison — <a href="mailto:maisonbryan92@gmail.com">maisonbryan92@gmail.com</a></p>
       <p>PULSE-53 est né d'une idée inspirée par l'éléphant, la tortue et l'axolotl — mémoire, longévité et régénération.</p>
-    </div>
+    </section>
 
-    <div class="section">
-      <h2>Modélisation 3D — p53</h2>
-      <div id="p53-container"></div>
-      <p>Faites pivoter la protéine avec votre souris 🧬</p>
-    </div>
+    <section class="card" id="what-you-see">
+      <h2>Ce que vous voyez</h2>
+      <ul>
+        <li>Logo PNG animé.</li>
+        <li>Ciel étoilé avec dégradé et silhouette de biologiste.</li>
+      </ul>
+    </section>
 
-    <div class="section">
+    <section class="card">
       <h2>Contact</h2>
       <p>Email : <a href="mailto:maisonbryan92@gmail.com">maisonbryan92@gmail.com</a></p>
-    </div>
+    </section>
 
-    <footer class="section small">
+    <footer class="card small">
       <p>© Bryan Maison — Inspiré par l'éléphant, la tortue et l'axolotl</p>
     </footer>
   </main>
