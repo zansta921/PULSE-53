@@ -25,3 +25,6 @@ window.addEventListener('DOMContentLoaded', () => {
   };
   logoTest.src = logoPath;
 });
+window.addEventListener('DOMContentLoaded', () => {
+  document.body.classList.add('visible'); // déclenche les transitions
+});
