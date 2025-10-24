@@ -12,7 +12,7 @@ window.addEventListener('DOMContentLoaded', () => {
   bgCheck.src = 'assets/bg-dna.jpg';
 
   // Vérification logo PNG
-  const logoPath = 'assets/logo.png';
+  const logoPath = 'logo.png';
   const logoTest = new Image();
   logoTest.onload = () => {
     const logoWrap = document.getElementById('logo');
