@@ -4,7 +4,7 @@
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width,initial-scale=1" />
   <title>PULSE-53 — Bryan Maison</title>
-  <link rel="stylesheet" href="./styles.css" />
+  <link rel="stylesheet" href="styles.css" />
 </head>
 <body>
   <div id="hero">
@@ -12,8 +12,8 @@
 
     <header id="topbar">
       <div id="logo" aria-hidden="true">
-        <!-- Logo externe si présent -->
-       <img id="logo-img" src="assets/logo.png" alt="logo PULSE-53" class="logo-fluo" />
+        <!-- Logo externe -->
+        <img id="logo-img" src="assets/logo.png" alt="logo PULSE-53" class="logo-fluo" onerror="this.style.display='none';" />
         <!-- SVG fallback -->
         <svg id="logo-svg" viewBox="0 0 200 200" width="72" height="72" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Logo Bryan Maison">
           <defs>
@@ -48,8 +48,8 @@
     <section class="card">
       <h2>Ce que vous voyez</h2>
       <ul>
-        <li>Fond fixe (image d'ADN si uploadée dans assets/bg-dna.jpg).</li>
-        <li>Logo fluorescent (assets/logo.png si présent, sinon SVG fallback).</li>
+        <li>Fond fixe (image d'ADN si uploadée dans <code>assets/bg-dna.jpg</code>).</li>
+        <li>Logo fluorescent (<code>assets/logo.png</code> si présent, sinon SVG fallback).</li>
       </ul>
     </section>
 
@@ -63,6 +63,6 @@
     </footer>
   </main>
 
-  <script type="module" src="./script.js"></script>
+  <script type="module" src="script.js"></script>
 </body>
 </html>
