@@ -1,40 +1,29 @@
 <!doctype html>
 <html lang="fr">
 <head>
-  <meta charset="utf-8" />
-  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
   <title>PULSE-53 — Bryan Maison</title>
-  <link rel="stylesheet" href="styles.css" />
+  <link rel="stylesheet" href="styles.css">
 </head>
 <body>
+  <!-- Animation de lancement -->
+  <div id="launch-screen">
+    <div class="loader">PULSE-53</div>
+  </div>
+
   <div id="hero">
     <div class="hero-bg" aria-hidden="true"></div>
 
     <header id="topbar">
-      <div id="logo" aria-hidden="true">
-        <!-- Logo PNG optionnel -->
-        <img id="logo-img" src="assets/logo.png" alt="logo PULSE-53" class="logo-fluo" onerror="this.style.display='none';" />
-        <!-- SVG fallback -->
-        <svg id="logo-svg" viewBox="0 0 200 200" width="72" height="72" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Logo Bryan Maison">
-          <defs>
-            <radialGradient id="g" cx="30%" cy="30%">
-              <stop offset="0%" stop-color="#9fffd6"/>
-              <stop offset="50%" stop-color="#12ffff"/>
-              <stop offset="100%" stop-color="#004b3a"/>
-            </radialGradient>
-          </defs>
-          <circle cx="100" cy="100" r="62" fill="url(#g)" opacity="0.18"/>
-          <g fill="#cffff0" transform="translate(56,46)">
-            <path d="M40 0 L70 0 Q95 0 95 22 Q95 36 80 44 Q95 52 95 76 Q95 98 70 98 L40 98 Q17 98 17 76 L17 22 Q17 0 40 0 Z" fill="#b7fff0" opacity="0.95"/>
-          </g>
-        </svg>
+      <div id="logo">
+        <img id="logo-img" src="assets/logo.png" alt="logo PULSE-53" class="logo-fluo" />
       </div>
     </header>
 
     <div id="overlay">
       <h1 id="title">PULSE-53</h1>
       <p id="subtitle">Une exploration visuelle du p53 — pulsations, particules et ADN en mouvement.</p>
-      <div id="scroll-hint">⤓ Descendre</div>
     </div>
   </div>
 
