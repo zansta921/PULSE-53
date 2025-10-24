@@ -4,6 +4,26 @@
   --muted:#ffffffcc;
 }
 
+#overlay {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  z-index: 10; /* toujours au-dessus du bg */
+  text-align: center;
+  color: #fff;
+}
+
+#title {
+  font-size: 3rem;
+  opacity: 0;
+  transition: opacity 0.8s ease;
+}
+
+body.visible #title {
+  opacity: 1;
+}
+
 /* Base */
 *{box-sizing:border-box}
 html,body{height:100%;margin:0;background:var(--bg);color:#fff;font-family:Inter,Arial,Helvetica,sans-serif}
