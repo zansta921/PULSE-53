@@ -1,73 +1,58 @@
 <!DOCTYPE html>
 <html lang="fr">
 <head>
-<meta charset="UTF-8" />
-<meta name="viewport" content="width=device-width, initial-scale=1.0" />
-<title>PULSE-53 — Bryan Maison</title>
-<link rel="stylesheet" href="styles.css" />
-<link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@700&display=swap" rel="stylesheet">
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>PULSE-53 — Bryan Maison</title>
+  <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@700&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="styles.css" />
 </head>
 <body>
+  <!-- Écran de lancement -->
   <div id="launch-screen">
     <div class="loader">PULSE-53</div>
   </div>
 
-  <div id="hero">
-    <!-- Ciel étoilé canvas (plein écran) -->
+  <!-- Section Héros -->
+  <section id="hero">
     <canvas id="starfield"></canvas>
 
-    <!-- Logo PNG -->
     <header id="topbar">
-      <div id="logo">
-        <img id="logo-img" src="logo.png" alt="logo PULSE-53">
-      </div>
+      <img id="logo-img" src="logo.png" alt="Logo PULSE-53" />
     </header>
 
-    <!-- Titre et sous-titre -->
-    <div id="overlay" class="parallax-layer" data-speed="0.2">
+    <div id="overlay">
       <h1 id="title">PULSE-53</h1>
       <p id="subtitle">Une exploration visuelle du p53 — pulsations, particules et ADN en mouvement.</p>
     </div>
 
-    <!-- Zone 3D (p53) -->
-    <div id="p53-wrapper" title="Cliquer & glisser pour faire tourner la protéine">
-      <canvas id="p53-canvas"></canvas>
-    </div>
+    <img src="silhouette.png" id="silhouette" alt="biologiste regardant le ciel" />
+  </section>
 
-    <!-- Silhouette -->
-    <img src="silhouette.png" id="silhouette" alt="biologiste regardant le ciel" class="parallax-layer" data-speed="0.6">
-
-    <!-- CTA pour monter / aller aux informations -->
-    <button id="goInfo" aria-label="Voir les informations">En savoir plus ↑</button>
-  </div>
-
-  <main id="content">
-    <section id="info-top" class="card">
+  <!-- Section Informations -->
+  <main id="info">
+    <div class="section">
       <h2>À propos</h2>
       <p>Créateur : Bryan Maison — <a href="mailto:maisonbryan92@gmail.com">maisonbryan92@gmail.com</a></p>
       <p>PULSE-53 est né d'une idée inspirée par l'éléphant, la tortue et l'axolotl — mémoire, longévité et régénération.</p>
-    </section>
+    </div>
 
-    <section id="info-body" class="card">
-      <h2>Ce que vous voyez</h2>
-      <ul>
-        <li>Logo PNG animé.</li>
-        <li>Ciel étoilé avec dégradé et silhouette de biologiste.</li>
-        <li>Protéine 3D interactive (p53) — clique et fais tourner.</li>
-      </ul>
-    </section>
+    <div class="section">
+      <h2>Modélisation 3D — p53</h2>
+      <div id="p53-container"></div>
+      <p>Faites pivoter la protéine avec votre souris 🧬</p>
+    </div>
 
-    <section class="card">
+    <div class="section">
       <h2>Contact</h2>
       <p>Email : <a href="mailto:maisonbryan92@gmail.com">maisonbryan92@gmail.com</a></p>
-    </section>
+    </div>
 
-    <footer class="card small">
+    <footer class="section small">
       <p>© Bryan Maison — Inspiré par l'éléphant, la tortue et l'axolotl</p>
     </footer>
   </main>
 
-  <!-- script.js en module -->
   <script type="module" src="script.js"></script>
 </body>
 </html>
