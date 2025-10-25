@@ -1,39 +1,37 @@
 <!DOCTYPE html>
 <html lang="fr">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>PULSE-53 — Bryan Maison</title>
-  <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@700&display=swap" rel="stylesheet" />
-  <link rel="stylesheet" href="styles.css" />
+  <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="styles.css">
 </head>
 <body>
-  <!-- Écran de lancement -->
+
+  <!-- Loader -->
   <div id="launch-screen">
     <div class="loader">PULSE-53</div>
   </div>
 
-  <!-- Section Héros -->
+  <!-- Hero -->
   <section id="hero">
-    <canvas id="starfield" aria-hidden="true"></canvas>
-
+    <canvas id="starfield"></canvas>
     <header id="topbar">
-      <img id="logo-img" src="logo.png" alt="Logo PULSE-53" />
+      <img id="logo-img" src="logo.png" alt="Logo PULSE-53">
     </header>
-
-    <div id="overlay" class="parallax-layer" data-speed="0.22">
+    <div id="overlay">
       <h1 id="title">PULSE-53</h1>
       <p id="subtitle">Une exploration visuelle du p53 — pulsations, particules et ADN en mouvement.</p>
     </div>
-
-    <img src="silhouette.png" id="silhouette" alt="biologiste regardant le ciel" class="parallax-layer" data-speed="0.6" />
-
+    <img src="silhouette.png" id="silhouette" alt="biologiste regardant le ciel">
     <button id="goInfo" aria-label="Voir les informations">En savoir plus ↑</button>
   </section>
-<!-- Canvas de transition -->
-<canvas id="transition-canvas" aria-hidden="true"></canvas>
 
-  <!-- Section Informations -->
+  <!-- Transition full screen -->
+  <canvas id="transition-canvas"></canvas>
+
+  <!-- Contenu principal -->
   <main id="content">
     <section class="card" id="about">
       <h2>À propos</h2>
@@ -46,6 +44,7 @@
       <ul>
         <li>Logo PNG animé.</li>
         <li>Ciel étoilé avec dégradé et silhouette de biologiste.</li>
+        <li>Transition aléatoire et dégradée vers le contenu principal.</li>
       </ul>
     </section>
 
