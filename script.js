@@ -1,17 +1,53 @@
 window.addEventListener('DOMContentLoaded', () => {
   // Cache loader
+  const launch = document.getElementById('launch-screen');
+  const virusCanvas = document.getElementById('virus-animation');
+  const vCtx = virusCanvas.getContext('2d');
+  virusCanvas.width = window.innerWidth;
+  virusCanvas.height = window.innerHeight;
+
+  let veins = [];
+  for(let i=0;i<50;i++){
+    veins.push({
+      x: window.innerWidth/2,
+      y: window.innerHeight/2,
+      dx:(Math.random()-0.5)*3,
+      dy:(Math.random()-0.5)*3,
+      len:Math.random()*50+30,
+      alpha: Math.random()*0.5+0.3
+    });
+  }
+
+  function drawVeins(){
+    vCtx.clearRect(0,0,virusCanvas.width,virusCanvas.height);
+    veins.forEach(v=>{
+      v.x += v.dx;
+      v.y += v.dy;
+      vCtx.strokeStyle = `rgba(18,255,255,${v.alpha})`;
+      vCtx.lineWidth = 2;
+      vCtx.beginPath();
+      vCtx.moveTo(v.x,v.y);
+      vCtx.lineTo(v.x-v.dx*v.len, v.y-v.dy*v.len);
+      vCtx.stroke();
+      // rebond
+      if(v.x<0||v.x>virusCanvas.width) v.dx*=-1;
+      if(v.y<0||v.y>virusCanvas.height) v.dy*=-1;
+    });
+    requestAnimationFrame(drawVeins);
+  }
+  drawVeins();
+
   setTimeout(()=>{
-    const launch = document.getElementById('launch-screen');
-    if(launch) launch.style.display = 'none';
-  }, 900);
+    launch.style.transition = 'opacity 1s ease';
+    launch.style.opacity = 0;
+    setTimeout(()=>launch.style.display='none',1000);
+  },2000);
 
   // Starfield
   const canvas = document.getElementById('starfield');
   const ctx = canvas.getContext('2d');
-  let W = 0, H = 0;
-  function resize() { W = canvas.width = window.innerWidth; H = canvas.height = window.innerHeight; }
-  window.addEventListener('resize', resize);
-  resize();
+  let W = window.innerWidth, H = window.innerHeight;
+  canvas.width = W; canvas.height = H;
 
   const stars = [];
   for(let i=0; i<200; i++){
@@ -50,7 +86,7 @@ window.addEventListener('DOMContentLoaded', () => {
   }
   parallaxLoop();
 
-  // Scroll button vers slider
+  // Scroll vers slider
   document.getElementById('goSlider').addEventListener('click', ()=>{
     const sliderPos = document.getElementById('cell-slider').offsetTop;
     window.scrollTo({ top: sliderPos, behavior:'smooth' });
@@ -62,34 +98,12 @@ window.addEventListener('DOMContentLoaded', () => {
   let canSlide = true;
 
   function updateSlides() {
-    slides.forEach((s, i) => {
-      s.classList.remove('active', 'prev', 'next');
-      if(i === current) s.classList.add('active');
-      if(i === current - 1) s.classList.add('prev');
-      if(i === current + 1) s.classList.add('next');
+    slides.forEach((s,i)=>{
+      s.classList.remove('active','prev','next');
+      if(i===current) s.classList.add('active');
+      if(i===current-1) s.classList.add('prev');
+      if(i===current+1) s.classList.add('next');
     });
   }
 
-  function throttleSlide(callback) {
-    if(!canSlide) return;
-    canSlide = false;
-    callback();
-    setTimeout(()=> canSlide = true, 1600); // 1.6s entre slides
-  }
-
-  document.querySelector('.nav.next').addEventListener('click', () => {
-    throttleSlide(() => {
-      current = (current + 1) % slides.length;
-      updateSlides();
-    });
-  });
-
-  document.querySelector('.nav.prev').addEventListener('click', () => {
-    throttleSlide(() => {
-      current = (current - 1 + slides.length) % slides.length;
-      updateSlides();
-    });
-  });
-
-  updateSlides();
-});
+  function throttleSlide
