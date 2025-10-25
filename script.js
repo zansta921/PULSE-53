@@ -54,4 +54,56 @@ window.addEventListener('DOMContentLoaded', () => {
   document.getElementById('goInfo').addEventListener('click', ()=>{
     window.scrollTo({ top: window.innerHeight - 30, behavior:'smooth' });
   });
-});
+});// Transition refined
+const transitionCanvas = document.getElementById('transition-canvas');
+const tCtx = transitionCanvas.getContext('2d');
+function resizeTransition() {
+  transitionCanvas.width = window.innerWidth;
+  transitionCanvas.height = 300; // zone de transition
+}
+window.addEventListener('resize', resizeTransition);
+resizeTransition();
+
+// Générer des carrés aléatoires
+const squares = [];
+const cols = 40; // nombre de colonnes
+const rows = 10; // nombre de lignes
+const squareWidth = transitionCanvas.width / cols;
+const squareHeight = transitionCanvas.height / rows;
+
+for (let x = 0; x < cols; x++) {
+  for (let y = 0; y < rows; y++) {
+    squares.push({
+      x: x * squareWidth,
+      y: y * squareHeight,
+      width: squareWidth,
+      height: squareHeight,
+      alpha: 1,
+      speed: Math.random() * 0.015 + 0.005 // vitesse disparition
+    });
+  }
+}
+
+// Animation
+function animateTransition() {
+  tCtx.clearRect(0, 0, transitionCanvas.width, transitionCanvas.height);
+
+  squares.forEach(s => {
+    // Réduire alpha
+    s.alpha -= s.speed;
+    if (s.alpha < 0) s.alpha = 0;
+
+    // Dégradé plus raffiné
+    const grd = tCtx.createLinearGradient(s.x, s.y, s.x + s.width, s.y + s.height);
+    grd.addColorStop(0, `rgba(18,255,255,${s.alpha * 0.1})`);
+    grd.addColorStop(1, `rgba(0, 180, 166,${s.alpha * 0.3})`);
+
+    tCtx.fillStyle = grd;
+    tCtx.fillRect(s.x, s.y, s.width, s.height);
+  });
+
+  requestAnimationFrame(animateTransition);
+}
+animateTransition();
+
+
