@@ -11,7 +11,7 @@ window.addEventListener('DOMContentLoaded', () => {
       const offsetX = (Math.random() - 0.5) * 6;
       const offsetY = (Math.random() - 0.5) * 6;
       this.points = [{x: x + offsetX, y: y + offsetY}];
-      this.maxPoints = 30 + Math.floor(Math.random() * 60); // plus rapide
+      this.maxPoints = 30 + Math.floor(Math.random() * 60);
       this.color = `rgba(18,255,255,${0.3 + Math.random() * 0.4})`;
       this.finished = false;
     }
@@ -19,7 +19,7 @@ window.addEventListener('DOMContentLoaded', () => {
       if (this.finished) return;
       const last = this.points[this.points.length - 1];
       const angle = Math.random() * Math.PI * 2;
-      const len = 15 + Math.random() * 15; // croissance rapide
+      const len = 15 + Math.random() * 15;
       const nx = last.x + Math.cos(angle) * len;
       const ny = last.y + Math.sin(angle) * len;
       this.points.push({x: nx, y: ny});
@@ -99,7 +99,7 @@ window.addEventListener('DOMContentLoaded', () => {
     window.scrollTo({top:sliderPos,behavior:'smooth'});
   });
 
-  /* =================== Slider tunnel =================== */
+  /* =================== Slider tunnel centré =================== */
   const slides=document.querySelectorAll('#cell-slider .slide');
   let current=0, canSlide=true;
   function updateSlides(){
@@ -109,8 +109,16 @@ window.addEventListener('DOMContentLoaded', () => {
       if(i===current-1||(current===0&&i===slides.length-1)) s.classList.add('prev');
       if(i===current+1||(current===slides.length-1&&i===0)) s.classList.add('next');
     });
+
+    // Centrer la slide active
+    const slider = document.getElementById('cell-slider');
+    const activeSlide = slides[current];
+    const sliderWidth = slider.offsetWidth;
+    const slideWidth = activeSlide.offsetWidth;
+    const offset = activeSlide.offsetLeft + slideWidth / 2 - sliderWidth / 2;
+    slider.scrollTo({ left: offset, behavior: 'smooth' });
   }
-  function throttleSlide(cb){if(!canSlide) return; canSlide=false; cb(); setTimeout(()=>canSlide=true,700);}
+  function throttleSlide(cb){ if(!canSlide) return; canSlide=false; cb(); setTimeout(()=>canSlide=true,700);}
   document.querySelector('.nav.next').addEventListener('click',()=>throttleSlide(()=>{current=(current+1)%slides.length;updateSlides();}));
   document.querySelector('.nav.prev').addEventListener('click',()=>throttleSlide(()=>{current=(current-1+slides.length)%slides.length;updateSlides();}));
   updateSlides();
