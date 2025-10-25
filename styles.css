@@ -57,7 +57,7 @@ a { color:var(--cyan); text-decoration:none; }
 }
 
 .slide {
-  flex: 0 0 45%; /* plus large */
+  flex: 0 0 45%;
   margin:0 15px;
   background: #111;
   border-radius:18px;
@@ -121,5 +121,5 @@ main#content { padding:40px 20px; max-width:1000px; margin:0 auto; position:rela
   #title { font-size:3.2rem; }
   #silhouette { height:44%; }
   #goSlider { bottom:4vh; }
-  .slide { font-size:2rem; flex:0 0 70%; }
+  .slide { font-size:2rem; flex:0 0 70%; margin:0 8px; }
 }
