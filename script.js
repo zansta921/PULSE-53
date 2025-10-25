@@ -59,6 +59,8 @@ window.addEventListener('DOMContentLoaded', () => {
   // Slider Tunnel
   const slides = document.querySelectorAll('#cell-slider .slide');
   let current = 0;
+  let canSlide = true;
+
   function updateSlides() {
     slides.forEach((s, i) => {
       s.classList.remove('active', 'prev', 'next');
@@ -68,14 +70,25 @@ window.addEventListener('DOMContentLoaded', () => {
     });
   }
 
+  function throttleSlide(callback) {
+    if(!canSlide) return;
+    canSlide = false;
+    callback();
+    setTimeout(()=> canSlide = true, 1600); // 1.6s entre slides
+  }
+
   document.querySelector('.nav.next').addEventListener('click', () => {
-    current = (current + 1) % slides.length;
-    updateSlides();
+    throttleSlide(() => {
+      current = (current + 1) % slides.length;
+      updateSlides();
+    });
   });
 
   document.querySelector('.nav.prev').addEventListener('click', () => {
-    current = (current - 1 + slides.length) % slides.length;
-    updateSlides();
+    throttleSlide(() => {
+      current = (current - 1 + slides.length) % slides.length;
+      updateSlides();
+    });
   });
 
   updateSlides();
