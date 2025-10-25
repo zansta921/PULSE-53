@@ -11,9 +11,9 @@ html,body { height:100%; font-family:var(--title-font); background:var(--bg); co
 a { color:var(--cyan); text-decoration:none; }
 
 /* Loader */
-#launch-screen { position:fixed; inset:0; background:#000; display:flex; justify-content:center; align-items:center; z-index:9999; }
-.loader { font-size:3rem; color:var(--cyan); letter-spacing:0.2em; animation:loaderPulse 1.5s infinite alternate; }
-@keyframes loaderPulse { 0%{text-shadow:0 0 8px var(--cyan);} 100%{text-shadow:0 0 20px var(--cyan);} }
+#launch-screen { position:fixed; inset:0; background:#000; display:flex; justify-content:center; align-items:center; z-index:9999; overflow:hidden; }
+.loader { font-size:3rem; color:var(--cyan); letter-spacing:0.2em; position:relative; }
+#virus-animation { position:absolute; top:50%; left:50%; transform:translate(-50%, -50%); pointer-events:none; z-index:5; }
 
 /* Héros */
 #hero { position:relative; height:100vh; overflow:hidden; }
@@ -50,15 +50,15 @@ a { color:var(--cyan); text-decoration:none; }
 
 .slider-container {
   display:flex;
-  transition: transform 1.5s ease-in-out;
+  transition: transform 0.8s ease-in-out;
   height:70%;
   perspective:1500px;
-  justify-content:center; /* centrer les slides */
+  justify-content:center;
 }
 
 .slide {
-  flex: 0 0 30%;
-  margin:0 10px;
+  flex: 0 0 45%; /* plus large */
+  margin:0 15px;
   background: #111;
   border-radius:18px;
   display:flex;
@@ -67,23 +67,29 @@ a { color:var(--cyan); text-decoration:none; }
   font-size:3rem;
   color:#fff;
   text-align:center;
-  transform: translateZ(0) scale(0.85);
+  transform: translateZ(0) scale(0.85) rotateY(0deg);
   opacity:0.7;
-  transition: all 1.2s ease-in-out;
+  transition: all 0.6s ease-in-out;
   box-shadow:0 6px 30px rgba(0,0,0,0.4);
 }
 
 .slide.active {
   background:#fff;
   color:#000;
-  transform: translateZ(80px) scale(1);
+  transform: translateZ(80px) scale(1) rotateY(0deg);
   opacity:1;
 }
 
-.slide.prev, .slide.next {
+.slide.prev {
   background: linear-gradient(to right, #111, #eee);
   color:#000;
-  transform: translateZ(-30px) rotateY(10deg);
+  transform: translateZ(-30px) scale(0.85) rotateY(15deg);
+}
+
+.slide.next {
+  background: linear-gradient(to right, #111, #eee);
+  color:#000;
+  transform: translateZ(-30px) scale(0.85) rotateY(-15deg);
 }
 
 .nav {
@@ -115,5 +121,5 @@ main#content { padding:40px 20px; max-width:1000px; margin:0 auto; position:rela
   #title { font-size:3.2rem; }
   #silhouette { height:44%; }
   #goSlider { bottom:4vh; }
-  .slide { font-size:2rem; flex: 0 0 70%; }
+  .slide { font-size:2rem; flex:0 0 70%; }
 }
