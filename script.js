@@ -106,4 +106,15 @@ window.addEventListener('DOMContentLoaded', () => {
     });
   }
 
-  function throttleSlide
+  function throttleSlide(callback){
+    if(!canSlide) return;
+    canSlide = false;
+    callback();
+    setTimeout(()=> canSlide=true,900); // transition rapide
+  }
+
+  document.querySelector('.nav.next').addEventListener('click',()=>throttleSlide(()=>{current=(current+1)%slides.length;updateSlides();}));
+  document.querySelector('.nav.prev').addEventListener('click',()=>throttleSlide(()=>{current=(current-1+slides.length)%slides.length;updateSlides();}));
+
+  updateSlides();
+});
