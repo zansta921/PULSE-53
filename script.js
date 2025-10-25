@@ -1,41 +1,43 @@
 window.addEventListener('DOMContentLoaded', () => {
-  /* ========== Ecran de lancement fluide veines ========== */
+  /* ========== Écran de lancement : veines organiques rapides ========== */
   const launch = document.getElementById('launch-screen');
   const virusCanvas = document.getElementById('virus-animation');
   virusCanvas.width = window.innerWidth;
   virusCanvas.height = window.innerHeight;
   const vCtx = virusCanvas.getContext('2d');
 
-  const titleEl = document.getElementById('title');
-  const rect = titleEl.getBoundingClientRect();
-  const padding = 10;
+  const loaderText = document.querySelector('#launch-screen .loader');
+  const rect = loaderText.getBoundingClientRect();
   const halo = {
-    xMin: rect.left - padding,
-    xMax: rect.right + padding,
-    yMin: rect.top - padding,
-    yMax: rect.bottom + padding
+    xMin: rect.left - 5,
+    xMax: rect.right + 5,
+    yMin: rect.top - 5,
+    yMax: rect.bottom + 5
   };
 
-  class VeineFluid {
+  class Veine {
     constructor() {
+      // Départ autour du halo
       const edge = Math.random() < 0.5 ? 'horizontal' : 'vertical';
       let x = edge==='horizontal' ? halo.xMin + Math.random()*(halo.xMax-halo.xMin)
                                   : (Math.random()<0.5 ? halo.xMin-1 : halo.xMax+1);
       let y = edge==='horizontal' ? (Math.random()<0.5 ? halo.yMin-1 : halo.yMax+1)
                                   : halo.yMin + Math.random()*(halo.yMax-halo.yMin);
       this.x=x; this.y=y;
-      this.vx=(Math.random()-0.5)*10;
-      this.vy=(Math.random()-0.5)*10;
-      this.radius=3+Math.random()*4;
+      this.vx=(Math.random()-0.5)*12; // propagation rapide
+      this.vy=(Math.random()-0.5)*12;
+      this.radius=2+Math.random()*3;
       this.alpha=0.3+Math.random()*0.5;
       this.finished=false;
     }
     move() {
       this.x+=this.vx; this.y+=this.vy;
+      // Dévier si le halo est touché
       if(this.x>halo.xMin && this.x<halo.xMax && this.y>halo.yMin && this.y<halo.yMax){
-        this.x+=this.vx>0?10:-10; this.y+=this.vy>0?10:-10;
+        this.x+=this.vx>0?10:-10;
+        this.y+=this.vy>0?10:-10;
       }
-      if(this.x<0||this.x>virusCanvas.width||this.y<0||this.y>virusCanvas.height) this.finished=true;
+      if(this.x<0 || this.x>virusCanvas.width || this.y<0 || this.y>virusCanvas.height) this.finished=true;
     }
     draw(ctx){
       ctx.fillStyle=`rgba(18,255,255,${this.alpha})`;
@@ -46,24 +48,23 @@ window.addEventListener('DOMContentLoaded', () => {
   }
 
   const veines=[];
-  for(let i=0;i<120;i++) veines.push(new VeineFluid());
+  for(let i=0;i<100;i++) veines.push(new Veine());
 
-  function animateFluid(){
-    vCtx.fillStyle='rgba(0,0,0,0.05)';
-    vCtx.fillRect(0,0,virusCanvas.width,virusCanvas.height);
+  function animateVeines(){
+    vCtx.clearRect(0,0,virusCanvas.width,virusCanvas.height);
     let allFinished=true;
     veines.forEach(v=>{
       if(!v.finished){v.move(); allFinished=false;}
       v.draw(vCtx);
     });
-    if(!allFinished) requestAnimationFrame(animateFluid);
+    if(!allFinished) requestAnimationFrame(animateVeines);
     else{
-      launch.style.transition='opacity 1s ease';
+      launch.style.transition='opacity 0.8s ease';
       launch.style.opacity=0;
-      setTimeout(()=>launch.style.display='none',1000);
+      setTimeout(()=>launch.style.display='none',800);
     }
   }
-  animateFluid();
+  animateVeines();
 
   /* ========== Starfield ========== */
   const canvas=document.getElementById('starfield');
@@ -118,7 +119,7 @@ window.addEventListener('DOMContentLoaded', () => {
       if(i===current+1||(current===slides.length-1&&i===0)) s.classList.add('next');
     });
   }
-  function throttleSlide(cb){ if(!canSlide) return; canSlide=false; cb(); setTimeout(()=>canSlide=true,900); }
+  function throttleSlide(cb){ if(!canSlide) return; canSlide=false; cb(); setTimeout(()=>canSlide=true,700); }
   document.querySelector('.nav.next').addEventListener('click',()=>throttleSlide(()=>{current=(current+1)%slides.length;updateSlides();}));
   document.querySelector('.nav.prev').addEventListener('click',()=>throttleSlide(()=>{current=(current-1+slides.length)%slides.length;updateSlides();}));
   updateSlides();
