@@ -38,7 +38,7 @@ a { color:var(--cyan); text-decoration:none; }
 
 /* Slider tunnel */
 #cell-slider { position:relative; display:flex; justify-content:center; align-items:center; perspective:1500px; margin:50px 0; overflow:hidden; }
-#cell-slider .slide { min-width:300px; width:50%; margin:0 15px; background:#111; color:#fff; padding:40px; border-radius:20px; text-align:center; transform-origin:center center; transition:transform 0.9s ease, background 0.9s ease, color 0.9s ease; }
+#cell-slider .slide { min-width:300px; width:50%; margin:0 15px; background:#111; color:#fff; padding:40px; border-radius:20px; text-align:center; transform-origin:center center; transition:transform 0.7s ease, background 0.7s ease, color 0.7s ease; }
 #cell-slider .slide.prev { transform:rotateY(30deg) translateX(-50%) scale(0.8); background:#111; color:#888; }
 #cell-slider .slide.next { transform:rotateY(-30deg) translateX(50%) scale(0.8); background:#111; color:#888; }
 #cell-slider .slide.active { transform:rotateY(0deg) scale(1); background:#fff; color:#000; }
