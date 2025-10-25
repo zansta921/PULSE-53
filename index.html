@@ -17,23 +17,29 @@
   <!-- Section Héros -->
   <section id="hero">
     <canvas id="starfield" aria-hidden="true"></canvas>
+
     <header id="topbar">
       <img id="logo-img" src="logo.png" alt="Logo PULSE-53" />
     </header>
+
     <div id="overlay" class="parallax-layer" data-speed="0.22">
       <h1 id="title">PULSE-53</h1>
       <p id="subtitle">Une exploration visuelle du p53 — pulsations, particules et ADN en mouvement.</p>
     </div>
+
     <img src="silhouette.png" id="silhouette" alt="biologiste regardant le ciel" class="parallax-layer" data-speed="0.6" />
+
     <button id="goSlider" aria-label="Voir les informations">En savoir plus ↑</button>
   </section>
 
   <!-- Slider tunnel -->
-  <section id="cell-slider">
-    <div class="slide active">Slide 1</div>
-    <div class="slide">Slide 2</div>
-    <div class="slide">Slide 3</div>
+  <section id="cell-slider-container">
     <button class="nav prev">‹</button>
+    <div id="cell-slider">
+      <div class="slide active">Slide 1</div>
+      <div class="slide">Slide 2</div>
+      <div class="slide">Slide 3</div>
+    </div>
     <button class="nav next">›</button>
   </section>
 
