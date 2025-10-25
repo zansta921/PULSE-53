@@ -1,72 +1,68 @@
 window.addEventListener('DOMContentLoaded', () => {
-  /* ========== Écran de lancement : veines organiques rapides ========== */
+  /* =================== Écran de lancement : veines organiques =================== */
   const launch = document.getElementById('launch-screen');
   const virusCanvas = document.getElementById('virus-animation');
+  const vCtx = virusCanvas.getContext('2d');
   virusCanvas.width = window.innerWidth;
   virusCanvas.height = window.innerHeight;
-  const vCtx = virusCanvas.getContext('2d');
-
-  const loaderText = document.querySelector('#launch-screen .loader');
-  const rect = loaderText.getBoundingClientRect();
-  const halo = {
-    xMin: rect.left - 5,
-    xMax: rect.right + 5,
-    yMin: rect.top - 5,
-    yMax: rect.bottom + 5
-  };
 
   class Veine {
-    constructor() {
-      // Départ autour du halo
-      const edge = Math.random() < 0.5 ? 'horizontal' : 'vertical';
-      let x = edge==='horizontal' ? halo.xMin + Math.random()*(halo.xMax-halo.xMin)
-                                  : (Math.random()<0.5 ? halo.xMin-1 : halo.xMax+1);
-      let y = edge==='horizontal' ? (Math.random()<0.5 ? halo.yMin-1 : halo.yMax+1)
-                                  : halo.yMin + Math.random()*(halo.yMax-halo.yMin);
-      this.x=x; this.y=y;
-      this.vx=(Math.random()-0.5)*12; // propagation rapide
-      this.vy=(Math.random()-0.5)*12;
-      this.radius=2+Math.random()*3;
-      this.alpha=0.3+Math.random()*0.5;
-      this.finished=false;
+    constructor(x, y) {
+      const offsetX = (Math.random() - 0.5) * 6;
+      const offsetY = (Math.random() - 0.5) * 6;
+      this.points = [{x: x + offsetX, y: y + offsetY}];
+      this.maxPoints = 30 + Math.floor(Math.random() * 60); // plus rapide
+      this.color = `rgba(18,255,255,${0.3 + Math.random() * 0.4})`;
+      this.finished = false;
     }
-    move() {
-      this.x+=this.vx; this.y+=this.vy;
-      // Dévier si le halo est touché
-      if(this.x>halo.xMin && this.x<halo.xMax && this.y>halo.yMin && this.y<halo.yMax){
-        this.x+=this.vx>0?10:-10;
-        this.y+=this.vy>0?10:-10;
+    grow() {
+      if (this.finished) return;
+      const last = this.points[this.points.length - 1];
+      const angle = Math.random() * Math.PI * 2;
+      const len = 15 + Math.random() * 15; // croissance rapide
+      const nx = last.x + Math.cos(angle) * len;
+      const ny = last.y + Math.sin(angle) * len;
+      this.points.push({x: nx, y: ny});
+      if(this.points.length > this.maxPoints || nx<0 || nx>virusCanvas.width || ny<0 || ny>virusCanvas.height){
+        this.finished = true;
       }
-      if(this.x<0 || this.x>virusCanvas.width || this.y<0 || this.y>virusCanvas.height) this.finished=true;
     }
-    draw(ctx){
-      ctx.fillStyle=`rgba(18,255,255,${this.alpha})`;
+    draw(ctx) {
+      ctx.strokeStyle = this.color;
+      ctx.lineWidth = 2;
       ctx.beginPath();
-      ctx.arc(this.x,this.y,this.radius,0,Math.PI*2);
-      ctx.fill();
+      ctx.moveTo(this.points[0].x, this.points[0].y);
+      for(let i=1;i<this.points.length;i++){
+        const midX = (this.points[i-1].x + this.points[i].x)/2;
+        const midY = (this.points[i-1].y + this.points[i].y)/2;
+        ctx.quadraticCurveTo(this.points[i-1].x,this.points[i-1].y,midX,midY);
+      }
+      ctx.stroke();
     }
   }
 
-  const veines=[];
-  for(let i=0;i<100;i++) veines.push(new Veine());
+  const veines = [];
+  const originX = window.innerWidth/2;
+  const originY = window.innerHeight/2;
+  for(let i=0;i<100;i++) veines.push(new Veine(originX, originY));
 
-  function animateVeines(){
+  function animateVeines() {
     vCtx.clearRect(0,0,virusCanvas.width,virusCanvas.height);
-    let allFinished=true;
-    veines.forEach(v=>{
-      if(!v.finished){v.move(); allFinished=false;}
+    let allFinished = true;
+    veines.forEach(v => {
+      if(!v.finished) { v.grow(); allFinished=false; }
       v.draw(vCtx);
     });
-    if(!allFinished) requestAnimationFrame(animateVeines);
-    else{
-      launch.style.transition='opacity 0.8s ease';
+    requestAnimationFrame(animateVeines);
+    if(allFinished) {
+      launch.style.transition='opacity 0.5s ease';
       launch.style.opacity=0;
-      setTimeout(()=>launch.style.display='none',800);
+      setTimeout(()=>launch.style.display='none',500);
     }
   }
   animateVeines();
 
-  /* ========== Starfield ========== */
+  /* =================== Starfield =================== */
   const canvas=document.getElementById('starfield');
   const ctx=canvas.getContext('2d');
   let W=window.innerWidth,H=window.innerHeight;
@@ -75,40 +71,35 @@ window.addEventListener('DOMContentLoaded', () => {
   for(let i=0;i<200;i++) stars.push({x:Math.random()*W,y:Math.random()*H,r:Math.random()*1.5+0.5,alpha:Math.random(),speed:0.05+Math.random()*0.1});
   function drawStars(){
     ctx.clearRect(0,0,W,H);
-    stars.forEach(s=>{
+    for(let s of stars){
       s.y+=s.speed; if(s.y>H) s.y=0;
       ctx.fillStyle=`rgba(18,255,255,${s.alpha})`;
-      ctx.beginPath();
-      ctx.arc(s.x,s.y,s.r,0,Math.PI*2);
-      ctx.fill();
-    });
+      ctx.beginPath(); ctx.arc(s.x,s.y,s.r,0,Math.PI*2); ctx.fill();
+    }
     requestAnimationFrame(drawStars);
   }
   drawStars();
 
-  /* ========== Parallax ========== */
+  /* =================== Parallax =================== */
   const layers=Array.from(document.querySelectorAll('.parallax-layer'));
   function parallaxLoop(){
-    const sc=window.scrollY, vh=window.innerHeight;
+    const sc=window.scrollY,vh=window.innerHeight;
     layers.forEach(el=>{
       const speed=parseFloat(el.dataset.speed||'0.3');
-      if(el.id==='overlay'){
-        el.style.transform=`translate(-50%,-50%) translateY(${sc*speed}px)`;
-      }else{
-        el.style.transform=`translateX(-50%) translateY(${sc*speed}px)`;
-      }
+      if(el.id==='overlay'){ el.style.transform=`translate(-50%,-50%) translateY(${sc*speed}px)`; }
+      else{ el.style.transform=`translateX(-50%) translateY(${sc*speed}px)`; }
     });
     requestAnimationFrame(parallaxLoop);
   }
   parallaxLoop();
 
-  /* ========== Scroll vers slider ========== */
+  /* =================== Scroll vers slider =================== */
   document.getElementById('goSlider').addEventListener('click',()=>{
     const sliderPos=document.getElementById('cell-slider').offsetTop;
-    window.scrollTo({top:sliderPos, behavior:'smooth'});
+    window.scrollTo({top:sliderPos,behavior:'smooth'});
   });
 
-  /* ========== Slider tunnel ========== */
+  /* =================== Slider tunnel =================== */
   const slides=document.querySelectorAll('#cell-slider .slide');
   let current=0, canSlide=true;
   function updateSlides(){
@@ -119,7 +110,7 @@ window.addEventListener('DOMContentLoaded', () => {
       if(i===current+1||(current===slides.length-1&&i===0)) s.classList.add('next');
     });
   }
-  function throttleSlide(cb){ if(!canSlide) return; canSlide=false; cb(); setTimeout(()=>canSlide=true,700); }
+  function throttleSlide(cb){if(!canSlide) return; canSlide=false; cb(); setTimeout(()=>canSlide=true,700);}
   document.querySelector('.nav.next').addEventListener('click',()=>throttleSlide(()=>{current=(current+1)%slides.length;updateSlides();}));
   document.querySelector('.nav.prev').addEventListener('click',()=>throttleSlide(()=>{current=(current-1+slides.length)%slides.length;updateSlides();}));
   updateSlides();
