@@ -11,9 +11,24 @@ html,body { height:100%; font-family:var(--title-font); background:var(--bg); co
 a { color:var(--cyan); text-decoration:none; }
 
 /* Loader */
+/* Loader */
 #launch-screen { position:fixed; inset:0; background:#000; display:flex; justify-content:center; align-items:center; z-index:9999; overflow:hidden; }
 #virus-animation { position:absolute; top:0; left:0; width:100%; height:100%; pointer-events:none; z-index:1; }
-.loader { position:relative; z-index:2; font-size:3rem; color:var(--cyan); letter-spacing:0.2em; }
+.loader { 
+  position:relative; 
+  z-index:2; 
+  font-size:3rem; 
+  color:var(--cyan); 
+  letter-spacing:0.2em; 
+  /* contour noir */
+  text-shadow:
+    -2px -2px 0 #000,
+    2px -2px 0 #000,
+    -2px 2px 0 #000,
+    2px 2px 0 #000,
+    0px 0px 6px var(--cyan); /* léger halo cyan */
+}
+
 
 /* Héros */
 #hero { position:relative; height:100vh; overflow:hidden; }
