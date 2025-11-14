@@ -8,13 +8,13 @@
   <link rel="stylesheet" href="styles.css" />
 </head>
 <body>
-  <!-- Loader -->
+  <!-- Écran de lancement -->
   <div id="launch-screen">
     <canvas id="virus-animation"></canvas>
     <div class="loader">PULSE-53</div>
   </div>
 
-  <!-- Hero -->
+  <!-- Section Héros -->
   <section id="hero">
     <canvas id="starfield" aria-hidden="true"></canvas>
     <header id="topbar">
@@ -28,24 +28,22 @@
     <button id="goSlider" aria-label="Voir les informations">En savoir plus ↑</button>
   </section>
 
-  <!-- SECTION ADN ANIMAUX : sur fond sobre révélable -->
+  <!-- SECTION ADN ANIMAUX (alignés sur fond étoilé + uni) -->
   <section id="section-animaux">
-    <div class="animaux-bg"></div>
+    <canvas id="canvas-adn-bg"></canvas>
+    <div class="fond-sobre"></div>
     <div class="venom-mask"></div>
     <div class="adn-animaux-horizontal">
-      <!-- ADN 1 : Eléphant -->
       <div class="bloc-adn-animal">
         <canvas class="canvas-adn-animal" id="adn-elephant"></canvas>
         <div class="animal-svg small" id="elephant-svg"></div>
         <div class="adn-nom" id="nom-elephant"></div>
       </div>
-      <!-- ADN 2 : Tortue -->
       <div class="bloc-adn-animal">
         <canvas class="canvas-adn-animal" id="adn-turtle"></canvas>
         <div class="animal-svg small" id="turtle-svg"></div>
         <div class="adn-nom" id="nom-turtle"></div>
       </div>
-      <!-- ADN 3 : Axolotl -->
       <div class="bloc-adn-animal">
         <canvas class="canvas-adn-animal" id="adn-axolotl"></canvas>
         <div class="animal-svg small" id="axolotl-svg"></div>
@@ -53,7 +51,6 @@
       </div>
     </div>
   </section>
-  <!-- Fin section ADN animaux -->
 
   <!-- Slider tunnel -->
   <section id="cell-slider">
@@ -77,7 +74,7 @@
       <ul>
         <li>Logo PNG animé.</li>
         <li>Ciel étoilé avec dégradé et silhouette de biologiste.</li>
-        <li>ADN hélices animées alignées horizontalement + animaux réalistes + fond sobre révélé style virus Venom.</li>
+        <li>ADN hélices animées alignées horizontalement + animaux réalistes + fond sobre révélé style venom.</li>
       </ul>
     </section>
 
