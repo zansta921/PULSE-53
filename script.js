@@ -123,50 +123,7 @@ window.addEventListener('DOMContentLoaded', () => {
   document.querySelector('.nav.prev').addEventListener('click',()=>throttleSlide(()=>{current=(current-1+slides.length)%slides.length;updateSlides();}));
   updateSlides();
 
-  // ========== NOUVELLE SECTION : ADN animaux + reveal/fumée/venom ==========
-
-  // Smoke animation
-  function animateSmoke(canvasId) {
-    const c = document.getElementById(canvasId);
-    if (!c) return;
-    let W = c.width = c.offsetWidth || window.innerWidth, H = c.height = c.offsetHeight || 340;
-    const ctx = c.getContext('2d');
-    let particles = [];
-    for (let i = 0; i < 36; ++i) {
-      particles.push({
-        x: Math.random() * W,
-        y: Math.random() * H,
-        r: 48 + Math.random() * 56,
-        alpha: 0.08 + Math.random() * 0.15,
-        dx: -0.4 + Math.random() * 0.8,
-        dy: 0.15 + Math.random() * 0.4,
-        freq: Math.random() * 2 * Math.PI
-      })
-    }
-    function smokeLoop() {
-      ctx.clearRect(0, 0, W, H);
-      for (let p of particles) {
-        p.x += p.dx + 0.36 * Math.sin(performance.now() * 0.0006 + p.freq);
-        p.y += p.dy + 0.1 * Math.cos(performance.now() * 0.0005 + p.freq);
-        if (p.x > W + 50) p.x = -30;
-        if (p.x < -60) p.x = W + 34;
-        if (p.y > H + 45) { p.y = -15; p.x = Math.random() * W; }
-        ctx.save();
-        let grad = ctx.createRadialGradient(p.x, p.y, 6, p.x, p.y, p.r);
-        grad.addColorStop(0, '#e9f4ff33');
-        grad.addColorStop(1, 'rgba(20,34,54,0)');
-        ctx.globalAlpha = p.alpha;
-        ctx.beginPath();
-        ctx.arc(p.x, p.y, p.r, 0, Math.PI * 2);
-        ctx.fillStyle = grad;
-        ctx.fill();
-        ctx.restore();
-      }
-      requestAnimationFrame(smokeLoop);
-    }
-    smokeLoop();
-  }
-  animateSmoke('adn-animals-smoke');
+  // ===== NO SMOKE: ADN animations and SVG animals =====
 
   // Anim ADN: double hélice animée
   function animateADN(canvasId, color = "#12ffff") {
@@ -245,26 +202,4 @@ window.addEventListener('DOMContentLoaded', () => {
   svgAnimal("elephant-svg", "elephant");
   svgAnimal("turtle-svg", "turtle");
   svgAnimal("axolotl-svg", "axolotl");
-
-  // V E N O M : reveal mask/virus
-  function updateAdnReveal() {
-    const section = document.getElementById('adn-animals-section');
-    const reveal = document.getElementById('adn-animals-reveal');
-    const mask = document.getElementById('adn-animals-virus-mask');
-    if (!section || !reveal || !mask) return;
-
-    const rect = section.getBoundingClientRect();
-    const wh = window.innerHeight;
-    const show = rect.top < wh * 0.55 && rect.bottom > wh * 0.39;
-    // Show/Hide content and animate mask
-    if (show) {
-      reveal.classList.add('reveal-visible');
-      mask.classList.add('virus-gone');
-    } else {
-      reveal.classList.remove('reveal-visible');
-      mask.classList.remove('virus-gone');
-    }
-  }
-  window.addEventListener('scroll', updateAdnReveal);
-  setTimeout(updateAdnReveal, 750);
 });
