@@ -3,67 +3,58 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>PULSE-53 — Biologie & Espace</title>
+  <title>PULSE-53 — Biologie Moléculaire & Espace</title>
   <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@700&display=swap" rel="stylesheet" />
   <link rel="stylesheet" href="styles.css" />
 </head>
 <body>
   <main id="scroll-container">
     <!-- Section 0 : Hero, molécule + ADN animé + fond spatial -->
-    <section class="section hero-section" data-bg="hero">
-      <canvas id="bgSpaceHero"></canvas>
-      <div id="webgl-hero"></div>
+    <section class="section hero-section" id="section-hero">
+      <canvas id="canvas-hero-bg"></canvas>
+      <canvas id="canvas-hero-adn"></canvas>
       <div class="vapor-layer"></div>
       <div class="virus-layer"></div>
     </section>
-
-    <!-- Section 1 : Eléphant + ADN -->
-    <section class="section animal-section" data-bg="elephant">
-      <canvas id="bgSpaceElephant"></canvas>
-      <div class="adn-animal" id="adn-elephant"></div>
+    <!-- Section Eléphant -->
+    <section class="section animal-section elephant-bg" id="section-elephant">
+      <canvas class="canvas-bg-animal" id="canvas-elephant-bg"></canvas>
       <div class="animal-svg" id="elephant-svg"></div>
+      <canvas class="canvas-adn-animal" id="canvas-elephant-adn"></canvas>
       <div class="vapor-layer"></div>
       <div class="virus-layer"></div>
     </section>
-
-    <!-- Section 2 : Tortue + ADN -->
-    <section class="section animal-section" data-bg="turtle">
-      <canvas id="bgSpaceTurtle"></canvas>
-      <div class="adn-animal" id="adn-turtle"></div>
+    <!-- Section Tortue -->
+    <section class="section animal-section turtle-bg" id="section-turtle">
+      <canvas class="canvas-bg-animal" id="canvas-turtle-bg"></canvas>
       <div class="animal-svg" id="turtle-svg"></div>
+      <canvas class="canvas-adn-animal" id="canvas-turtle-adn"></canvas>
       <div class="vapor-layer"></div>
       <div class="virus-layer"></div>
     </section>
-
-    <!-- Section 3 : Axolotl + ADN -->
-    <section class="section animal-section" data-bg="axolotl">
-      <canvas id="bgSpaceAxolotl"></canvas>
-      <div class="adn-animal" id="adn-axolotl"></div>
+    <!-- Section Axolotl -->
+    <section class="section animal-section axolotl-bg" id="section-axolotl">
+      <canvas class="canvas-bg-animal" id="canvas-axolotl-bg"></canvas>
       <div class="animal-svg" id="axolotl-svg"></div>
+      <canvas class="canvas-adn-animal" id="canvas-axolotl-adn"></canvas>
       <div class="vapor-layer"></div>
       <div class="virus-layer"></div>
     </section>
-
     <!-- À propos -->
-    <section class="section about-section" data-bg="about">
+    <section class="section about-section" id="section-about">
       <div class="card about">
         <p>PULSE-53, biologie moléculaire et régénération dans l’espace.</p>
         <p>Par Bryan Maison</p>
       </div>
     </section>
-
     <!-- Contact & Footer -->
-    <section class="section contact-section" data-bg="contact">
+    <section class="section contact-section" id="section-contact">
       <div class="card contact">
         <p>Email : <a href="mailto:maisonbryan92@gmail.com">maisonbryan92@gmail.com</a></p>
         <p>© Bryan Maison - projet biologie moléculaire spatiale</p>
       </div>
     </section>
   </main>
-  <!-- Three.js / GSAP for webgl/scroll -->
-  <script src="https://unpkg.com/three@0.155.0/build/three.min.js"></script>
-  <script src="https://unpkg.com/gsap@3.12.5/dist/gsap.min.js"></script>
-  <script src="https://unpkg.com/gsap@3.12.5/dist/ScrollTrigger.min.js"></script>
-  <script type="module" src="script.js"></script>
+  <script src="script.js"></script>
 </body>
 </html>
