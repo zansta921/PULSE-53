@@ -1,84 +1,101 @@
 :root {
   --cyan: #12ffff;
   --green: #46e696;
-  --purple: #c85cff;
-  --space: #000019;
-  --hero-gradient: linear-gradient(110deg, #02c7ec 0%, #1f0856 90%);
-  --elephant-gradient: linear-gradient(120deg, #19ffda 0%, #0d2755 90%);
+  --purple: #df74ef;
+  --space: #05041a;
+  --hero-gradient: linear-gradient(117deg, #02c7ec 0%, #1f0856 87%);
+  --elephant-gradient: linear-gradient(120deg, #19ffe0 0%, #0d2755 100%);
   --turtle-gradient: linear-gradient(120deg, #2aff81 0%, #003930 100%);
   --axolotl-gradient: linear-gradient(120deg, #df74ef 0%, #391c63 100%);
-  --font-title: 'Orbitron', sans-serif;
+  --font-title: 'Orbitron', Arial, sans-serif;
 }
 
-body, html {
-  margin: 0; padding: 0;
+html, body {
+  height:100%; min-height:100vh;
+  margin:0; padding:0;
+  font-family: var(--font-title);
+  color: #fff;
   background: var(--space);
-  font-family: var(--font-title), Arial, sans-serif;
-  color: #fff; min-height:100vh;
   overflow: hidden;
 }
+
 #scroll-container {
   width: 100vw; height: 100vh;
-  overflow: hidden;
+  overflow: auto;
+  scroll-behavior: smooth;
+  scroll-snap-type: y mandatory;
 }
 
 .section {
-  position: relative; width: 100vw; height: 100vh;
+  position: relative;
+  width: 100vw; min-height: 100vh; height: 100vh;
   display: flex; align-items: center; justify-content: center;
-  z-index: 1; scroll-snap-align: start;
+  scroll-snap-align: start;
   overflow: hidden;
+  z-index: 1;
 }
 
-.hero-section { background: var(--hero-gradient);}
-.animal-section[data-bg="elephant"] { background: var(--elephant-gradient);}
-.animal-section[data-bg="turtle"] { background: var(--turtle-gradient);}
-.animal-section[data-bg="axolotl"] { background: var(--axolotl-gradient);}
-.about-section { background: var(--space);}
-.contact-section { background: var(--space);}
+.hero-section {
+  background: var(--hero-gradient);
+}
+
+.elephant-bg {
+  background: var(--elephant-gradient);
+}
+.turtle-bg {
+  background: var(--turtle-gradient);
+}
+.axolotl-bg {
+  background: var(--axolotl-gradient);
+}
 
 .card {
-  background: rgba(0,0,0,0.6);
-  border-radius: 16px; box-shadow: 0 8px 40px #0197e733;
-  padding: 32px 38px; max-width: 440px; margin: auto; text-align: center;
-  font-size: 1.25rem; z-index: 10; color: #fff;
-}
-
-.adn-animal, #webgl-hero {
-  width: 600px; height: 600px; max-width:90vw; max-height:80vh;
-  position: absolute; left: 50%; top: 51%;
-  transform: translate(-50%, -50%);
-  z-index: 5;
-  pointer-events: none;
+  background: rgba(0,0,0,0.7);
+  border-radius: 16px;
+  box-shadow: 0 10px 40px #0197e733;
+  padding: 32px 44px; 
+  max-width: 470px;
+  margin: auto;
+  text-align: center;
+  font-size: 1.3rem;
+  z-index:10;
+  color: #fff;
 }
 
 .animal-svg {
-  position: absolute; left: 60%; top: 45%;
-  width: 310px; height: 310px; max-width: 44vw; max-height: 44vh;
+  position: absolute;
+  left: 65%; top: 56%;
+  width: 320px; height: 320px; max-width: 48vw; max-height: 48vh;
   transform: translate(-50%, -50%) scale(1);
   z-index: 7;
   pointer-events: none;
 }
 
-/* Responsive */
-@media(max-width:900px) {
-  .adn-animal, #webgl-hero { width: 95vw; height: 95vw; }
-  .animal-svg { width: 34vw; height: 34vw;}
-  .card { font-size: 1rem;}
+.canvas-bg-animal, .canvas-adn-animal,
+#canvas-hero-bg, #canvas-hero-adn {
+  position: absolute;
+  left: 50%; top: 52%;
+  width: 660px; height: 660px; max-width:96vw; max-height:85vh;
+  transform: translate(-50%, -50%);
+  z-index: 5;
+  pointer-events: none;
+  background: transparent;
 }
 
-/* Effets vapor, virus, overlays */
 .vapor-layer, .virus-layer {
-  position: absolute; inset: 0; pointer-events: none;
-  z-index: 3;
+  position: absolute; inset: 0;
+  pointer-events: none;
   mix-blend-mode: lighten;
+  z-index: 4;
 }
 
-/* Scroll sections vertical fluide */
-#scroll-container { 
-  overflow-y: scroll;
-  height: 100vh;
-  scroll-snap-type: y mandatory;
-  scroll-behavior: smooth;
+.about-section, .contact-section { background: var(--space); }
+.contact-section a { color: var(--cyan); text-decoration:none; }
+
+@media(max-width:900px) {
+  .animal-svg, .canvas-bg-animal, .canvas-adn-animal {
+    width: 33vw; height: 33vw; min-width:210px; min-height:210px; }
+  .card { font-size: 1rem; padding: 18px 10px; }
 }
 
-.section { min-height: 100vh; scroll-snap-align: start;}
+::-webkit-scrollbar { width:0px; }
