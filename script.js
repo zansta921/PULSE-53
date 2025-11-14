@@ -1,250 +1,54 @@
 window.addEventListener('DOMContentLoaded', () => {
-  // =================== Écran de lancement : veines organiques ===================
-  const launch = document.getElementById('launch-screen');
-  const virusCanvas = document.getElementById('virus-animation');
-  const vCtx = virusCanvas.getContext('2d');
-  virusCanvas.width = window.innerWidth;
-  virusCanvas.height = window.innerHeight;
-  class Veine {
-    constructor(x, y) {
-      const offsetX = (Math.random() - 0.5) * 6;
-      const offsetY = (Math.random() - 0.5) * 6;
-      this.points = [{x: x + offsetX, y: y + offsetY}];
-      this.maxPoints = 30 + Math.floor(Math.random() * 60);
-      this.color = `rgba(18,255,255,${0.3 + Math.random() * 0.4})`;
-      this.finished = false;
-    }
-    grow() {
-      if (this.finished) return;
-      const last = this.points[this.points.length - 1];
-      const angle = Math.random() * Math.PI * 2;
-      const len = 15 + Math.random() * 15;
-      const nx = last.x + Math.cos(angle) * len;
-      const ny = last.y + Math.sin(angle) * len;
-      this.points.push({x: nx, y: ny});
-      if(this.points.length > this.maxPoints || nx<0 || nx>virusCanvas.width || ny<0 || ny>virusCanvas.height){
-        this.finished = true;
-      }
-    }
-    draw(ctx) {
-      ctx.strokeStyle = this.color;
-      ctx.lineWidth = 2;
-      ctx.beginPath();
-      ctx.moveTo(this.points[0].x, this.points[0].y);
-      for(let i=1;i<this.points.length;i++){
-        const midX = (this.points[i-1].x + this.points[i].x)/2;
-        const midY = (this.points[i-1].y + this.points[i].y)/2;
-        ctx.quadraticCurveTo(this.points[i-1].x,this.points[i-1].y,midX,midY);
-      }
-      ctx.stroke();
-    }
-  }
-  const veines = [];
-  const originX = window.innerWidth/2;
-  const originY = window.innerHeight/2;
-  for(let i=0;i<100;i++) veines.push(new Veine(originX, originY));
-  function animateVeines() {
-    vCtx.clearRect(0,0,virusCanvas.width,virusCanvas.height);
-    let allFinished = true;
-    veines.forEach(v => {
-      if(!v.finished) { v.grow(); allFinished=false; }
-      v.draw(vCtx);
-    });
-    requestAnimationFrame(animateVeines);
-    if(allFinished) {
-      launch.style.transition='opacity 0.5s ease';
-      launch.style.opacity=0;
-      setTimeout(()=>launch.style.display='none',500);
-    }
-  }
-  animateVeines();
+  // ... TES AUTRES SCRIPTS (loader, étoilé, slider, parallax, etc.) ...
 
-  // =================== Starfield ===================
-  const canvas=document.getElementById('starfield');
-  const ctx=canvas.getContext('2d');
-  let W=window.innerWidth,H=window.innerHeight;
-  canvas.width=W; canvas.height=H;
-  const stars=[];
-  for(let i=0;i<200;i++) stars.push({x:Math.random()*W,y:Math.random()*H,r:Math.random()*1.5+0.5,alpha:Math.random(),speed:0.05+Math.random()*0.1});
-  function drawStars(){
-    ctx.clearRect(0,0,W,H);
-    for(let s of stars){
-      s.y+=s.speed; if(s.y>H) s.y=0;
-      ctx.fillStyle=`rgba(18,255,255,${s.alpha})`;
-      ctx.beginPath(); ctx.arc(s.x,s.y,s.r,0,Math.PI*2); ctx.fill();
-    }
-    requestAnimationFrame(drawStars);
-  }
-  drawStars();
-
-  // =================== Parallax ===================
-  const layers=Array.from(document.querySelectorAll('.parallax-layer'));
-  function parallaxLoop(){
-    const sc=window.scrollY;
-    layers.forEach(el=>{
-      const speed=parseFloat(el.dataset.speed||'0.3');
-      if(el.id==='overlay'){ el.style.transform=`translate(-50%,-50%) translateY(${sc*speed}px)`; }
-      else{ el.style.transform=`translateX(-50%) translateY(${sc*speed}px)`; }
-    });
-    requestAnimationFrame(parallaxLoop);
-  }
-  parallaxLoop();
-
-  // =================== Scroll vers slider ===================
-  const goSlider = document.getElementById('goSlider');
-  if(goSlider) {
-    goSlider.addEventListener('click',()=>{
-      const sliderPos=document.getElementById('cell-slider').offsetTop;
-      window.scrollTo({top:sliderPos,behavior:'smooth'});
-    });
-  }
-
-  // =================== Slider tunnel centré ===================
-  const slides=document.querySelectorAll('#cell-slider .slide');
-  let current=0, canSlide=true;
-  function updateSlides(){
-    slides.forEach((s,i)=>{
-      s.classList.remove('active','prev','next');
-      if(i===current) s.classList.add('active');
-      if(i===current-1||(current===0&&i===slides.length-1)) s.classList.add('prev');
-      if(i===current+1||(current===slides.length-1&&i===0)) s.classList.add('next');
-    });
-    // Centrer la slide active
-    const slider = document.getElementById('cell-slider');
-    const activeSlide = slides[current];
-    const sliderWidth = slider.offsetWidth;
-    const slideWidth = activeSlide.offsetWidth;
-    const offset = activeSlide.offsetLeft + slideWidth / 2 - sliderWidth / 2;
-    slider.scrollTo({ left: offset, behavior: 'smooth' });
-  }
-  function throttleSlide(cb){ if(!canSlide) return; canSlide=false; cb(); setTimeout(()=>canSlide=true,700);}
-  document.querySelector('.nav.next').addEventListener('click',()=>throttleSlide(()=>{current=(current+1)%slides.length;updateSlides();}));
-  document.querySelector('.nav.prev').addEventListener('click',()=>throttleSlide(()=>{current=(current-1+slides.length)%slides.length;updateSlides();}));
-  updateSlides();
-
-  // =================== Animations ADN ANIMAUX + SVG ===================
-  // Starfield background for animal sections
-  function starfield(bgCanvasId, color1, color2){
-    const c = document.getElementById(bgCanvasId);
-    if(!c) return;
-    const ctx = c.getContext("2d");
-    let W = c.width = c.offsetWidth||window.innerWidth, H = c.height = c.offsetHeight||window.innerHeight;
-    const stars = [];
-    for(let i=0;i<180;i++){
-      stars.push({
-        x:Math.random()*W, y:Math.random()*H,
-        r:Math.random()*1.6+0.5,
-        alpha: 0.65 + Math.random()*0.28,
-        color: (i<110)?color1:color2,
-        speed: 0.08+Math.random()*0.17
-      });
-    }
-    function loop(){
-      ctx.clearRect(0,0,W,H);
-      let g = ctx.createLinearGradient(W/2,0,W/2,H);
-      g.addColorStop(0,color1); g.addColorStop(1,color2); ctx.fillStyle = g;
-      ctx.fillRect(0,0,W,H);
-      for(let s of stars){
-        s.y+=s.speed; if(s.y>H)s.y=0;
-        ctx.save(); ctx.globalAlpha=s.alpha; ctx.beginPath();
-        ctx.arc(s.x,s.y,s.r,0,Math.PI*2);
-        ctx.fillStyle=s.color;
-        ctx.shadowColor=s.color;
-        ctx.shadowBlur=26;
-        ctx.fill();
-        ctx.restore();
-      }
-      requestAnimationFrame(loop);
-    }
-    loop();
-  }
-  starfield("canvas-elephant-bg","#18f3b4","#128091");
-  starfield("canvas-turtle-bg","#45e696","#07906c");
-  starfield("canvas-axolotl-bg","#df74ef","#391c63");
-
-  function vaporAndVirus(layer) {
-    if(!layer) return;
-    const canvas = document.createElement("canvas");
-    canvas.width = window.innerWidth;
-    canvas.height = window.innerHeight;
-    layer.appendChild(canvas);
-    const ctx = canvas.getContext("2d");
-    const cloud = [];
-    for(let i=0;i<80;i++) {
-      cloud.push({
-        x:Math.random()*canvas.width,
-        y:Math.random()*canvas.height,
-        dx:(Math.random()-0.5)*1.5,
-        dy:(Math.random()*3.0)+0.6,
-        r:Math.random()*9+3,
-        alpha: 0.11 + Math.random()*0.13,
-        color: ["#12ffff","#45e696","#df74ef","#afd8e6"][Math.floor(Math.random()*4)]
-      });
-    }
-    function render() {
-      ctx.clearRect(0,0,canvas.width,canvas.height);
-      for(let p of cloud){
-        p.y+=p.dy; p.x+=p.dx;
-        if(p.y>canvas.height){p.y=0; p.x=Math.random()*canvas.width;}
-        if(p.x>canvas.width) p.x=0;
-        ctx.save(); ctx.globalAlpha=p.alpha; ctx.beginPath();
-        ctx.arc(p.x,p.y,p.r,0,Math.PI*2); ctx.fillStyle=p.color;
-        ctx.shadowColor=p.color; ctx.shadowBlur=20; ctx.fill(); ctx.restore();
-      }
-      requestAnimationFrame(render);
-    }
-    render();
-  }
-  document.querySelectorAll(".vapor-layer").forEach(l=>vaporAndVirus(l));
-  document.querySelectorAll(".virus-layer").forEach(l=>vaporAndVirus(l));
-
-  function animateADN(canvasId,color="#12ffff"){
+  // SECTION ADN ANIMAUX - Si besoin, tu peux retirer le vapor/virus layers ici !
+  // Anim ADN canvas
+  function animateADN(canvasId,color){
     const c = document.getElementById(canvasId);
     if(!c) return;
-    let W = c.width = c.offsetWidth||520, H = c.height = c.offsetHeight||520;
+    let W = c.width = c.offsetWidth||130, H = c.height = c.offsetHeight||130;
     const ctx = c.getContext("2d");
-    const helixTurns=5, segs=120, helixRadius=W/8, centerY=H/2;
+    const helixTurns=5, segs=120, helixRadius=W/5, centerY=H/2;
     let tAnim=0;
     function draw(){
       ctx.clearRect(0,0,W,H);
       tAnim += 0.018;
-      // Double hélice
       for(let s=0;s<2;s++){
         ctx.save();
         ctx.strokeStyle = color;
         ctx.shadowColor = color;
-        ctx.shadowBlur = 16;
-        ctx.lineWidth=11-(s*4);
-        ctx.globalAlpha= 0.39+s*0.34;
+        ctx.shadowBlur = 10;
+        ctx.lineWidth=7-(s*3.5);
+        ctx.globalAlpha= 0.42+s*0.37;
         ctx.beginPath();
         for(let i=0;i<=segs;i++){
           const t = i/segs*Math.PI*helixTurns+tAnim+(s?Math.PI:0);
           let x=W/2+Math.cos(t)*helixRadius;
-          let y=centerY+(i/segs-0.5)*W*0.77 + Math.sin(t*0.4+tAnim)*14*(1.3+s*0.28);
+          let y=centerY+(i/segs-0.5)*W*0.83 + Math.sin(t*0.3+tAnim)*8*(1.3+s*0.18);
           if(i==0) ctx.moveTo(x,y); else ctx.lineTo(x,y);
         }
         ctx.stroke();
         ctx.restore();
       }
-      // Barres base-pairs
+      // Ponts
       for(let i=0;i<segs;i+=8){
         let t=i/segs*Math.PI*helixTurns+tAnim;
-        let y=centerY+(i/segs-0.5)*W*0.77;
+        let y=centerY+(i/segs-0.5)*W*0.83;
         let x1=W/2+Math.cos(t)*helixRadius;
         let x2=W/2+Math.cos(t+Math.PI)*helixRadius;
         ctx.save();
-        ctx.strokeStyle=color; ctx.globalAlpha=0.48;
-        ctx.lineWidth=2.4;
+        ctx.strokeStyle=color; ctx.globalAlpha=0.46;
+        ctx.lineWidth=1.7;
         ctx.beginPath(); ctx.moveTo(x1,y); ctx.lineTo(x2,y); ctx.stroke();
         ctx.restore();
       }
-      // Sphere molécule centrale animée
+      // Sphere molécule
       ctx.save();
       ctx.beginPath();
-      ctx.arc(W/2,centerY,helixRadius*1.11+Math.sin(tAnim)*11,0,Math.PI*2);
+      ctx.arc(W/2,centerY,helixRadius*0.67+Math.sin(tAnim)*6,0,Math.PI*2);
       ctx.shadowColor=color;
-      ctx.shadowBlur=40+Math.abs(Math.sin(tAnim)*120);
-      ctx.globalAlpha=0.17 + 0.13*Math.abs(Math.sin(tAnim*0.59));
+      ctx.shadowBlur=21+Math.abs(Math.sin(tAnim)*40);
+      ctx.globalAlpha=0.19 + 0.14*Math.abs(Math.sin(tAnim*0.76));
       ctx.fillStyle=color;
       ctx.fill();
       ctx.restore();
@@ -252,19 +56,56 @@ window.addEventListener('DOMContentLoaded', () => {
     }
     draw();
   }
-  animateADN("canvas-elephant-adn","#24f8a7");
-  animateADN("canvas-turtle-adn","#45e696");
-  animateADN("canvas-axolotl-adn","#df74ef");
+  animateADN("adn-elephant","#24f8a7");
+  animateADN("adn-turtle","#45e696");
+  animateADN("adn-axolotl","#df74ef");
 
+  // SVG animaux réalistes (petits + glow)
   function svgAnimal(containerId, animal) {
     const div = document.getElementById(containerId);
     let color = "#12ffff", svg="";
-    if(animal==="elephant"){color="#24f8a7"; svg=`<svg viewBox="0 0 320 320" width="100%" height="100%"><path d="M30 210 Q80 110 185 95 Q276 90 253 198 Q260 142 176 130 Q162 176 217 200 Q159 217 125 192 Q90 165 139 175 Q89 159 48 170 Q60 200 160 225 Q140 200 60 215 Q44 190 35 220 Z" fill="black" stroke="${color}" stroke-width="9" filter="url(#glow)"/><defs><filter id="glow"><feGaussianBlur stdDeviation="7" result="coloredBlur"/><feMerge><feMergeNode in="coloredBlur"/><feMergeNode in="SourceGraphic"/></feMerge></filter></defs></svg>`;}
-    else if(animal==="turtle"){color="#45e696"; svg=`<svg viewBox="0 0 320 320" width="100%" height="100%"><ellipse cx="148" cy="190" rx="80" ry="48" fill="black" stroke="${color}" stroke-width="9" filter="url(#glow)"/><ellipse cx="148" cy="135" rx="53" ry="24" fill="black" stroke="${color}" stroke-width="7" filter="url(#glow)"/><ellipse cx="94" cy="190" rx="15" ry="24" fill="black" stroke="${color}" stroke-width="5" filter="url(#glow)"/><ellipse cx="198" cy="190" rx="15" ry="24" fill="black" stroke="${color}" stroke-width="5" filter="url(#glow)"/><ellipse cx="148" cy="220" rx="22" ry="18" fill="black" stroke="${color}" stroke-width="5" filter="url(#glow)"/><ellipse cx="148" cy="110" rx="12" ry="6" fill="black" stroke="${color}" stroke-width="4" filter="url(#glow)"/><defs><filter id="glow"><feGaussianBlur stdDeviation="7" result="coloredBlur"/><feMerge><feMergeNode in="coloredBlur"/><feMergeNode in="SourceGraphic"/></feMerge></filter></defs></svg>`;}
-    else if(animal==="axolotl"){color="#df74ef"; svg=`<svg viewBox="0 0 320 320" width="100%" height="100%"><ellipse cx="170" cy="180" rx="55" ry="48" fill="black" stroke="${color}" stroke-width="9" filter="url(#glow)"/><ellipse cx="230" cy="138" rx="17" ry="35" fill="black" stroke="${color}" stroke-width="7.5" filter="url(#glow)"/><ellipse cx="108" cy="135" rx="17" ry="28" fill="black" stroke="${color}" stroke-width="7.5" filter="url(#glow)"/><ellipse cx="205" cy="232" rx="16" ry="20" fill="black" stroke="${color}" stroke-width="5" filter="url(#glow)"/><ellipse cx="132" cy="232" rx="16" ry="20" fill="black" stroke="${color}" stroke-width="5" filter="url(#glow)"/><ellipse cx="170" cy="80" rx="18" ry="11" fill="black" stroke="${color}" stroke-width="5" filter="url(#glow)"/><defs><filter id="glow"><feGaussianBlur stdDeviation="7" result="coloredBlur"/><feMerge><feMergeNode in="coloredBlur"/><feMergeNode in="SourceGraphic"/></feMerge></filter></defs></svg>`;}
+    if(animal==="elephant"){color="#24f8a7"; svg=`<svg viewBox="0 0 120 120" width="100%" height="100%"><path d="M10 78Q30 44 92 41Q112 41 111 75Q104 68 78 61Q65 100 53 72Q69 79 93 74Q47 76 10 82Z" fill="black" stroke="${color}" stroke-width="5" filter="url(#glow)"/><defs><filter id="glow"><feGaussianBlur stdDeviation="5" result="coloredBlur"/><feMerge><feMergeNode in="coloredBlur"/><feMergeNode in="SourceGraphic"/></feMerge></filter></defs></svg>`;}
+    else if(animal==="turtle"){color="#45e696"; svg=`<svg viewBox="0 0 120 120" width="100%" height="100%"><ellipse cx="59" cy="68" rx="34" ry="22" fill="black" stroke="${color}" stroke-width="5" filter="url(#glow)"/><ellipse cx="59" cy="54" rx="23" ry="10" fill="black" stroke="${color}" stroke-width="3" filter="url(#glow)"/><defs><filter id="glow"><feGaussianBlur stdDeviation="5" result="coloredBlur"/><feMerge><feMergeNode in="coloredBlur"/><feMergeNode in="SourceGraphic"/></feMerge></filter></defs></svg>`;}
+    else if(animal==="axolotl"){color="#df74ef"; svg=`<svg viewBox="0 0 120 120" width="100%" height="100%"><ellipse cx="64" cy="70" rx="22" ry="18" fill="black" stroke="${color}" stroke-width="5" filter="url(#glow)"/><ellipse cx="90" cy="60" rx="7" ry="15" fill="black" stroke="${color}" stroke-width="3.5" filter="url(#glow)"/><ellipse cx="38" cy="60" rx="7" ry="15" fill="black" stroke="${color}" stroke-width="3.5" filter="url(#glow)"/><defs><filter id="glow"><feGaussianBlur stdDeviation="5" result="coloredBlur"/><feMerge><feMergeNode in="coloredBlur"/><feMergeNode in="SourceGraphic"/></feMerge></filter></defs></svg>`;}
     div.innerHTML=svg;
   }
   svgAnimal("elephant-svg","elephant");
   svgAnimal("turtle-svg","turtle");
   svgAnimal("axolotl-svg","axolotl");
+
+  // Titres animés pour chaque ADN
+  document.getElementById("nom-elephant").textContent = "ADN de l'Éléphant";
+  document.getElementById("nom-turtle").textContent = "ADN de la Tortue";
+  document.getElementById("nom-axolotl").textContent = "ADN de l'Axolotl";
+
+  // REVEAL FLUID MASK - GSAP + ScrollTrigger
+  gsap.registerPlugin(ScrollTrigger);
+  gsap.set(".venom-mask",{clipPath:"inset(0 0 0 0)",opacity:1});
+  gsap.set(".bloc-adn-animal",{opacity:0, y:70, scale:0.88});
+
+  ScrollTrigger.create({
+    trigger: "#section-animaux",
+    start: "top 80%",
+    end: "bottom 40%",
+    scrub: 1,
+    onUpdate: self => {
+      // slide the venom mask by scroll progress
+      let p = self.progress;
+      // mask slides up and fades (0 : masked, 1 : unmasked)
+      gsap.to(".venom-mask",{clipPath:`inset(${(1-p)*100}% 0 0 0)`,opacity:p>0.93?0:1,duration:0.2,ease:"power2.inOut"});
+      gsap.to(".bloc-adn-animal",{opacity:p>0.05?1:0.0, y:p>=0.7?0:70, scale:p>=0.7?1:0.88, stagger:0.13, duration:0.7, ease:"power2.out"});
+    }
+  });
+  // Optional: on leave back, restore mask fully
+  ScrollTrigger.create({
+    trigger:"#section-animaux",
+    start: "top top",
+    end: "top 40%",
+    scrub: 1,
+    onUpdate: self => {
+      let pb = 1-self.progress;
+      gsap.to(".venom-mask",{clipPath:`inset(0 0 ${pb*100}% 0)`, opacity: pb>0.9?1:0, duration:0.3,ease:"power2.in"});
+      gsap.to(".bloc-adn-animal",{opacity:pb>0.6?0:1, y:pb>0.6?70:0, scale:pb>0.6?0.88:1, stagger:0.14, duration:0.6, ease:"power2.inOut"});
+    }
+  });
 });
