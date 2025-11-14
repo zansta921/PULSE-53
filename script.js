@@ -1,12 +1,19 @@
-// script.js
 window.addEventListener('DOMContentLoaded', () => {
-  /* =================== Écran de lancement : veines organiques =================== */
+  /* BUG FIX : Écran de lancement responsive mobile */
   const launch = document.getElementById('launch-screen');
   const virusCanvas = document.getElementById('virus-animation');
-  const vCtx = virusCanvas && virusCanvas.getContext ? virusCanvas.getContext('2d') : null;
-  if (virusCanvas) {
+  let vCtx = virusCanvas && virusCanvas.getContext ? virusCanvas.getContext('2d') : null;
+
+  function resizeVirusCanvas() {
+    if (!virusCanvas) return;
     virusCanvas.width = window.innerWidth;
     virusCanvas.height = window.innerHeight;
+    // On doit re-centrer les veines si resize change
+    if (veines.length) {
+      veines.length = 0;
+      for (let i = 0; i < 100; i++) veines.push(new Veine(window.innerWidth/2, window.innerHeight/2));
+      allVeinesStarted = false;
+    }
   }
 
   class Veine {
@@ -26,7 +33,7 @@ window.addEventListener('DOMContentLoaded', () => {
       const nx = last.x + Math.cos(angle) * len;
       const ny = last.y + Math.sin(angle) * len;
       this.points.push({x: nx, y: ny});
-      if(this.points.length > this.maxPoints || nx<0 || nx> (virusCanvas ? virusCanvas.width : window.innerWidth) || ny<0 || ny> (virusCanvas ? virusCanvas.height : window.innerHeight)){
+      if (this.points.length > this.maxPoints || nx < 0 || nx > virusCanvas.width || ny < 0 || ny > virusCanvas.height){
         this.finished = true;
       }
     }
@@ -45,10 +52,14 @@ window.addEventListener('DOMContentLoaded', () => {
     }
   }
 
+  // bugfix mobile: veines doivent être "rafraichies" au resize
   const veines = [];
-  const originX = window.innerWidth/2;
-  const originY = window.innerHeight/2;
-  for(let i=0;i<100;i++) veines.push(new Veine(originX, originY));
+  let allVeinesStarted = false;
+  function startVeines() {
+    veines.length = 0;
+    for(let i=0;i<100;i++) veines.push(new Veine(window.innerWidth/2, window.innerHeight/2));
+    allVeinesStarted = false;
+  }
 
   function animateVeines() {
     if (vCtx && virusCanvas) {
@@ -58,7 +69,8 @@ window.addEventListener('DOMContentLoaded', () => {
         if(!v.finished) { v.grow(); allFinished=false; }
         v.draw(vCtx);
       });
-      if(allFinished) {
+      if(allFinished && !allVeinesStarted) {
+        allVeinesStarted = true;
         launch.style.transition='opacity 0.5s ease';
         launch.style.opacity=0;
         setTimeout(()=>launch.style.display='none',500);
@@ -66,6 +78,14 @@ window.addEventListener('DOMContentLoaded', () => {
     }
     requestAnimationFrame(animateVeines);
   }
+
+  // Resize support sur mobile
+  window.addEventListener('resize', function() {
+    resizeVirusCanvas();
+    vCtx = virusCanvas.getContext('2d');
+  });
+  resizeVirusCanvas();
+  startVeines();
   animateVeines();
 
   /* =================== Starfield =================== */
@@ -140,119 +160,104 @@ window.addEventListener('DOMContentLoaded', () => {
   if (prevBtn) prevBtn.addEventListener('click',()=>throttleSlide(()=>{current=(current-1+slides.length)%slides.length;updateSlides();}));
   updateSlides();
 
-  // ===== NO SMOKE: ADN animations and SVG animals =====
-
-  // Utility: setup canvas for high-DPI and given displayed size
+  // Utilitaire: setup canvas for high-DPI et responsif
   function setupCanvasForDrawing(canvasEl) {
     if(!canvasEl) return null;
     const rect = canvasEl.getBoundingClientRect();
     const DPR = Math.max(window.devicePixelRatio || 1, 1);
-    // set internal size to physical pixels
     canvasEl.width = Math.max(1, Math.round(rect.width * DPR));
     canvasEl.height = Math.max(1, Math.round(rect.height * DPR));
-    // ensure CSS size remains the same (use style)
     canvasEl.style.width = rect.width + "px";
     canvasEl.style.height = rect.height + "px";
     const ctx = canvasEl.getContext('2d');
     if(!ctx) return null;
-    // scale drawing to DPR so drawing coordinates use CSS pixels
     ctx.setTransform(DPR, 0, 0, DPR, 0, 0);
     return {ctx, W: rect.width, H: rect.height};
   }
 
-  // Anim ADN: double hélice animée (uses canvas displayed size)
-  function animateADN(canvasSelector, color = "#12ffff") {
+  // Anim ADN: plus allongé et couleurs exactes demandées
+  function animateADN(canvasSelector, color = "#12ffff", helixRadiusRatio=0.32, helixTurns=7.4) {
     const c = document.getElementById(canvasSelector);
     if (!c) return;
-    // ensure canvas is visible and sized to CSS size
-    const setup = setupCanvasForDrawing(c);
+    let setup = setupCanvasForDrawing(c);
     if (!setup) {
       console.warn('Canvas context not available for', canvasSelector);
       return;
     }
-    const ctx = setup.ctx;
+    let ctx = setup.ctx;
     let W = setup.W, H = setup.H;
-    const helixTurns = 4.7, segs = 66, helixRadius = Math.max(12, Math.min(W, H) / 4), centerY = H / 2;
+    const segs = 66;
+    let helixRadius = Math.max(10, Math.min(W, H) * helixRadiusRatio);
+    const centerY = H / 2;
     let tAnim = Math.random() * 50;
-    // handle resize: recalc on window resize or when container changes
-    function handleResize() {
-      const s = setupCanvasForDrawing(c);
-      if (!s) return;
-      W = s.W; H = s.H;
-      // update ctx reference (setup returns ctx already setTransform'ed)
-      // but we keep ctx variable referencing current context
-    }
-    window.addEventListener('resize', handleResize, {passive:true});
+
+    window.addEventListener('resize', () => {
+      setup = setupCanvasForDrawing(c);
+      if (!setup) return;
+      ctx = setup.ctx;
+      W = setup.W; H = setup.H;
+      helixRadius = Math.max(10, Math.min(W, H) * helixRadiusRatio);
+    }, {passive:true});
 
     function draw() {
-      const s = c.getContext('2d');
-      if(!s) return;
-      // get current CSS size (in case of responsive)
-      const rect = c.getBoundingClientRect();
-      W = rect.width; H = rect.height;
-      // clear scaled canvas (ctx already scaled by DPR)
-      s.clearRect(0,0,c.width, c.height);
+      ctx.clearRect(0,0, W, H);
       tAnim += 0.017;
-      // Double hélice
       for (let side = 0; side < 2; side++) {
-        s.save();
-        s.strokeStyle = color;
-        s.shadowColor = color;
-        s.shadowBlur = 10 - side * 4;
-        s.lineWidth = Math.max(1.8, 9 - (side * 3));
-        s.globalAlpha = 0.31 + side * 0.38;
-        s.beginPath();
+        ctx.save();
+        ctx.strokeStyle = color;
+        ctx.shadowColor = color;
+        ctx.shadowBlur = 8 - side * 3;
+        ctx.lineWidth = Math.max(1.5, 7 - (side * 2));
+        ctx.globalAlpha = 0.33 + side * 0.34;
+        ctx.beginPath();
         for (let i = 0; i <= segs; i++) {
           const t = i / segs * Math.PI * helixTurns + tAnim + (side ? Math.PI : 0);
           let x = W / 2 + Math.cos(t) * helixRadius;
-          let y = centerY + (i / segs - 0.5) * W * 0.51 + Math.sin(t * 0.4 + tAnim) * 7 * (1.2 + side * 0.22);
-          if (i === 0) s.moveTo(x, y); else s.lineTo(x, y);
+          let y = centerY + (i / segs - 0.5) * H * 0.76 + Math.sin(t * 0.5 + tAnim) * 7 * (1.12 + side * 0.15);
+          if (i === 0) ctx.moveTo(x, y); else ctx.lineTo(x, y);
         }
-        s.stroke();
-        s.restore();
+        ctx.stroke();
+        ctx.restore();
       }
-      // base pairs
-      for (let i = 0; i < segs; i += 9) {
+      for (let i = 0; i < segs; i += 8) {
         let t = i / segs * Math.PI * helixTurns + tAnim;
-        let y = centerY + (i / segs - 0.5) * W * 0.51;
+        let y = centerY + (i / segs - 0.5) * H * 0.76;
         let x1 = W / 2 + Math.cos(t) * helixRadius;
         let x2 = W / 2 + Math.cos(t + Math.PI) * helixRadius;
-        s.save();
-        s.strokeStyle = color;
-        s.globalAlpha = 0.42;
-        s.lineWidth = 2;
-        s.beginPath(); s.moveTo(x1, y); s.lineTo(x2, y); s.stroke();
-        s.restore();
+        ctx.save();
+        ctx.strokeStyle = color;
+        ctx.globalAlpha = 0.38;
+        ctx.lineWidth = 2;
+        ctx.beginPath(); ctx.moveTo(x1, y); ctx.lineTo(x2, y); ctx.stroke();
+        ctx.restore();
       }
-      // center sphere
-      s.save();
-      s.beginPath();
-      s.arc(W/2, centerY, helixRadius * 1.04 + Math.sin(tAnim) * 3, 0, Math.PI*2);
-      s.shadowColor = color;
-      s.shadowBlur = 16 + Math.abs(Math.sin(tAnim) * 18);
-      s.globalAlpha = 0.12 + 0.1 * Math.abs(Math.sin(tAnim * 0.59));
-      s.fillStyle = color;
-      s.fill();
-      s.restore();
+      ctx.save();
+      ctx.beginPath();
+      ctx.arc(W/2, centerY, helixRadius * 1.011 + Math.sin(tAnim) * 3, 0, Math.PI*2);
+      ctx.shadowColor = color;
+      ctx.shadowBlur = 15 + Math.abs(Math.sin(tAnim) * 13);
+      ctx.globalAlpha = 0.15 + 0.08 * Math.abs(Math.sin(tAnim * 0.68));
+      ctx.fillStyle = color;
+      ctx.fill();
+      ctx.restore();
 
       requestAnimationFrame(draw);
     }
     draw();
   }
 
-  // start ADN animations (IDs correspond to HTML canvases)
-  // Note: ensure canvases exist in DOM (they do)
-  animateADN("adn-elephant", "#24f8a7");
-  animateADN("adn-turtle", "#45e696");
-  animateADN("adn-axolotl", "#df74ef");
+  // Éléphant = gris (helix ET silhouette)
+  animateADN("adn-elephant", "#bfc3ca", 0.31, 7.5);
+  animateADN("adn-turtle", "#45e696", 0.31, 7.5);
+  animateADN("adn-axolotl", "#df74ef", 0.31, 7.5);
 
-  // SVG animaux (contour fluo) dans .animal-svg
+  // SVG animaux : éléphant = gris
   function svgAnimal(containerId, animal) {
     const div = document.getElementById(containerId);
     if(!div) return;
     let color = "#12ffff", svg = "";
     if (animal === "elephant") {
-      color = "#24f8a7";
+      color = "#bfc3ca";
       svg = `<svg viewBox="0 0 320 320" width="100%" height="100%"><path d="M30 210 Q80 110 185 95 Q276 90 253 198 Q260 142 176 130 Q162 176 217 200 Q159 217 125 192 Q90 165 139 175 Q89 159 48 170 Q60 200 160 225 Q140 200 60 215 Q44 190 35 220 Z" fill="black" stroke="${color}" stroke-width="9" filter="url(#glow)"/><defs><filter id="glow"><feGaussianBlur stdDeviation="7" result="coloredBlur"/><feMerge><feMergeNode in="coloredBlur"/><feMergeNode in="SourceGraphic"/></feMerge></filter></defs></svg>`;
     } else if (animal === "turtle") {
       color = "#45e696";
