@@ -1,139 +1,270 @@
 window.addEventListener('DOMContentLoaded', () => {
-  // FOND ÉTOILÉ POUR LA SECTION ADN ANIMAUX
-  function starfield(bgCanvasId, color1, color2){
-    const c = document.getElementById(bgCanvasId);
-    if(!c) return;
-    const ctx = c.getContext("2d");
-    let W = c.width = window.innerWidth, H = c.height = window.innerHeight;
-    const stars = [];
-    for(let i=0;i<180;i++){
-      stars.push({
-        x:Math.random()*W, y:Math.random()*H,
-        r:Math.random()*1.3+0.4,
-        alpha: 0.55 + Math.random()*0.35,
-        color: (i<60)?color1:(i>120)?color2:"#1a206f",
-        speed: 0.07+Math.random()*0.15
-      });
+  /* =================== Écran de lancement : veines organiques =================== */
+  const launch = document.getElementById('launch-screen');
+  const virusCanvas = document.getElementById('virus-animation');
+  const vCtx = virusCanvas.getContext('2d');
+  virusCanvas.width = window.innerWidth;
+  virusCanvas.height = window.innerHeight;
+
+  class Veine {
+    constructor(x, y) {
+      const offsetX = (Math.random() - 0.5) * 6;
+      const offsetY = (Math.random() - 0.5) * 6;
+      this.points = [{x: x + offsetX, y: y + offsetY}];
+      this.maxPoints = 30 + Math.floor(Math.random() * 60);
+      this.color = `rgba(18,255,255,${0.3 + Math.random() * 0.4})`;
+      this.finished = false;
     }
-    function loop(){
-      ctx.clearRect(0,0,W,H);
-      let g = ctx.createLinearGradient(W/2,0,W/2,H);
-      g.addColorStop(0,color1); g.addColorStop(1,color2); ctx.fillStyle = g;
-      ctx.fillRect(0,0,W,H);
-      for(let s of stars){
-        s.y+=s.speed; if(s.y>H)s.y=0;
-        ctx.save(); ctx.globalAlpha=s.alpha; ctx.beginPath();
-        ctx.arc(s.x,s.y,s.r,0,Math.PI*2);
-        ctx.fillStyle=s.color;
-        ctx.shadowColor=s.color;
-        ctx.shadowBlur=24;
+    grow() {
+      if (this.finished) return;
+      const last = this.points[this.points.length - 1];
+      const angle = Math.random() * Math.PI * 2;
+      const len = 15 + Math.random() * 15;
+      const nx = last.x + Math.cos(angle) * len;
+      const ny = last.y + Math.sin(angle) * len;
+      this.points.push({x: nx, y: ny});
+      if(this.points.length > this.maxPoints || nx<0 || nx>virusCanvas.width || ny<0 || ny>virusCanvas.height){
+        this.finished = true;
+      }
+    }
+    draw(ctx) {
+      ctx.strokeStyle = this.color;
+      ctx.lineWidth = 2;
+      ctx.beginPath();
+      ctx.moveTo(this.points[0].x, this.points[0].y);
+      for(let i=1;i<this.points.length;i++){
+        const midX = (this.points[i-1].x + this.points[i].x)/2;
+        const midY = (this.points[i-1].y + this.points[i].y)/2;
+        ctx.quadraticCurveTo(this.points[i-1].x,this.points[i-1].y,midX,midY);
+      }
+      ctx.stroke();
+    }
+  }
+
+  const veines = [];
+  const originX = window.innerWidth/2;
+  const originY = window.innerHeight/2;
+  for(let i=0;i<100;i++) veines.push(new Veine(originX, originY));
+
+  function animateVeines() {
+    vCtx.clearRect(0,0,virusCanvas.width,virusCanvas.height);
+    let allFinished = true;
+    veines.forEach(v => {
+      if(!v.finished) { v.grow(); allFinished=false; }
+      v.draw(vCtx);
+    });
+    requestAnimationFrame(animateVeines);
+    if(allFinished) {
+      launch.style.transition='opacity 0.5s ease';
+      launch.style.opacity=0;
+      setTimeout(()=>launch.style.display='none',500);
+    }
+  }
+  animateVeines();
+
+  /* =================== Starfield =================== */
+  const canvas=document.getElementById('starfield');
+  const ctx=canvas.getContext('2d');
+  let W=window.innerWidth,H=window.innerHeight;
+  canvas.width=W; canvas.height=H;
+  const stars=[];
+  for(let i=0;i<200;i++) stars.push({x:Math.random()*W,y:Math.random()*H,r:Math.random()*1.5+0.5,alpha:Math.random(),speed:0.05+Math.random()*0.1});
+  function drawStars(){
+    ctx.clearRect(0,0,W,H);
+    for(let s of stars){
+      s.y+=s.speed; if(s.y>H) s.y=0;
+      ctx.fillStyle=`rgba(18,255,255,${s.alpha})`;
+      ctx.beginPath(); ctx.arc(s.x,s.y,s.r,0,Math.PI*2); ctx.fill();
+    }
+    requestAnimationFrame(drawStars);
+  }
+  drawStars();
+
+  /* =================== Parallax =================== */
+  const layers=Array.from(document.querySelectorAll('.parallax-layer'));
+  function parallaxLoop(){
+    const sc=window.scrollY,vh=window.innerHeight;
+    layers.forEach(el=>{
+      const speed=parseFloat(el.dataset.speed||'0.3');
+      if(el.id==='overlay'){ el.style.transform=`translate(-50%,-50%) translateY(${sc*speed}px)`; }
+      else{ el.style.transform=`translateX(-50%) translateY(${sc*speed}px)`; }
+    });
+    requestAnimationFrame(parallaxLoop);
+  }
+  parallaxLoop();
+
+  /* =================== Scroll vers slider =================== */
+  document.getElementById('goSlider').addEventListener('click',()=>{
+    const sliderPos=document.getElementById('cell-slider').offsetTop;
+    window.scrollTo({top:sliderPos,behavior:'smooth'});
+  });
+
+  /* =================== Slider tunnel centré =================== */
+  const slides=document.querySelectorAll('#cell-slider .slide');
+  let current=0, canSlide=true;
+  function updateSlides(){
+    slides.forEach((s,i)=>{
+      s.classList.remove('active','prev','next');
+      if(i===current) s.classList.add('active');
+      if(i===current-1||(current===0&&i===slides.length-1)) s.classList.add('prev');
+      if(i===current+1||(current===slides.length-1&&i===0)) s.classList.add('next');
+    });
+
+    // Centrer la slide active
+    const slider = document.getElementById('cell-slider');
+    const activeSlide = slides[current];
+    const sliderWidth = slider.offsetWidth;
+    const slideWidth = activeSlide.offsetWidth;
+    const offset = activeSlide.offsetLeft + slideWidth / 2 - sliderWidth / 2;
+    slider.scrollTo({ left: offset, behavior: 'smooth' });
+  }
+  function throttleSlide(cb){ if(!canSlide) return; canSlide=false; cb(); setTimeout(()=>canSlide=true,700);}
+  document.querySelector('.nav.next').addEventListener('click',()=>throttleSlide(()=>{current=(current+1)%slides.length;updateSlides();}));
+  document.querySelector('.nav.prev').addEventListener('click',()=>throttleSlide(()=>{current=(current-1+slides.length)%slides.length;updateSlides();}));
+  updateSlides();
+
+  // ========== NOUVELLE SECTION : ADN animaux + reveal/fumée/venom ==========
+
+  // Smoke animation
+  function animateSmoke(canvasId) {
+    const c = document.getElementById(canvasId);
+    if (!c) return;
+    let W = c.width = c.offsetWidth || window.innerWidth, H = c.height = c.offsetHeight || 340;
+    const ctx = c.getContext('2d');
+    let particles = [];
+    for (let i = 0; i < 36; ++i) {
+      particles.push({
+        x: Math.random() * W,
+        y: Math.random() * H,
+        r: 48 + Math.random() * 56,
+        alpha: 0.08 + Math.random() * 0.15,
+        dx: -0.4 + Math.random() * 0.8,
+        dy: 0.15 + Math.random() * 0.4,
+        freq: Math.random() * 2 * Math.PI
+      })
+    }
+    function smokeLoop() {
+      ctx.clearRect(0, 0, W, H);
+      for (let p of particles) {
+        p.x += p.dx + 0.36 * Math.sin(performance.now() * 0.0006 + p.freq);
+        p.y += p.dy + 0.1 * Math.cos(performance.now() * 0.0005 + p.freq);
+        if (p.x > W + 50) p.x = -30;
+        if (p.x < -60) p.x = W + 34;
+        if (p.y > H + 45) { p.y = -15; p.x = Math.random() * W; }
+        ctx.save();
+        let grad = ctx.createRadialGradient(p.x, p.y, 6, p.x, p.y, p.r);
+        grad.addColorStop(0, '#e9f4ff33');
+        grad.addColorStop(1, 'rgba(20,34,54,0)');
+        ctx.globalAlpha = p.alpha;
+        ctx.beginPath();
+        ctx.arc(p.x, p.y, p.r, 0, Math.PI * 2);
+        ctx.fillStyle = grad;
         ctx.fill();
         ctx.restore();
       }
-      requestAnimationFrame(loop);
+      requestAnimationFrame(smokeLoop);
     }
-    loop();
+    smokeLoop();
   }
-  starfield("canvas-adn-bg","#12ffff","#1e226c");
+  animateSmoke('adn-animals-smoke');
 
-  // ADN hélices animées (petites)
-  function animateADN(canvasId,color){
+  // Anim ADN: double hélice animée
+  function animateADN(canvasId, color = "#12ffff") {
     const c = document.getElementById(canvasId);
-    if(!c) return;
-    let W = c.width = c.offsetWidth||110, H = c.height = c.offsetHeight||110;
+    if (!c) return;
+    let W = c.width = 200, H = c.height = 200;
     const ctx = c.getContext("2d");
-    const helixTurns=5, segs=120, helixRadius=W/6.3, centerY=H/2;
-    let tAnim=0;
-    function draw(){
-      ctx.clearRect(0,0,W,H);
+    const helixTurns = 4.7, segs = 66, helixRadius = 38, centerY = H / 2;
+    let tAnim = Math.random() * 50; // décale les anims entre animaux
+    function draw() {
+      ctx.clearRect(0, 0, W, H);
       tAnim += 0.017;
-      for(let s=0;s<2;s++){
+      // Double hélice
+      for (let s = 0; s < 2; s++) {
         ctx.save();
         ctx.strokeStyle = color;
         ctx.shadowColor = color;
-        ctx.shadowBlur = 7;
-        ctx.lineWidth=5-(s*2.3);
-        ctx.globalAlpha= 0.42+s*0.37;
+        ctx.shadowBlur = 12 - s * 5;
+        ctx.lineWidth = 9 - (s * 3);
+        ctx.globalAlpha = 0.31 + s * 0.38;
         ctx.beginPath();
-        for(let i=0;i<=segs;i++){
-          const t = i/segs*Math.PI*helixTurns+tAnim+(s?Math.PI:0);
-          let x=W/2+Math.cos(t)*helixRadius;
-          let y=centerY+(i/segs-0.5)*W*0.65 + Math.sin(t*0.3+tAnim)*6*(1.3+s*0.18);
-          if(i==0) ctx.moveTo(x,y); else ctx.lineTo(x,y);
+        for (let i = 0; i <= segs; i++) {
+          const t = i / segs * Math.PI * helixTurns + tAnim + (s ? Math.PI : 0);
+          let x = W / 2 + Math.cos(t) * helixRadius;
+          let y = centerY + (i / segs - 0.5) * W * 0.51 + Math.sin(t * 0.4 + tAnim) * 7 * (1.2 + s * 0.22);
+          if (i == 0) ctx.moveTo(x, y); else ctx.lineTo(x, y);
         }
-        ctx.stroke();
-        ctx.restore();
+        ctx.stroke(); ctx.restore();
       }
-      // Ponts
-      for(let i=0;i<segs;i+=8){
-        let t=i/segs*Math.PI*helixTurns+tAnim;
-        let y=centerY+(i/segs-0.5)*W*0.65;
-        let x1=W/2+Math.cos(t)*helixRadius;
-        let x2=W/2+Math.cos(t+Math.PI)*helixRadius;
+      // Barres nucléotidiques
+      for (let i = 0; i < segs; i += 9) {
+        let t = i / segs * Math.PI * helixTurns + tAnim;
+        let y = centerY + (i / segs - 0.5) * W * 0.51;
+        let x1 = W / 2 + Math.cos(t) * helixRadius;
+        let x2 = W / 2 + Math.cos(t + Math.PI) * helixRadius;
         ctx.save();
-        ctx.strokeStyle=color; ctx.globalAlpha=0.46;
-        ctx.lineWidth=1.1;
-        ctx.beginPath(); ctx.moveTo(x1,y); ctx.lineTo(x2,y); ctx.stroke();
-        ctx.restore();
+        ctx.strokeStyle = color; ctx.globalAlpha = 0.41;
+        ctx.lineWidth = 2;
+        ctx.beginPath(); ctx.moveTo(x1, y); ctx.lineTo(x2, y); ctx.stroke(); ctx.restore();
       }
-      // Sphere molécule
+      // Sphère centrale
       ctx.save();
       ctx.beginPath();
-      ctx.arc(W/2,centerY,helixRadius*0.62+Math.sin(tAnim)*3.7,0,Math.PI*2);
-      ctx.shadowColor=color;
-      ctx.shadowBlur=12+Math.abs(Math.sin(tAnim)*16);
-      ctx.globalAlpha=0.18 + 0.13*Math.abs(Math.sin(tAnim*0.76));
-      ctx.fillStyle=color;
+      ctx.arc(W / 2, centerY, helixRadius * 1.08 + Math.sin(tAnim) * 4, 0, Math.PI * 2);
+      ctx.shadowColor = color;
+      ctx.shadowBlur = 19 + Math.abs(Math.sin(tAnim) * 18);
+      ctx.globalAlpha = 0.13 + 0.11 * Math.abs(Math.sin(tAnim * 0.59));
+      ctx.fillStyle = color;
       ctx.fill();
       ctx.restore();
+
       requestAnimationFrame(draw);
     }
     draw();
   }
-  animateADN("adn-elephant","#24f8a7");
-  animateADN("adn-turtle","#45e696");
-  animateADN("adn-axolotl","#df74ef");
+  animateADN("adn-elephant", "#24f8a7");
+  animateADN("adn-turtle", "#45e696");
+  animateADN("adn-axolotl", "#df74ef");
 
-  // SVG animaux réalistes (petits + glow)
+  // SVG animaux (contour fluo) dans .animal-svg
   function svgAnimal(containerId, animal) {
     const div = document.getElementById(containerId);
-    let color = "#12ffff", svg="";
-    if(animal==="elephant"){color="#24f8a7"; svg=`<svg viewBox="0 0 90 90" width="100%" height="100%"><path d="M8 59Q22 33 73 31Q90 31 89 57Q83 52 61 56Q45 85 32 62Q45 68 74 62Q39 64 8 62Z" fill="black" stroke="${color}" stroke-width="4" filter="url(#glow)"/><defs><filter id="glow"><feGaussianBlur stdDeviation="3" result="coloredBlur"/><feMerge><feMergeNode in="coloredBlur"/><feMergeNode in="SourceGraphic"/></feMerge></filter></defs></svg>`;}
-    else if(animal==="turtle"){color="#45e696"; svg=`<svg viewBox="0 0 90 90" width="100%" height="100%"><ellipse cx="44" cy="54" rx="24" ry="14" fill="black" stroke="${color}" stroke-width="4" filter="url(#glow)"/><ellipse cx="44" cy="44" rx="16" ry="6" fill="black" stroke="${color}" stroke-width="2.5" filter="url(#glow)"/><defs><filter id="glow"><feGaussianBlur stdDeviation="3" result="coloredBlur"/><feMerge><feMergeNode in="coloredBlur"/><feMergeNode in="SourceGraphic"/></feMerge></filter></defs></svg>`;}
-    else if(animal==="axolotl"){color="#df74ef"; svg=`<svg viewBox="0 0 90 90" width="100%" height="100%"><ellipse cx="49" cy="57" rx="15" ry="12" fill="black" stroke="${color}" stroke-width="4" filter="url(#glow)"/><ellipse cx="67" cy="47" rx="5" ry="10" fill="black" stroke="${color}" stroke-width="2.2" filter="url(#glow)"/><ellipse cx="31" cy="47" rx="5" ry="10" fill="black" stroke="${color}" stroke-width="2.2" filter="url(#glow)"/><defs><filter id="glow"><feGaussianBlur stdDeviation="3" result="coloredBlur"/><feMerge><feMergeNode in="coloredBlur"/><feMergeNode in="SourceGraphic"/></feMerge></filter></defs></svg>`;}
-    div.innerHTML=svg;
+    let color = "#12ffff", svg = "";
+    if (animal === "elephant") {
+      color = "#24f8a7";
+      svg = `<svg viewBox="0 0 320 320" width="100%" height="100%"><path d="M30 210 Q80 110 185 95 Q276 90 253 198 Q260 142 176 130 Q162 176 217 200 Q159 217 125 192 Q90 165 139 175 Q89 159 48 170 Q60 200 160 225 Q140 200 60 215 Q44 190 35 220 Z" fill="black" stroke="${color}" stroke-width="9" filter="url(#glow)"/><defs><filter id="glow"><feGaussianBlur stdDeviation="7" result="coloredBlur"/><feMerge><feMergeNode in="coloredBlur"/><feMergeNode in="SourceGraphic"/></feMerge></filter></defs></svg>`;
+    } else if (animal === "turtle") {
+      color = "#45e696";
+      svg = `<svg viewBox="0 0 320 320" width="100%" height="100%"><ellipse cx="148" cy="190" rx="80" ry="48" fill="black" stroke="${color}" stroke-width="9" filter="url(#glow)"/><ellipse cx="148" cy="135" rx="53" ry="24" fill="black" stroke="${color}" stroke-width="7" filter="url(#glow)"/><ellipse cx="94" cy="190" rx="15" ry="24" fill="black" stroke="${color}" stroke-width="5" filter="url(#glow)"/><ellipse cx="198" cy="190" rx="15" ry="24" fill="black" stroke="${color}" stroke-width="5" filter="url(#glow)"/><ellipse cx="148" cy="220" rx="22" ry="18" fill="black" stroke="${color}" stroke-width="5" filter="url(#glow)"/><ellipse cx="148" cy="110" rx="12" ry="6" fill="black" stroke="${color}" stroke-width="4" filter="url(#glow)"/><defs><filter id="glow"><feGaussianBlur stdDeviation="7" result="coloredBlur"/><feMerge><feMergeNode in="coloredBlur"/><feMergeNode in="SourceGraphic"/></feMerge></filter></defs></svg>`;
+    } else if (animal === "axolotl") {
+      color = "#df74ef";
+      svg = `<svg viewBox="0 0 320 320" width="100%" height="100%"><ellipse cx="170" cy="180" rx="55" ry="48" fill="black" stroke="${color}" stroke-width="9" filter="url(#glow)"/><ellipse cx="230" cy="138" rx="17" ry="35" fill="black" stroke="${color}" stroke-width="7.5" filter="url(#glow)"/><ellipse cx="108" cy="135" rx="17" ry="28" fill="black" stroke="${color}" stroke-width="7.5" filter="url(#glow)"/><ellipse cx="205" cy="232" rx="16" ry="20" fill="black" stroke="${color}" stroke-width="5" filter="url(#glow)"/><ellipse cx="132" cy="232" rx="16" ry="20" fill="black" stroke="${color}" stroke-width="5" filter="url(#glow)"/><ellipse cx="170" cy="80" rx="18" ry="11" fill="black" stroke="${color}" stroke-width="5" filter="url(#glow)"/><defs><filter id="glow"><feGaussianBlur stdDeviation="7" result="coloredBlur"/><feMerge><feMergeNode in="coloredBlur"/><feMergeNode in="SourceGraphic"/></feMerge></filter></defs></svg>`;
+    }
+    div.innerHTML = svg;
   }
-  svgAnimal("elephant-svg","elephant");
-  svgAnimal("turtle-svg","turtle");
-  svgAnimal("axolotl-svg","axolotl");
+  svgAnimal("elephant-svg", "elephant");
+  svgAnimal("turtle-svg", "turtle");
+  svgAnimal("axolotl-svg", "axolotl");
 
-  // Titres animés pour chaque ADN
-  document.getElementById("nom-elephant").textContent = "ADN de l'Éléphant";
-  document.getElementById("nom-turtle").textContent = "ADN de la Tortue";
-  document.getElementById("nom-axolotl").textContent = "ADN de l'Axolotl";
+  // V E N O M : reveal mask/virus
+  function updateAdnReveal() {
+    const section = document.getElementById('adn-animals-section');
+    const reveal = document.getElementById('adn-animals-reveal');
+    const mask = document.getElementById('adn-animals-virus-mask');
+    if (!section || !reveal || !mask) return;
 
-  // REVEAL FLUID MASK - GSAP + ScrollTrigger
-  gsap.registerPlugin(ScrollTrigger);
-  gsap.set(".venom-mask",{clipPath:"inset(0 0 0 0)",opacity:1});
-  gsap.set(".bloc-adn-animal",{opacity:0, y:70, scale:0.88});
-  ScrollTrigger.create({
-    trigger: "#section-animaux",
-    start: "top 80%",
-    end: "bottom 40%",
-    scrub: 1,
-    onUpdate: self => {
-      let p = self.progress;
-      gsap.to(".venom-mask",{clipPath:`inset(${(1-p)*100}% 0 0 0)`,opacity:p>0.93?0:1,duration:0.2,ease:"power2.inOut"});
-      gsap.to(".bloc-adn-animal",{opacity:p>0.05?1:0.0, y:p>=0.7?0:70, scale:p>=0.7?1:0.88, stagger:0.12, duration:0.6, ease:"power2.out"});
+    const rect = section.getBoundingClientRect();
+    const wh = window.innerHeight;
+    const show = rect.top < wh * 0.55 && rect.bottom > wh * 0.39;
+    // Show/Hide content and animate mask
+    if (show) {
+      reveal.classList.add('reveal-visible');
+      mask.classList.add('virus-gone');
+    } else {
+      reveal.classList.remove('reveal-visible');
+      mask.classList.remove('virus-gone');
     }
-  });
-  ScrollTrigger.create({
-    trigger:"#section-animaux",
-    start: "top top", end:"top 40%", scrub:1,
-    onUpdate: self => {
-      let pb = 1-self.progress;
-      gsap.to(".venom-mask",{clipPath:`inset(0 0 ${pb*100}% 0)`, opacity: pb>0.9?1:0, duration:0.26,ease:"power2.in"});
-      gsap.to(".bloc-adn-animal",{opacity:pb>0.6?0:1, y:pb>0.6?70:0, scale:pb>0.6?0.88:1, stagger:0.14, duration:0.5, ease:"power2.inOut"});
-    }
-  });
+  }
+  window.addEventListener('scroll', updateAdnReveal);
+  setTimeout(updateAdnReveal, 750);
 });
