@@ -1,101 +1,226 @@
 :root {
-  --bg: #000;
-  --cyan: #12ffff;
-  --green: #46e696;
-  --purple: #df74ef;
-  --muted: #ffffffaa;
-  --title-font: 'Orbitron', Arial, sans-serif;
-  --fond-sobre: #101234;
+  --bg:#000;
+  --cyan:#12ffff;
+  --muted:#ffffffaa;
+  --title-font:'Orbitron', sans-serif;
+  --green:#45e696;
+  --purple:#df74ef;
+  --gray: #151824;
 }
 
-#section-animaux {
-  position: relative; width: 100vw; min-height: 100vh;
-  display: flex; align-items: center; justify-content: center;
-  background: var(--fond-sobre);
+/* --- ADN Animals Section --- */
+#adn-animals-section {
+  position: relative;
+  background: linear-gradient(120deg, #0d1647 0%, #151421 100%);
+  min-height: 68vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 25;
   overflow: hidden;
-  z-index: 1;
 }
-.fond-sobre {
-  position: absolute; inset: 0;
-  background: linear-gradient(135deg, #101234 70%, #1e266f 100%);
-  opacity: 0.97;
-  z-index: 0;
+.adn-animals-bg {
+  position: relative;
+  width: 100vw;
+  min-height: 68vh;
+  overflow: visible;
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }
-#canvas-adn-bg {
-  position: absolute; inset: 0;
-  background: transparent;
-  z-index: 1;
-  width: 100vw; height: 100vh;
-  pointer-events: none;
-}
-.venom-mask {
+#adn-animals-smoke {
   position: absolute;
   inset: 0;
-  background: radial-gradient(circle at 50% 70%, #181828 70%, #010214 100%);
-  z-index: 2;
+  width: 100vw;
+  height: 100%;
+  z-index: 1;
   pointer-events: none;
-  transition: clip-path 1.3s cubic-bezier(.6,.3,.7,1.3), opacity 1s;
-  clip-path: inset(0 0 0 0);
-  opacity: 1;
+  background: transparent;
 }
-.adn-animaux-horizontal {
+#adn-animals-reveal {
   position: relative;
-  display: flex;
-  align-items: flex-end;
-  justify-content: center;
-  gap: 7vw;
-  min-height: 52vh;
-  width: 100%;
-  z-index: 3;
-}
-.bloc-adn-animal {
+  z-index: 5;
+  width: 100vw;
   display: flex;
   flex-direction: column;
   align-items: center;
-  width: 23vw; min-width:140px; max-width:240px;
-  position: relative;
-  opacity: 0; /* revealed by GSAP */
-  transform: translateY(70px) scale(0.88);
+  justify-content: center;
+  opacity: 0;
+  clip-path: inset(0 0 0 0 round 38px);
+  transition: opacity 1.2s ease, clip-path 0.9s cubic-bezier(.41,.47,.57,.99);
+  will-change: opacity, clip-path;
 }
-.canvas-adn-animal {
-  width: 120px; height: 120px;
-  margin-bottom: 8px;
-  margin-left: auto; margin-right: auto;
-  background: transparent;
-  z-index: 4;
-  display: block;
-}
-.animal-svg.small {
-  width: 56px; height: 56px; max-width: 100px;
-  margin: 0 auto 10px auto;
-  display: block;
-  position: relative;
-  z-index: 5;
-}
-.adn-nom {
-  color: #fff;
-  font-family: var(--title-font);
-  font-weight: 700;
-  font-size: 1rem;
-  letter-spacing: 0.16em;
-  text-align: center;
-  margin-top: 2px;
-  margin-bottom: 2px;
-  text-shadow: 0 0 12px var(--cyan), 0 0 4px #19023a;
-  animation: pulseGlow 2.3s infinite alternate;
-}
-@keyframes pulseGlow {
-  0% { text-shadow: 0 0 8px var(--cyan); }
-  100% { text-shadow: 0 0 17px var(--green), 0 0 4px #391c63; }
+.reveal-visible {
+  opacity: 1 !important;
+  clip-path: inset(0 0 0 0 round 38px)!important;
 }
 
-@media(max-width: 900px) {
-  .adn-animaux-horizontal { gap:3vw; min-height:26vh;}
-  .bloc-adn-animal { width: 30vw;}
-  .canvas-adn-animal { width:19vw; height:19vw;}
+#adn-animals-virus-mask {
+  pointer-events: none;
+  z-index: 9;
+  width: 100vw; height: 100%;
+  top: 0; left: 0; position: absolute;
+  background: radial-gradient(circle at 50% 45%, rgba(30,30,50,0.88) 60%, rgba(0,0,0,0.98) 80%);
+  transition: clip-path 1.04s cubic-bezier(.46,1.16,.4,.99);
+  will-change: clip-path;
+  clip-path: inset(0 0 0 0 round 54px);
 }
-@media(max-width: 630px) {
-  .adn-animaux-horizontal { flex-direction: column; gap:3vw; min-height:40vh;}
-  .bloc-adn-animal { width:88vw;}
-  .canvas-adn-animal { width:39vw; height:39vw;}
+.virus-gone {
+  clip-path: inset(100% 50% 0 50%);
+  opacity: 0.01;
+  transition: opacity 1s, clip-path 1.25s cubic-bezier(.49,1.07,.47,.98);
+}
+
+.adn-animal-wrap {
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  align-items: flex-end;
+  gap: 3vw;
+  margin-bottom: 1.5em;
+  margin-top: 2.5em;
+}
+
+.adn-animal {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: end;
+  width: 200px;
+  min-width: 120px;
+  max-width: 24vw;
+  position: relative;
+}
+
+.adn-canvas {
+  width: 110px;
+  height: 110px;
+  margin-bottom: -28px;
+  background: transparent;
+  z-index: 2;
+  transition: filter 0.34s;
+  will-change: filter;
+  filter: drop-shadow(0 0 12px var(--cyan));
+}
+
+#adn-turtle .adn-canvas {
+  filter: drop-shadow(0 0 12px var(--green));
+}
+#adn-axolotl .adn-canvas {
+  filter: drop-shadow(0 0 12px var(--purple));
+}
+
+.animal-svg {
+  width: 80px;
+  height: 80px;
+  position: static;
+  margin-bottom: 7px;
+}
+
+.adn-animal-label {
+  text-align: center;
+  margin-top: 1em;
+  font-size: 1.13em;
+  color: var(--muted);
+  text-shadow: 0 2px 14px #18104660;
+  letter-spacing: 0.04em;
+  font-family: var(--title-font);
+  transition: color 0.3s;
+  animation: popIn 1s cubic-bezier(.25,1.57,.57,.99);
+}
+
+@keyframes popIn {
+  from { transform: translateY(64px) scale(0.7); opacity: 0; }
+  to   { transform: translateY(0) scale(1); opacity: 1; }
+}
+
+.adn-animals-desc {
+  text-align: center;
+  color: var(--muted);
+  font-size: 1.11em;
+  margin-bottom: 2vw;
+  max-width: 600px;
+  padding: 0.7em 0.3em 0.9em 0.3em;
+  filter: drop-shadow(0 4px 20px #0b091b97);
+  z-index: 7;
+  animation: fadeInUp 1.3s cubic-bezier(.21,1.12,.47,.99);
+}
+@keyframes fadeInUp {
+  from { transform: translateY(36px) scale(0.97); opacity: 0;}
+  to { transform: translateY(0) scale(1); opacity: 1;}
+}
+
+/* Smoke/Fumée */
+#adn-animals-smoke {
+  pointer-events: none;
+  z-index: 3;
+  opacity: 0.52;
+}
+
+/* Responsive */
+@media (max-width: 1000px) {
+  .adn-animal-wrap {
+    gap: 1vw;
+  }
+  .adn-animal {
+    width: 95px;
+    min-width: 95px;
+    max-width: 33vw;
+  }
+  .animal-svg, .adn-canvas { width: 70px; height: 70px; }
+}
+
+@media (max-width: 650px) {
+  .adn-animal-wrap {
+    flex-direction: column;
+    gap: 1.2em;
+  }
+  .adn-animal { margin-bottom: 0.5em; }
+  #adn-animals-section { min-height: 52vh; }
+}
+
+/* ==== Autres styles de base ==== */
+* { box-sizing:border-box; margin:0; padding:0; }
+html,body { height:100%; font-family:var(--title-font); background:var(--bg); color:#fff; overflow-x:hidden; }
+a { color:var(--cyan); text-decoration:none; }
+
+#launch-screen { position:fixed; inset:0; background:#000; display:flex; justify-content:center; align-items:center; z-index:9999; overflow:hidden; }
+#virus-animation { position:absolute; top:0; left:0; width:100%; height:100%; pointer-events:none; z-index:1; }
+.loader { position:relative; z-index:2; font-size:3rem; color:var(--cyan); letter-spacing:0.2em; text-shadow:-2px -2px 0 #000,2px -2px 0 #000,-2px 2px 0 #000,2px 2px 0 #000,0px 0px 6px var(--cyan); }
+
+#hero { position:relative; height:100vh; overflow:hidden; }
+#starfield { position:absolute; top:0; left:0; width:100%; height:100%; z-index:0; background:linear-gradient(to bottom,#000,#001d24); }
+
+#topbar { position:absolute; top:20px; left:50%; transform:translateX(-50%); z-index:40; }
+#logo-img { width:120px; filter:drop-shadow(0 0 20px var(--cyan)); transition:transform 0.4s ease, filter 0.4s ease; }
+#logo-img:hover { transform:scale(1.05); filter:drop-shadow(0 0 30px var(--cyan)); }
+
+#overlay { position:absolute; top:40%; left:50%; transform:translate(-50%,-50%); text-align:center; z-index:30; pointer-events:none; }
+#title { font-size:6.6rem; text-transform:uppercase; background:linear-gradient(90deg,var(--cyan),#00b3a6); -webkit-background-clip:text; -webkit-text-fill-color:transparent; text-shadow:0 0 4px var(--cyan),0 0 8px #00b3a6; }
+#subtitle { margin-top:12px; font-size:1.25rem; color:var(--muted); }
+
+#silhouette { position:absolute; bottom:0; left:50%; transform:translateX(-50%) translateY(25%); height:60%; z-index:20; pointer-events:none; }
+
+#goSlider { position:absolute; left:50%; transform:translateX(-50%); bottom:8vh; z-index:38; background:transparent; border:2px solid rgba(18,255,255,0.12); color:var(--muted); padding:10px 18px; border-radius:999px; font-weight:700; backdrop-filter:blur(6px); cursor:pointer; transition:all .28s ease; }
+#goSlider:hover { color:var(--cyan); border-color:var(--cyan); }
+
+#cell-slider { position: relative; display: flex; justify-content: center; align-items: center; perspective: 1500px; margin: 50px 0; overflow: visible; }
+#cell-slider .slide { min-width: 300px; width: 50%; margin: 0 15px; background: #111; color: #fff; padding: 40px; border-radius: 20px; text-align: center; transform-origin: center center; transition: transform 0.7s ease, background 0.7s ease, color 0.7s ease; }
+#cell-slider .slide.prev { transform: rotateY(30deg) translateX(-50%) scale(0.8); color: #888; }
+#cell-slider .slide.next { transform: rotateY(-30deg) translateX(50%) scale(0.8); color: #888; }
+#cell-slider .slide.active { transform: rotateY(0deg) scale(1) translateX(0); background:#fff; color:#000; }
+
+.nav { position:absolute; top:50%; transform:translateY(-50%); background:rgba(18,255,255,0.1); border:none; color:#fff; font-size:2rem; width:50px; height:50px; border-radius:50%; cursor:pointer; z-index:10; }
+.nav.prev { left:10px; }
+.nav.next { right:10px; }
+
+main#content { padding:40px 20px; max-width:1000px; margin:0 auto; position:relative; z-index:10; background:transparent; }
+.card { background:rgba(255,255,255,0.02); border-radius:12px; padding:22px; margin:18px 0; box-shadow:0 6px 20px rgba(0,0,0,0.4); }
+.card.small { font-size:13px; text-align:center; opacity:0.9; }
+
+@media (max-width:800px) {
+  #title { font-size:3.2rem; }
+  #silhouette { height:44%; }
+  #goSlider { bottom:4vh; }
+  #cell-slider .slide { width:70%; }
 }
