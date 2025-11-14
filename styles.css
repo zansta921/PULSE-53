@@ -8,7 +8,7 @@
   --gray: #151824;
 }
 
-/* --- ADN Animals Section --- */
+/* --- ADN Animals Section (sans fumée) --- */
 #adn-animals-section {
   position: relative;
   background: linear-gradient(120deg, #0d1647 0%, #151421 100%);
@@ -28,15 +28,6 @@
   align-items: center;
   justify-content: center;
 }
-#adn-animals-smoke {
-  position: absolute;
-  inset: 0;
-  width: 100vw;
-  height: 100%;
-  z-index: 1;
-  pointer-events: none;
-  background: transparent;
-}
 #adn-animals-reveal {
   position: relative;
   z-index: 5;
@@ -45,30 +36,9 @@
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  opacity: 0;
-  clip-path: inset(0 0 0 0 round 38px);
-  transition: opacity 1.2s ease, clip-path 0.9s cubic-bezier(.41,.47,.57,.99);
-  will-change: opacity, clip-path;
-}
-.reveal-visible {
-  opacity: 1 !important;
-  clip-path: inset(0 0 0 0 round 38px)!important;
-}
-
-#adn-animals-virus-mask {
-  pointer-events: none;
-  z-index: 9;
-  width: 100vw; height: 100%;
-  top: 0; left: 0; position: absolute;
-  background: radial-gradient(circle at 50% 45%, rgba(30,30,50,0.88) 60%, rgba(0,0,0,0.98) 80%);
-  transition: clip-path 1.04s cubic-bezier(.46,1.16,.4,.99);
-  will-change: clip-path;
-  clip-path: inset(0 0 0 0 round 54px);
-}
-.virus-gone {
-  clip-path: inset(100% 50% 0 50%);
-  opacity: 0.01;
-  transition: opacity 1s, clip-path 1.25s cubic-bezier(.49,1.07,.47,.98);
+  opacity: 1;
+  clip-path: unset;
+  transition: opacity 1.2s ease;
 }
 
 .adn-animal-wrap {
@@ -102,13 +72,8 @@
   will-change: filter;
   filter: drop-shadow(0 0 12px var(--cyan));
 }
-
-#adn-turtle .adn-canvas {
-  filter: drop-shadow(0 0 12px var(--green));
-}
-#adn-axolotl .adn-canvas {
-  filter: drop-shadow(0 0 12px var(--purple));
-}
+#adn-turtle .adn-canvas { filter: drop-shadow(0 0 12px var(--green)); }
+#adn-axolotl .adn-canvas { filter: drop-shadow(0 0 12px var(--purple)); }
 
 .animal-svg {
   width: 80px;
@@ -150,36 +115,20 @@
   to { transform: translateY(0) scale(1); opacity: 1;}
 }
 
-/* Smoke/Fumée */
-#adn-animals-smoke {
-  pointer-events: none;
-  z-index: 3;
-  opacity: 0.52;
-}
-
 /* Responsive */
 @media (max-width: 1000px) {
-  .adn-animal-wrap {
-    gap: 1vw;
-  }
-  .adn-animal {
-    width: 95px;
-    min-width: 95px;
-    max-width: 33vw;
-  }
+  .adn-animal-wrap { gap: 1vw; }
+  .adn-animal { width: 95px; min-width: 95px; max-width: 33vw; }
   .animal-svg, .adn-canvas { width: 70px; height: 70px; }
 }
 
 @media (max-width: 650px) {
-  .adn-animal-wrap {
-    flex-direction: column;
-    gap: 1.2em;
-  }
+  .adn-animal-wrap { flex-direction: column; gap: 1.2em; }
   .adn-animal { margin-bottom: 0.5em; }
   #adn-animals-section { min-height: 52vh; }
 }
 
-/* ==== Autres styles de base ==== */
+/* ==== Le reste garde le CSS d'origine ==== */
 * { box-sizing:border-box; margin:0; padding:0; }
 html,body { height:100%; font-family:var(--title-font); background:var(--bg); color:#fff; overflow-x:hidden; }
 a { color:var(--cyan); text-decoration:none; }
