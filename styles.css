@@ -5,14 +5,13 @@
   --title-font:'Orbitron', sans-serif;
   --green:#45e696;
   --purple:#df74ef;
-  --gray: #bfc3ca;
+  --gray:#bfc3ca;
 }
 
 /* Section ADN animals adapté */
 #adn-animals-section {
   position: relative;
-  /* Même fond que hero */
-  background: linear-gradient(to bottom,#000,#001d24);
+  background: linear-gradient(to bottom,#000,#001d24) !important;
   min-height: 68vh;
   display: flex;
   align-items: center;
@@ -65,7 +64,7 @@
 
 .adn-canvas {
   width: 100px;
-  height: 155px;       /* Plus allongé ! */
+  height: 165px;       /* Plus allongé */
   margin-bottom: -28px;
   background: transparent;
   z-index: 9;
@@ -98,7 +97,6 @@
   stroke: var(--gray) !important;
   filter: drop-shadow(0 0 16px var(--gray));
 }
-
 #elephant-adn-block .animal-svg svg {
   color: var(--gray) !important;
   fill: black !important;
@@ -146,7 +144,7 @@
 @media (max-width: 1000px) {
   .adn-animal-wrap { gap: 1vw; }
   .adn-animal { width: 95px; min-width: 95px; max-width: 33vw; }
-  .animal-svg, .adn-canvas { width: 54px; height: 95px; }
+  .animal-svg, .adn-canvas { width: 54px; height: 100px; }
 }
 
 @media (max-width: 650px) {
@@ -155,7 +153,7 @@
   #adn-animals-section { min-height: 52vh; }
 }
 
-/* ==== Le reste du CSS d'origine est inchangé ... ==== */
+/* le reste comme avant... */
 * { box-sizing:border-box; margin:0; padding:0; }
 html,body { height:100%; font-family:var(--title-font); background:var(--bg); color:#fff; overflow-x:hidden; }
 a { color:var(--cyan); text-decoration:none; }
