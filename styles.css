@@ -73,9 +73,11 @@
   display: block;
   filter: drop-shadow(0 0 12px var(--cyan));
 }
+
 #elephant-adn-block .adn-canvas {
   filter: drop-shadow(0 0 12px var(--gray));
 }
+
 #turtle-adn-block .adn-canvas {
   filter: drop-shadow(0 0 12px var(--green));
 }
