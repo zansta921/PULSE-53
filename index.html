@@ -28,27 +28,33 @@
     <button id="goSlider" aria-label="Voir les informations">En savoir plus ↑</button>
   </section>
 
-  <!-- SECTION ADN ANIMAUX (alignés sur fond étoilé + uni) -->
-  <section id="section-animaux">
-    <canvas id="canvas-adn-bg"></canvas>
-    <div class="fond-sobre"></div>
-    <div class="venom-mask"></div>
-    <div class="adn-animaux-horizontal">
-      <div class="bloc-adn-animal">
-        <canvas class="canvas-adn-animal" id="adn-elephant"></canvas>
-        <div class="animal-svg small" id="elephant-svg"></div>
-        <div class="adn-nom" id="nom-elephant"></div>
+  <!-- Section ADN animaux -->
+  <section id="adn-animals-section">
+    <div class="adn-animals-bg">
+      <canvas class="adn-animals-smoke" id="adn-animals-smoke"></canvas>
+      <div class="adn-animals-reveal" id="adn-animals-reveal">
+        <div class="adn-animal-wrap">
+          <div class="adn-animal" id="elephant-adn-block">
+            <canvas class="adn-canvas" id="adn-elephant" width="200" height="200"></canvas>
+            <div class="animal-svg" id="elephant-svg"></div>
+            <div class="adn-animal-label">Éléphant</div>
+          </div>
+          <div class="adn-animal" id="turtle-adn-block">
+            <canvas class="adn-canvas" id="adn-turtle" width="200" height="200"></canvas>
+            <div class="animal-svg" id="turtle-svg"></div>
+            <div class="adn-animal-label">Tortue</div>
+          </div>
+          <div class="adn-animal" id="axolotl-adn-block">
+            <canvas class="adn-canvas" id="adn-axolotl" width="200" height="200"></canvas>
+            <div class="animal-svg" id="axolotl-svg"></div>
+            <div class="adn-animal-label">Axolotl</div>
+          </div>
+        </div>
+        <div class="adn-animals-desc">
+          <p>Les doubles hélices colorées représentent l'ADN de trois animaux d'exception, chacun accompagné de sa silhouette et son ciel étoilé signature. <br/><span>Des animations et un effet de "venom" enveloppent ou révèlent la section selon le scroll.</span></p>
+        </div>
       </div>
-      <div class="bloc-adn-animal">
-        <canvas class="canvas-adn-animal" id="adn-turtle"></canvas>
-        <div class="animal-svg small" id="turtle-svg"></div>
-        <div class="adn-nom" id="nom-turtle"></div>
-      </div>
-      <div class="bloc-adn-animal">
-        <canvas class="canvas-adn-animal" id="adn-axolotl"></canvas>
-        <div class="animal-svg small" id="axolotl-svg"></div>
-        <div class="adn-nom" id="nom-axolotl"></div>
-      </div>
+      <div class="adn-animals-virus-mask" id="adn-animals-virus-mask"></div>
     </div>
   </section>
 
@@ -74,7 +80,6 @@
       <ul>
         <li>Logo PNG animé.</li>
         <li>Ciel étoilé avec dégradé et silhouette de biologiste.</li>
-        <li>ADN hélices animées alignées horizontalement + animaux réalistes + fond sobre révélé style venom.</li>
       </ul>
     </section>
 
@@ -88,8 +93,6 @@
     </footer>
   </main>
 
-  <script src="https://unpkg.com/gsap@3/dist/gsap.min.js"></script>
-  <script src="https://unpkg.com/gsap@3/dist/ScrollTrigger.min.js"></script>
-  <script src="script.js"></script>
+  <script type="module" src="script.js"></script>
 </body>
 </html>
