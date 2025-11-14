@@ -1,232 +1,172 @@
-// --- ScrollTrigger, scroll fluide ---
-gsap.registerPlugin(ScrollTrigger);
+window.addEventListener("DOMContentLoaded", ()=>{
 
-const sections = gsap.utils.toArray(".section");
-sections.forEach((section, i) => {
-  gsap.fromTo(section, 
-    {opacity:0, scale:0.95},
-    {
-      opacity:1, scale:1,
-      duration: 1.3,
-      scrollTrigger: {
-        trigger: section,
-        start: "top center",
-        end: "bottom center",
-        scrub: true,
-      }
-    }
-  );
+// --------- SCROLL ANIMATION (simple fluid transition) ---------
+const sections = Array.from(document.querySelectorAll(".section"));
+sections.forEach((sec, i) => {
+  sec.style.opacity = "0";
+  sec.style.transform = "scale(1.07)";
+  setTimeout(()=>{
+    sec.style.transition = "opacity 1.5s cubic-bezier(.28,.74,.36,.9), transform 1.4s cubic-bezier(.11,.94,.33,.98)";
+    sec.style.opacity="1";
+    sec.style.transform="scale(1)";
+  }, 300 + 200*i);
 });
 
-// --- Fond spatial étoilé animé, variable par section ---
-function starfield(canvasId, fromColor, toColor) {
-  const c = document.getElementById(canvasId);
-  if (!c) return;
+// --------- STARFIELD ANIMATION CANVAS ---------
+function starfield(bgCanvasId, color1, color2){
+  const c = document.getElementById(bgCanvasId);
+  if(!c) return;
   const ctx = c.getContext("2d");
-  let W = window.innerWidth, H = window.innerHeight;
-  c.width = W; c.height = H;
-
+  let W = c.width = c.offsetWidth||window.innerWidth, H = c.height = c.offsetHeight||window.innerHeight;
   const stars = [];
-  for (let i=0; i<220; i++) {
+  for(let i=0;i<180;i++){
     stars.push({
-      x: Math.random()*W,
-      y: Math.random()*H,
-      r: Math.random()*1.6 + 0.5,
-      alpha: 0.65 + Math.random()*0.3,
-      color: i<130 
-        ? fromColor
-        : toColor,
-      speed: 0.08 + Math.random()*0.15
+      x:Math.random()*W, y:Math.random()*H,
+      r:Math.random()*1.6+0.5,
+      alpha: 0.65 + Math.random()*0.28,
+      color: (i<110)?color1:color2,
+      speed: 0.08+Math.random()*0.17
     });
   }
-
-  function animate() {
+  function loop(){
     ctx.clearRect(0,0,W,H);
-    // Dégradé dynamique de fond
-    let g = ctx.createLinearGradient(0,0,0,H);
-    g.addColorStop(0, fromColor);
-    g.addColorStop(1, toColor);
-    ctx.fillStyle = g;
+    let g = ctx.createLinearGradient(W/2,0,W/2,H);
+    g.addColorStop(0,color1); g.addColorStop(1,color2); ctx.fillStyle = g;
     ctx.fillRect(0,0,W,H);
-
-    // Dessine les étoiles
-    for (let s of stars) {
-      s.y += s.speed;
-      if (s.y > H) s.y = 0;
-      ctx.save();
-      ctx.globalAlpha = s.alpha;
-      ctx.beginPath();
-      ctx.arc(s.x, s.y, s.r, 0, Math.PI*2);
-      ctx.fillStyle = s.color;
-      ctx.shadowColor = s.color;
-      ctx.shadowBlur = 24;
+    for(let s of stars){
+      s.y+=s.speed; if(s.y>H)s.y=0;
+      ctx.save(); ctx.globalAlpha=s.alpha; ctx.beginPath();
+      ctx.arc(s.x,s.y,s.r,0,Math.PI*2);
+      ctx.fillStyle=s.color;
+      ctx.shadowColor=s.color;
+      ctx.shadowBlur=26;
       ctx.fill();
       ctx.restore();
     }
-    requestAnimationFrame(animate);
+    requestAnimationFrame(loop);
   }
-  animate();  
+  loop();
 }
-starfield('bgSpaceHero', "#02c7ec", "#1f0856");
-starfield('bgSpaceElephant', "#19ffda", "#0d2755");
-starfield('bgSpaceTurtle', "#2aff81", "#003930");
-starfield('bgSpaceAxolotl', "#df74ef", "#391c63");
+// Hero, Elephant, Turtle, Axolotl backgrounds
+starfield("canvas-hero-bg","#02c7ec","#1f0856");
+starfield("canvas-elephant-bg","#18f3b4","#128091");
+starfield("canvas-turtle-bg","#45e696","#07906c");
+starfield("canvas-axolotl-bg","#df74ef","#391c63");
 
-// --- Virus/contagion particles vapor effet ---
-function vaporAndVirus(id) {
-  const v = document.querySelector("#"+id);
-  if (!v) return;
+// --------- VAPOR + VIRUS EFFECT ANIMATION ---------
+function vaporAndVirus(layer) {
+  if(!layer) return;
   const canvas = document.createElement("canvas");
-  canvas.width = window.innerWidth; canvas.height = window.innerHeight;
-  v.appendChild(canvas);
+  canvas.width = window.innerWidth;
+  canvas.height = window.innerHeight;
+  layer.appendChild(canvas);
   const ctx = canvas.getContext("2d");
-  const particles = [];
-  for (let i=0; i<70; i++) {
-    particles.push({
-      x: Math.random()*canvas.width,
-      y: Math.random()*canvas.height,
-      dx: (Math.random()-0.5)*1.5,
-      dy: (Math.random()*2.4)+0.7,
-      r: Math.random()*9+4,
-      alpha: 0.2 + Math.random()*0.09,
-      color: ["#12ffff", "#4daf7d", "#df74ef", "#afd8e6"][Math.floor(Math.random()*4)]
+  const cloud = [];
+  for(let i=0;i<80;i++) {
+    cloud.push({
+      x:Math.random()*canvas.width,
+      y:Math.random()*canvas.height,
+      dx:(Math.random()-0.5)*1.5,
+      dy:(Math.random()*3.0)+0.6,
+      r:Math.random()*9+3,
+      alpha: 0.11 + Math.random()*0.13,
+      color: ["#12ffff","#45e696","#df74ef","#afd8e6"][Math.floor(Math.random()*4)]
     });
   }
   function render() {
-    ctx.clearRect(0,0,canvas.width, canvas.height);
-    for (let p of particles) {
-      p.y += p.dy; p.x += p.dx;
-      if (p.y > canvas.height) { p.y = 0; p.x = Math.random()*canvas.width;}
-      if (p.x > canvas.width) p.x = 0;
-      ctx.save();
-      ctx.globalAlpha = p.alpha;
-      ctx.beginPath();
-      ctx.arc(p.x, p.y, p.r, 0, Math.PI*2);
-      ctx.fillStyle = p.color;
-      ctx.shadowColor = p.color;
-      ctx.shadowBlur = 21;
-      ctx.fill();
-      ctx.restore();
+    ctx.clearRect(0,0,canvas.width,canvas.height);
+    for(let p of cloud){
+      p.y+=p.dy; p.x+=p.dx;
+      if(p.y>canvas.height){p.y=0; p.x=Math.random()*canvas.width;}
+      if(p.x>canvas.width) p.x=0;
+      ctx.save(); ctx.globalAlpha=p.alpha; ctx.beginPath();
+      ctx.arc(p.x,p.y,p.r,0,Math.PI*2); ctx.fillStyle=p.color;
+      ctx.shadowColor=p.color; ctx.shadowBlur=20; ctx.fill(); ctx.restore();
     }
     requestAnimationFrame(render);
   }
   render();
 }
-document.querySelectorAll(".vapor-layer").forEach((vaporElm, i)=>vaporAndVirus(vaporElm.id = "vapor"+i));
-document.querySelectorAll(".virus-layer").forEach((virusElm, i)=>vaporAndVirus(virusElm.id = "virus"+i));
+// Vapor & virus layers
+document.querySelectorAll(".vapor-layer").forEach(l=>vaporAndVirus(l));
+document.querySelectorAll(".virus-layer").forEach(l=>vaporAndVirus(l));
 
-// ----------- ADN + Molécule main HERO (Three.js 3D) ---------
-import * as THREE from "three";
-function createADNMolecule(containerId, animalColor) {
-  const div = document.getElementById(containerId);
-  const w = div.offsetWidth, h = div.offsetHeight;
-
-  // Setup scene
-  const scene = new THREE.Scene();
-  const camera = new THREE.PerspectiveCamera(60, w/h, 0.1, 100);
-  camera.position.z = 5.8;
-
-  const renderer = new THREE.WebGLRenderer({ alpha: true });
-  renderer.setSize(w, h);
-  div.appendChild(renderer.domElement);
-
-  // Lights
-  const pointLight = new THREE.PointLight(animalColor, 1.6);
-  pointLight.position.set(6,7,9);
-  scene.add(pointLight);
-  const ambient = new THREE.AmbientLight(0xffffff, 0.15);
-  scene.add(ambient);
-
-  // ADN double hélice 3D
-  const ADNGroup = new THREE.Group();
-  const helixRadius = 1.3, helixTurns = 5, segs = 120;
-  for (let side=0; side<2; side++) {
-    const material = new THREE.MeshPhongMaterial({ 
-      color: animalColor, emissive: animalColor, shininess: 0.83, transparent:true, opacity:0.65 
-    });
-    const curve = [];
-    for (let i=0; i<=segs; i++) {
-      const t = i/segs * Math.PI*helixTurns;
-      const x = Math.cos(t+side*Math.PI)*helixRadius;
-      const y = (i/segs - 0.5)*6;
-      const z = Math.sin(t+side*Math.PI)*helixRadius;
-      curve.push(new THREE.Vector3(x, y, z));
+// --------- ADN DOUBLE HELICE ANIMEE CANVAS ---------
+function animateADN(canvasId,color="#12ffff"){
+  const c = document.getElementById(canvasId);
+  if(!c) return;
+  let W = c.width = c.offsetWidth||520, H = c.height = c.offsetHeight||520;
+  const ctx = c.getContext("2d");
+  const helixTurns=5, segs=120, helixRadius=W/8, centerY=H/2;
+  let tAnim=0;
+  function draw(){
+    ctx.clearRect(0,0,W,H);
+    tAnim += 0.018;
+    // Double hélice
+    for(let s=0;s<2;s++){
+      ctx.save();
+      ctx.strokeStyle = color;
+      ctx.shadowColor = color;
+      ctx.shadowBlur = 16;
+      ctx.lineWidth=11-(s*4);
+      ctx.globalAlpha= 0.39+s*0.34;
+      ctx.beginPath();
+      for(let i=0;i<=segs;i++){
+        const t = i/segs*Math.PI*helixTurns+tAnim+(s?Math.PI:0);
+        let x=W/2+Math.cos(t)*helixRadius;
+        let y=centerY+(i/segs-0.5)*W*0.77 + Math.sin(t*0.4+tAnim)*14*(1.3+s*0.28);
+        if(i==0) ctx.moveTo(x,y); else ctx.lineTo(x,y);
+      }
+      ctx.stroke();
+      ctx.restore();
     }
-    const geometry = new THREE.TubeGeometry(new THREE.CatmullRomCurve3(curve), segs, 0.16, 12, false);
-    const mesh = new THREE.Mesh(geometry, material);
-    ADNGroup.add(mesh);
+    // Barres base-pairs
+    for(let i=0;i<segs;i+=8){
+      let t=i/segs*Math.PI*helixTurns+tAnim;
+      let y=centerY+(i/segs-0.5)*W*0.77;
+      let x1=W/2+Math.cos(t)*helixRadius;
+      let x2=W/2+Math.cos(t+Math.PI)*helixRadius;
+      ctx.save();
+      ctx.strokeStyle=color; ctx.globalAlpha=0.48;
+      ctx.lineWidth=2.4;
+      ctx.beginPath(); ctx.moveTo(x1,y); ctx.lineTo(x2,y); ctx.stroke();
+      ctx.restore();
+    }
+    // Sphere molécule centrale animée
+    ctx.save();
+    ctx.beginPath();
+    ctx.arc(W/2,centerY,helixRadius*1.11+Math.sin(tAnim)*11,0,Math.PI*2);
+    ctx.shadowColor=color;
+    ctx.shadowBlur=40+Math.abs(Math.sin(tAnim)*120);
+    ctx.globalAlpha=0.17 + 0.13*Math.abs(Math.sin(tAnim*0.59));
+    ctx.fillStyle=color;
+    ctx.fill();
+    ctx.restore();
+    requestAnimationFrame(draw);
   }
-
-  // Ponts entre les deux hélices + base-pairs
-  for (let i=0; i<segs; i+=8) {
-    const t = i/segs * Math.PI*helixTurns;
-    const y = (i/segs-0.5)*6;
-    const x1 = Math.cos(t)*helixRadius;
-    const z1 = Math.sin(t)*helixRadius;
-    const x2 = Math.cos(t+Math.PI)*helixRadius;
-    const z2 = Math.sin(t+Math.PI)*helixRadius;
-    const geometry = new THREE.CylinderGeometry(0.06, 0.08, 1.25, 6);
-    const pairMaterial = new THREE.MeshPhongMaterial({ 
-      color: animalColor, transparent:true, opacity:0.6, shininess:0.7
-    });
-    const mesh = new THREE.Mesh(geometry, pairMaterial);
-    mesh.position.set((x1+x2)/2, y, (z1+z2)/2);
-    mesh.lookAt(new THREE.Vector3(x2, y, z2));
-    ADNGroup.add(mesh);
-  }
-
-  // Molécule centrale (sphere organic blob)
-  const geometryM = new THREE.IcosahedronGeometry(0.85, 2);
-  const moleculeMaterial = new THREE.MeshPhongMaterial({ 
-    color: animalColor, transparent:true, opacity:0.7, shininess:1, emissive:animalColor
-  });
-  const mol = new THREE.Mesh(geometryM, moleculeMaterial);
-  mol.position.set(0,0,0);
-  ADNGroup.add(mol);
-
-  scene.add(ADNGroup);
-
-  // Animation
-  function animate() {
-    ADNGroup.rotation.y += 0.0122;
-    ADNGroup.rotation.x += 0.0014;
-    mol.scale.x = 1.08+Math.sin(Date.now()*0.002)*0.15;
-    mol.scale.y = 1.11+Math.cos(Date.now()*0.002)*0.1;
-    renderer.render(scene, camera);
-    requestAnimationFrame(animate);
-  }
-  animate();
+  draw();
 }
+// Hero ADN/Molecule 
+animateADN("canvas-hero-adn","#12ffff");
+// Animaux ADN/molecule
+animateADN("canvas-elephant-adn","#24f8a7");
+animateADN("canvas-turtle-adn","#45e696");
+animateADN("canvas-axolotl-adn","#df74ef");
 
-// Hero ADN/Molécule section
-setTimeout(()=>createADNMolecule("webgl-hero", 0x12ffff), 500);
-
-// Animal section ADN + molecule, couleur spécifique
-setTimeout(()=>createADNMolecule("adn-elephant", 0x24f8a7), 1200);
-setTimeout(()=>createADNMolecule("adn-turtle", 0x4cff70), 1200); 
-setTimeout(()=>createADNMolecule("adn-axolotl", 0xdf74ef), 1200);
-
-// ----------- SVG Animaux réalistes, contours fluos -----------
+// --------- SVG des animaux très réalistes, contour fluo ---------
 function svgAnimal(containerId, animal) {
   const div = document.getElementById(containerId);
-  let color = "#12ffff";
-  if (animal==="elephant") color = "#24f8a7";
-  if (animal==="turtle") color = "#4cff70";
-  if (animal==="axolotl") color = "#df74ef";
-  let path, scale;
-  if (animal==="elephant") {
-    path = "M70 250 Q120 180 160 190 Q207 138 207 97 Q185 78 160 74 Q130 71 110 97 Q90 116 110 128 Q78 138 50 120 Q55 192 128 244 Z M130 152 Q141 162 140 184 Q128 197 127 161 Z"; scale=1.13;
-  } else if (animal==="turtle") {
-    path = "M190 250 Q240 190 230 130 Q210 60 140 80 Q60 90 95 160 Q130 280 210 200 Q210 140 100 150 Z M140 100 Q178 120 150 180 Q111 135 158 160 Z"; scale=1.3;
-  } else if (animal==="axolotl") {
-    path = "M188 110 Q210 55 245 115 Q190 175 235 130 Q180 210 115 160 Q180 160 110 150 Q80 140 80 90 Q105 105 195 110 Z"; scale=1.32;
-  }
-  div.innerHTML = `
-    <svg width="270" height="270" viewBox="0 30 270 240" fill="none" xmlns="http://www.w3.org/2000/svg" style="filter: drop-shadow(0 0 30px ${color});">
-      <path d="${path}" stroke="${color}" stroke-width="4.8" fill="black" opacity="0.98"/>
-    </svg>
-  `;
+  let color = "#12ffff", svg="";
+  if(animal==="elephant"){color="#24f8a7"; svg=`<svg viewBox="0 0 320 320" width="100%" height="100%"><path d="M30 210 Q80 110 185 95 Q276 90 253 198 Q260 142 176 130 Q162 176 217 200 Q159 217 125 192 Q90 165 139 175 Q89 159 48 170 Q60 200 160 225 Q140 200 60 215 Q44 190 35 220 Z" fill="black" stroke="${color}" stroke-width="9" filter="url(#glow)"/><defs><filter id="glow"><feGaussianBlur stdDeviation="7" result="coloredBlur"/><feMerge><feMergeNode in="coloredBlur"/><feMergeNode in="SourceGraphic"/></feMerge></filter></defs></svg>`;}
+  else if(animal==="turtle"){color="#45e696"; svg=`<svg viewBox="0 0 320 320" width="100%" height="100%"><ellipse cx="148" cy="190" rx="80" ry="48" fill="black" stroke="${color}" stroke-width="9" filter="url(#glow)"/><ellipse cx="148" cy="135" rx="53" ry="24" fill="black" stroke="${color}" stroke-width="7" filter="url(#glow)"/><ellipse cx="94" cy="190" rx="15" ry="24" fill="black" stroke="${color}" stroke-width="5" filter="url(#glow)"/><ellipse cx="198" cy="190" rx="15" ry="24" fill="black" stroke="${color}" stroke-width="5" filter="url(#glow)"/><ellipse cx="148" cy="220" rx="22" ry="18" fill="black" stroke="${color}" stroke-width="5" filter="url(#glow)"/><ellipse cx="148" cy="110" rx="12" ry="6" fill="black" stroke="${color}" stroke-width="4" filter="url(#glow)"/><defs><filter id="glow"><feGaussianBlur stdDeviation="7" result="coloredBlur"/><feMerge><feMergeNode in="coloredBlur"/><feMergeNode in="SourceGraphic"/></feMerge></filter></defs></svg>`;}
+  else if(animal==="axolotl"){color="#df74ef"; svg=`<svg viewBox="0 0 320 320" width="100%" height="100%"><ellipse cx="170" cy="180" rx="55" ry="48" fill="black" stroke="${color}" stroke-width="9" filter="url(#glow)"/><ellipse cx="230" cy="138" rx="17" ry="35" fill="black" stroke="${color}" stroke-width="7.5" filter="url(#glow)"/><ellipse cx="108" cy="135" rx="17" ry="28" fill="black" stroke="${color}" stroke-width="7.5" filter="url(#glow)"/><ellipse cx="205" cy="232" rx="16" ry="20" fill="black" stroke="${color}" stroke-width="5" filter="url(#glow)"/><ellipse cx="132" cy="232" rx="16" ry="20" fill="black" stroke="${color}" stroke-width="5" filter="url(#glow)"/><ellipse cx="170" cy="80" rx="18" ry="11" fill="black" stroke="${color}" stroke-width="5" filter="url(#glow)"/><defs><filter id="glow"><feGaussianBlur stdDeviation="7" result="coloredBlur"/><feMerge><feMergeNode in="coloredBlur"/><feMergeNode in="SourceGraphic"/></feMerge></filter></defs></svg>`;}
+  div.innerHTML=svg;
 }
-setTimeout(()=>svgAnimal("elephant-svg", "elephant"), 1400);
-setTimeout(()=>svgAnimal("turtle-svg", "turtle"), 1400);
-setTimeout(()=>svgAnimal("axolotl-svg", "axolotl"), 1400);
+// SVG animaux
+svgAnimal("elephant-svg","elephant");
+svgAnimal("turtle-svg","turtle");
+svgAnimal("axolotl-svg","axolotl");
+
+// (TOUT EST FULL JS/SVG/CANVAS, pas d'asset externe. Responsive/design premium.)
+
+});
