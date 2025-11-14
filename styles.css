@@ -5,27 +5,33 @@
   --purple: #df74ef;
   --muted: #ffffffaa;
   --title-font: 'Orbitron', Arial, sans-serif;
-  --animaux-gradient: linear-gradient(110deg, #1f0856 0%, #02c7ec 100%);
+  --fond-sobre: #101234;
 }
 
 #section-animaux {
-  position: relative;
-  width: 100vw; min-height: 100vh;
-  padding-top: 5vh; padding-bottom: 5vh;
+  position: relative; width: 100vw; min-height: 100vh;
   display: flex; align-items: center; justify-content: center;
+  background: var(--fond-sobre);
   overflow: hidden;
-  background: var(--animaux-gradient);
+  z-index: 1;
 }
-.animaux-bg {
+.fond-sobre {
   position: absolute; inset: 0;
-  background: var(--animaux-gradient);
-  opacity: 0.95;
+  background: linear-gradient(135deg, #101234 70%, #1e266f 100%);
+  opacity: 0.97;
   z-index: 0;
+}
+#canvas-adn-bg {
+  position: absolute; inset: 0;
+  background: transparent;
+  z-index: 1;
+  width: 100vw; height: 100vh;
+  pointer-events: none;
 }
 .venom-mask {
   position: absolute;
   inset: 0;
-  background: radial-gradient(circle at 50% 60%, #181828 75%, #020216 100%);
+  background: radial-gradient(circle at 50% 70%, #181828 70%, #010214 100%);
   z-index: 2;
   pointer-events: none;
   transition: clip-path 1.3s cubic-bezier(.6,.3,.7,1.3), opacity 1s;
@@ -42,64 +48,54 @@
   width: 100%;
   z-index: 3;
 }
-
 .bloc-adn-animal {
   display: flex;
   flex-direction: column;
   align-items: center;
-  width: 25vw; min-width:180px; max-width:300px;
+  width: 23vw; min-width:140px; max-width:240px;
   position: relative;
   opacity: 0; /* revealed by GSAP */
   transform: translateY(70px) scale(0.88);
 }
-
 .canvas-adn-animal {
-  width: 180px; height: 180px;
-  margin-bottom: 12px;
+  width: 120px; height: 120px;
+  margin-bottom: 8px;
   margin-left: auto; margin-right: auto;
   background: transparent;
   z-index: 4;
   display: block;
 }
-
 .animal-svg.small {
-  width: 76px; height: 76px; max-width: 140px;
-  margin: 0 auto 14px auto;
+  width: 56px; height: 56px; max-width: 100px;
+  margin: 0 auto 10px auto;
   display: block;
   position: relative;
   z-index: 5;
 }
-
 .adn-nom {
   color: #fff;
   font-family: var(--title-font);
   font-weight: 700;
-  font-size: 1.15rem;
-  letter-spacing: 0.18em;
+  font-size: 1rem;
+  letter-spacing: 0.16em;
   text-align: center;
-  margin-top: 4px;
-  margin-bottom: 6px;
-  text-shadow: 0 0 16px var(--cyan), 0 0 4px #19023a;
-  /* Glow animation */
+  margin-top: 2px;
+  margin-bottom: 2px;
+  text-shadow: 0 0 12px var(--cyan), 0 0 4px #19023a;
   animation: pulseGlow 2.3s infinite alternate;
 }
 @keyframes pulseGlow {
-  0% { text-shadow: 0 0 9px var(--cyan); }
-  100% { text-shadow: 0 0 24px var(--green),0 0 4px #391c63; }
+  0% { text-shadow: 0 0 8px var(--cyan); }
+  100% { text-shadow: 0 0 17px var(--green), 0 0 4px #391c63; }
 }
 
-@media(max-width: 1100px) {
-  .adn-animaux-horizontal { gap:4vw; }
+@media(max-width: 900px) {
+  .adn-animaux-horizontal { gap:3vw; min-height:26vh;}
   .bloc-adn-animal { width: 30vw;}
+  .canvas-adn-animal { width:19vw; height:19vw;}
 }
-
-@media(max-width: 700px) {
-  .adn-animaux-horizontal { gap: 0; }
-  .bloc-adn-animal { width: 40vw;}
-  .canvas-adn-animal { width:28vw; height:28vw;}
-}
-
-@media(max-width:500px){
-  .adn-animaux-horizontal { flex-direction: column; gap:5vw; }
-  .bloc-adn-animal { width:80vw; margin-bottom:6vw;}
+@media(max-width: 630px) {
+  .adn-animaux-horizontal { flex-direction: column; gap:3vw; min-height:40vh;}
+  .bloc-adn-animal { width:88vw;}
+  .canvas-adn-animal { width:39vw; height:39vw;}
 }
