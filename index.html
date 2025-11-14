@@ -3,71 +3,67 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>PULSE-53 — Bryan Maison</title>
+  <title>PULSE-53 — Biologie & Espace</title>
   <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@700&display=swap" rel="stylesheet" />
   <link rel="stylesheet" href="styles.css" />
 </head>
 <body>
-  <!-- Écran de lancement -->
-  <div id="launch-screen">
-    <canvas id="virus-animation"></canvas>
-    <div class="loader">PULSE-53</div>
-  </div>
-
-  <!-- Section Héros avec effet Igloo (WebGL/Canvas étoilé + plan 3D animé) -->
-  <section id="hero">
-    <canvas id="starfield" aria-hidden="true"></canvas>
-    <div id="webgl-container">
-      <canvas id="webgl-canvas"></canvas>
-    </div>
-    <header id="topbar">
-      <img id="logo-img" src="logo.png" alt="Logo PULSE-53" />
-    </header>
-    <div id="overlay" class="parallax-layer" data-speed="0.22">
-      <h1 id="title">PULSE-53</h1>
-      <p id="subtitle">Une exploration visuelle du p53 — pulsations, particules, relief ADN en mouvement.</p>
-    </div>
-    <img src="silhouette.png" id="silhouette" alt="biologiste regardant le ciel" class="parallax-layer" data-speed="0.6" />
-    <button id="goSlider" aria-label="Voir les informations">En savoir plus ↑</button>
-  </section>
-
-  <!-- Slider tunnel centré -->
-  <section id="cell-slider">
-    <div class="slide active">Slide 1</div>
-    <div class="slide">Slide 2</div>
-    <div class="slide">Slide 3</div>
-    <button class="nav prev">‹</button>
-    <button class="nav next">›</button>
-  </section>
-
-  <!-- Section Informations -->
-  <main id="content">
-    <section class="card" id="about">
-      <h2>À propos</h2>
-      <p>Créateur : Bryan Maison — <a href="mailto:maisonbryan92@gmail.com">maisonbryan92@gmail.com</a></p>
-      <p>PULSE-53 est né d'une idée inspirée par l'éléphant, la tortue et l'axolotl — mémoire, longévité et régénération.</p>
+  <main id="scroll-container">
+    <!-- Section 0 : Hero, molécule + ADN animé + fond spatial -->
+    <section class="section hero-section" data-bg="hero">
+      <canvas id="bgSpaceHero"></canvas>
+      <div id="webgl-hero"></div>
+      <div class="vapor-layer"></div>
+      <div class="virus-layer"></div>
     </section>
-    <section class="card" id="what-you-see">
-      <h2>Ce que vous voyez</h2>
-      <ul>
-        <li>Logo PNG animé relief 3D</li>
-        <li>Ciel étoilé avec dégradé et silhouette biologiste</li>
-        <li>Tunnel de slides centré, effet premium</li>
-      </ul>
+
+    <!-- Section 1 : Eléphant + ADN -->
+    <section class="section animal-section" data-bg="elephant">
+      <canvas id="bgSpaceElephant"></canvas>
+      <div class="adn-animal" id="adn-elephant"></div>
+      <div class="animal-svg" id="elephant-svg"></div>
+      <div class="vapor-layer"></div>
+      <div class="virus-layer"></div>
     </section>
-    <section class="card">
-      <h2>Contact</h2>
-      <p>Email : <a href="mailto:maisonbryan92@gmail.com">maisonbryan92@gmail.com</a></p>
+
+    <!-- Section 2 : Tortue + ADN -->
+    <section class="section animal-section" data-bg="turtle">
+      <canvas id="bgSpaceTurtle"></canvas>
+      <div class="adn-animal" id="adn-turtle"></div>
+      <div class="animal-svg" id="turtle-svg"></div>
+      <div class="vapor-layer"></div>
+      <div class="virus-layer"></div>
     </section>
-    <footer class="card small">
-      <p>© Bryan Maison — Inspiré par l'éléphant, la tortue et l'axolotl</p>
-    </footer>
+
+    <!-- Section 3 : Axolotl + ADN -->
+    <section class="section animal-section" data-bg="axolotl">
+      <canvas id="bgSpaceAxolotl"></canvas>
+      <div class="adn-animal" id="adn-axolotl"></div>
+      <div class="animal-svg" id="axolotl-svg"></div>
+      <div class="vapor-layer"></div>
+      <div class="virus-layer"></div>
+    </section>
+
+    <!-- À propos -->
+    <section class="section about-section" data-bg="about">
+      <div class="card about">
+        <p>PULSE-53, biologie moléculaire et régénération dans l’espace.</p>
+        <p>Par Bryan Maison</p>
+      </div>
+    </section>
+
+    <!-- Contact & Footer -->
+    <section class="section contact-section" data-bg="contact">
+      <div class="card contact">
+        <p>Email : <a href="mailto:maisonbryan92@gmail.com">maisonbryan92@gmail.com</a></p>
+        <p>© Bryan Maison - projet biologie moléculaire spatiale</p>
+      </div>
+    </section>
   </main>
-
-  <!-- Babylon.js pour plan 3D -->
-  <script src="https://cdn.babylonjs.com/babylon.js"></script>
-  <script src="https://cdn.babylonjs.com/materials/babylonjs.materials.min.js"></script>
-  <!-- Ton JS -->
+  <!-- Three.js / GSAP for webgl/scroll -->
+  <script src="https://unpkg.com/three@0.155.0/build/three.min.js"></script>
+  <script src="https://unpkg.com/gsap@3.12.5/dist/gsap.min.js"></script>
+  <script src="https://unpkg.com/gsap@3.12.5/dist/ScrollTrigger.min.js"></script>
   <script type="module" src="script.js"></script>
 </body>
 </html>
