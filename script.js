@@ -1,10 +1,13 @@
+// script.js
 window.addEventListener('DOMContentLoaded', () => {
   /* =================== Écran de lancement : veines organiques =================== */
   const launch = document.getElementById('launch-screen');
   const virusCanvas = document.getElementById('virus-animation');
-  const vCtx = virusCanvas.getContext('2d');
-  virusCanvas.width = window.innerWidth;
-  virusCanvas.height = window.innerHeight;
+  const vCtx = virusCanvas && virusCanvas.getContext ? virusCanvas.getContext('2d') : null;
+  if (virusCanvas) {
+    virusCanvas.width = window.innerWidth;
+    virusCanvas.height = window.innerHeight;
+  }
 
   class Veine {
     constructor(x, y) {
@@ -23,11 +26,12 @@ window.addEventListener('DOMContentLoaded', () => {
       const nx = last.x + Math.cos(angle) * len;
       const ny = last.y + Math.sin(angle) * len;
       this.points.push({x: nx, y: ny});
-      if(this.points.length > this.maxPoints || nx<0 || nx>virusCanvas.width || ny<0 || ny>virusCanvas.height){
+      if(this.points.length > this.maxPoints || nx<0 || nx> (virusCanvas ? virusCanvas.width : window.innerWidth) || ny<0 || ny> (virusCanvas ? virusCanvas.height : window.innerHeight)){
         this.finished = true;
       }
     }
     draw(ctx) {
+      if(!ctx) return;
       ctx.strokeStyle = this.color;
       ctx.lineWidth = 2;
       ctx.beginPath();
@@ -47,29 +51,32 @@ window.addEventListener('DOMContentLoaded', () => {
   for(let i=0;i<100;i++) veines.push(new Veine(originX, originY));
 
   function animateVeines() {
-    vCtx.clearRect(0,0,virusCanvas.width,virusCanvas.height);
-    let allFinished = true;
-    veines.forEach(v => {
-      if(!v.finished) { v.grow(); allFinished=false; }
-      v.draw(vCtx);
-    });
-    requestAnimationFrame(animateVeines);
-    if(allFinished) {
-      launch.style.transition='opacity 0.5s ease';
-      launch.style.opacity=0;
-      setTimeout(()=>launch.style.display='none',500);
+    if (vCtx && virusCanvas) {
+      vCtx.clearRect(0,0,virusCanvas.width,virusCanvas.height);
+      let allFinished = true;
+      veines.forEach(v => {
+        if(!v.finished) { v.grow(); allFinished=false; }
+        v.draw(vCtx);
+      });
+      if(allFinished) {
+        launch.style.transition='opacity 0.5s ease';
+        launch.style.opacity=0;
+        setTimeout(()=>launch.style.display='none',500);
+      }
     }
+    requestAnimationFrame(animateVeines);
   }
   animateVeines();
 
   /* =================== Starfield =================== */
   const canvas=document.getElementById('starfield');
-  const ctx=canvas.getContext('2d');
+  const ctx=canvas && canvas.getContext ? canvas.getContext('2d') : null;
   let W=window.innerWidth,H=window.innerHeight;
-  canvas.width=W; canvas.height=H;
+  if (canvas) { canvas.width=W; canvas.height=H; }
   const stars=[];
   for(let i=0;i<200;i++) stars.push({x:Math.random()*W,y:Math.random()*H,r:Math.random()*1.5+0.5,alpha:Math.random(),speed:0.05+Math.random()*0.1});
   function drawStars(){
+    if(!ctx) return;
     ctx.clearRect(0,0,W,H);
     for(let s of stars){
       s.y+=s.speed; if(s.y>H) s.y=0;
@@ -83,7 +90,7 @@ window.addEventListener('DOMContentLoaded', () => {
   /* =================== Parallax =================== */
   const layers=Array.from(document.querySelectorAll('.parallax-layer'));
   function parallaxLoop(){
-    const sc=window.scrollY,vh=window.innerHeight;
+    const sc=window.scrollY;
     layers.forEach(el=>{
       const speed=parseFloat(el.dataset.speed||'0.3');
       if(el.id==='overlay'){ el.style.transform=`translate(-50%,-50%) translateY(${sc*speed}px)`; }
@@ -94,15 +101,21 @@ window.addEventListener('DOMContentLoaded', () => {
   parallaxLoop();
 
   /* =================== Scroll vers slider =================== */
-  document.getElementById('goSlider').addEventListener('click',()=>{
-    const sliderPos=document.getElementById('cell-slider').offsetTop;
-    window.scrollTo({top:sliderPos,behavior:'smooth'});
-  });
+  const goBtn = document.getElementById('goSlider');
+  if (goBtn) {
+    goBtn.addEventListener('click',()=>{
+      const slider=document.getElementById('cell-slider');
+      if(!slider) return;
+      const sliderPos=slider.offsetTop;
+      window.scrollTo({top:sliderPos,behavior:'smooth'});
+    });
+  }
 
   /* =================== Slider tunnel centré =================== */
   const slides=document.querySelectorAll('#cell-slider .slide');
   let current=0, canSlide=true;
   function updateSlides(){
+    if(!slides || slides.length===0) return;
     slides.forEach((s,i)=>{
       s.classList.remove('active','prev','next');
       if(i===current) s.classList.add('active');
@@ -113,72 +126,122 @@ window.addEventListener('DOMContentLoaded', () => {
     // Centrer la slide active
     const slider = document.getElementById('cell-slider');
     const activeSlide = slides[current];
-    const sliderWidth = slider.offsetWidth;
-    const slideWidth = activeSlide.offsetWidth;
-    const offset = activeSlide.offsetLeft + slideWidth / 2 - sliderWidth / 2;
-    slider.scrollTo({ left: offset, behavior: 'smooth' });
+    if (slider && activeSlide) {
+      const sliderWidth = slider.offsetWidth;
+      const slideWidth = activeSlide.offsetWidth;
+      const offset = activeSlide.offsetLeft + slideWidth / 2 - sliderWidth / 2;
+      slider.scrollTo({ left: offset, behavior: 'smooth' });
+    }
   }
   function throttleSlide(cb){ if(!canSlide) return; canSlide=false; cb(); setTimeout(()=>canSlide=true,700);}
-  document.querySelector('.nav.next').addEventListener('click',()=>throttleSlide(()=>{current=(current+1)%slides.length;updateSlides();}));
-  document.querySelector('.nav.prev').addEventListener('click',()=>throttleSlide(()=>{current=(current-1+slides.length)%slides.length;updateSlides();}));
+  const nextBtn = document.querySelector('.nav.next');
+  const prevBtn = document.querySelector('.nav.prev');
+  if (nextBtn) nextBtn.addEventListener('click',()=>throttleSlide(()=>{current=(current+1)%slides.length;updateSlides();}));
+  if (prevBtn) prevBtn.addEventListener('click',()=>throttleSlide(()=>{current=(current-1+slides.length)%slides.length;updateSlides();}));
   updateSlides();
 
   // ===== NO SMOKE: ADN animations and SVG animals =====
 
-  // Anim ADN: double hélice animée
-  function animateADN(canvasId, color = "#12ffff") {
-    const c = document.getElementById(canvasId);
+  // Utility: setup canvas for high-DPI and given displayed size
+  function setupCanvasForDrawing(canvasEl) {
+    if(!canvasEl) return null;
+    const rect = canvasEl.getBoundingClientRect();
+    const DPR = Math.max(window.devicePixelRatio || 1, 1);
+    // set internal size to physical pixels
+    canvasEl.width = Math.max(1, Math.round(rect.width * DPR));
+    canvasEl.height = Math.max(1, Math.round(rect.height * DPR));
+    // ensure CSS size remains the same (use style)
+    canvasEl.style.width = rect.width + "px";
+    canvasEl.style.height = rect.height + "px";
+    const ctx = canvasEl.getContext('2d');
+    if(!ctx) return null;
+    // scale drawing to DPR so drawing coordinates use CSS pixels
+    ctx.setTransform(DPR, 0, 0, DPR, 0, 0);
+    return {ctx, W: rect.width, H: rect.height};
+  }
+
+  // Anim ADN: double hélice animée (uses canvas displayed size)
+  function animateADN(canvasSelector, color = "#12ffff") {
+    const c = document.getElementById(canvasSelector);
     if (!c) return;
-    let W = c.width = 200, H = c.height = 200;
-    const ctx = c.getContext("2d");
-    const helixTurns = 4.7, segs = 66, helixRadius = 38, centerY = H / 2;
-    let tAnim = Math.random() * 50; // décale les anims entre animaux
+    // ensure canvas is visible and sized to CSS size
+    const setup = setupCanvasForDrawing(c);
+    if (!setup) {
+      console.warn('Canvas context not available for', canvasSelector);
+      return;
+    }
+    const ctx = setup.ctx;
+    let W = setup.W, H = setup.H;
+    const helixTurns = 4.7, segs = 66, helixRadius = Math.max(12, Math.min(W, H) / 4), centerY = H / 2;
+    let tAnim = Math.random() * 50;
+    // handle resize: recalc on window resize or when container changes
+    function handleResize() {
+      const s = setupCanvasForDrawing(c);
+      if (!s) return;
+      W = s.W; H = s.H;
+      // update ctx reference (setup returns ctx already setTransform'ed)
+      // but we keep ctx variable referencing current context
+    }
+    window.addEventListener('resize', handleResize, {passive:true});
+
     function draw() {
-      ctx.clearRect(0, 0, W, H);
+      const s = c.getContext('2d');
+      if(!s) return;
+      // get current CSS size (in case of responsive)
+      const rect = c.getBoundingClientRect();
+      W = rect.width; H = rect.height;
+      // clear scaled canvas (ctx already scaled by DPR)
+      s.clearRect(0,0,c.width, c.height);
       tAnim += 0.017;
       // Double hélice
-      for (let s = 0; s < 2; s++) {
-        ctx.save();
-        ctx.strokeStyle = color;
-        ctx.shadowColor = color;
-        ctx.shadowBlur = 12 - s * 5;
-        ctx.lineWidth = 9 - (s * 3);
-        ctx.globalAlpha = 0.31 + s * 0.38;
-        ctx.beginPath();
+      for (let side = 0; side < 2; side++) {
+        s.save();
+        s.strokeStyle = color;
+        s.shadowColor = color;
+        s.shadowBlur = 10 - side * 4;
+        s.lineWidth = Math.max(1.8, 9 - (side * 3));
+        s.globalAlpha = 0.31 + side * 0.38;
+        s.beginPath();
         for (let i = 0; i <= segs; i++) {
-          const t = i / segs * Math.PI * helixTurns + tAnim + (s ? Math.PI : 0);
+          const t = i / segs * Math.PI * helixTurns + tAnim + (side ? Math.PI : 0);
           let x = W / 2 + Math.cos(t) * helixRadius;
-          let y = centerY + (i / segs - 0.5) * W * 0.51 + Math.sin(t * 0.4 + tAnim) * 7 * (1.2 + s * 0.22);
-          if (i == 0) ctx.moveTo(x, y); else ctx.lineTo(x, y);
+          let y = centerY + (i / segs - 0.5) * W * 0.51 + Math.sin(t * 0.4 + tAnim) * 7 * (1.2 + side * 0.22);
+          if (i === 0) s.moveTo(x, y); else s.lineTo(x, y);
         }
-        ctx.stroke(); ctx.restore();
+        s.stroke();
+        s.restore();
       }
-      // Barres nucléotidiques
+      // base pairs
       for (let i = 0; i < segs; i += 9) {
         let t = i / segs * Math.PI * helixTurns + tAnim;
         let y = centerY + (i / segs - 0.5) * W * 0.51;
         let x1 = W / 2 + Math.cos(t) * helixRadius;
         let x2 = W / 2 + Math.cos(t + Math.PI) * helixRadius;
-        ctx.save();
-        ctx.strokeStyle = color; ctx.globalAlpha = 0.41;
-        ctx.lineWidth = 2;
-        ctx.beginPath(); ctx.moveTo(x1, y); ctx.lineTo(x2, y); ctx.stroke(); ctx.restore();
+        s.save();
+        s.strokeStyle = color;
+        s.globalAlpha = 0.42;
+        s.lineWidth = 2;
+        s.beginPath(); s.moveTo(x1, y); s.lineTo(x2, y); s.stroke();
+        s.restore();
       }
-      // Sphère centrale
-      ctx.save();
-      ctx.beginPath();
-      ctx.arc(W / 2, centerY, helixRadius * 1.08 + Math.sin(tAnim) * 4, 0, Math.PI * 2);
-      ctx.shadowColor = color;
-      ctx.shadowBlur = 19 + Math.abs(Math.sin(tAnim) * 18);
-      ctx.globalAlpha = 0.13 + 0.11 * Math.abs(Math.sin(tAnim * 0.59));
-      ctx.fillStyle = color;
-      ctx.fill();
-      ctx.restore();
+      // center sphere
+      s.save();
+      s.beginPath();
+      s.arc(W/2, centerY, helixRadius * 1.04 + Math.sin(tAnim) * 3, 0, Math.PI*2);
+      s.shadowColor = color;
+      s.shadowBlur = 16 + Math.abs(Math.sin(tAnim) * 18);
+      s.globalAlpha = 0.12 + 0.1 * Math.abs(Math.sin(tAnim * 0.59));
+      s.fillStyle = color;
+      s.fill();
+      s.restore();
 
       requestAnimationFrame(draw);
     }
     draw();
   }
+
+  // start ADN animations (IDs correspond to HTML canvases)
+  // Note: ensure canvases exist in DOM (they do)
   animateADN("adn-elephant", "#24f8a7");
   animateADN("adn-turtle", "#45e696");
   animateADN("adn-axolotl", "#df74ef");
@@ -186,6 +249,7 @@ window.addEventListener('DOMContentLoaded', () => {
   // SVG animaux (contour fluo) dans .animal-svg
   function svgAnimal(containerId, animal) {
     const div = document.getElementById(containerId);
+    if(!div) return;
     let color = "#12ffff", svg = "";
     if (animal === "elephant") {
       color = "#24f8a7";
