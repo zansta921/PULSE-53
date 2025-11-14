@@ -1,7 +1,7 @@
 window.addEventListener('DOMContentLoaded', () => {
   // ... tout l'ancien code est inchangé jusqu'à la section ADN ...
 
-  // Utility: setup canvas for high-DPI and given displayed size
+  // Utilitaire: canvas high-DPI et responsif
   function setupCanvasForDrawing(canvasEl) {
     if(!canvasEl) return null;
     const rect = canvasEl.getBoundingClientRect();
@@ -16,28 +16,28 @@ window.addEventListener('DOMContentLoaded', () => {
     return {ctx, W: rect.width, H: rect.height};
   }
 
-  // Anim ADN: double hélice animée (avec allongement !)
-  function animateADN(canvasSelector, color = "#12ffff", helixRadiusRatio=0.38, helixTurns=6) {
+  // Anim ADN: plus allongé
+  function animateADN(canvasSelector, color = "#12ffff", helixRadiusRatio=0.32, helixTurns=7.4) {
     const c = document.getElementById(canvasSelector);
     if (!c) return;
-    const setup = setupCanvasForDrawing(c);
+    let setup = setupCanvasForDrawing(c);
     if (!setup) {
       console.warn('Canvas context not available for', canvasSelector);
       return;
     }
     let ctx = setup.ctx;
     let W = setup.W, H = setup.H;
-    // Plus haut => plus calme (0.38) / plus de tours = plus allongé
-    const helixRadius = Math.max(12, Math.min(W, H) * helixRadiusRatio);
     const segs = 66;
+    let helixRadius = Math.max(10, Math.min(W, H) * helixRadiusRatio);
     const centerY = H / 2;
     let tAnim = Math.random() * 50;
 
     window.addEventListener('resize', () => {
-      const s = setupCanvasForDrawing(c);
-      if (!s) return;
-      ctx = s.ctx;
-      W = s.W; H = s.H;
+      setup = setupCanvasForDrawing(c);
+      if (!setup) return;
+      ctx = setup.ctx;
+      W = setup.W; H = setup.H;
+      helixRadius = Math.max(10, Math.min(W, H) * helixRadiusRatio);
     }, {passive:true});
 
     function draw() {
@@ -48,28 +48,28 @@ window.addEventListener('DOMContentLoaded', () => {
         ctx.save();
         ctx.strokeStyle = color;
         ctx.shadowColor = color;
-        ctx.shadowBlur = 10 - side * 4;
-        ctx.lineWidth = Math.max(1.8, 9 - (side * 3));
-        ctx.globalAlpha = 0.31 + side * 0.38;
+        ctx.shadowBlur = 8 - side * 3;
+        ctx.lineWidth = Math.max(1.5, 7 - (side * 2));
+        ctx.globalAlpha = 0.33 + side * 0.34;
         ctx.beginPath();
         for (let i = 0; i <= segs; i++) {
           const t = i / segs * Math.PI * helixTurns + tAnim + (side ? Math.PI : 0);
           let x = W / 2 + Math.cos(t) * helixRadius;
-          let y = centerY + (i / segs - 0.5) * H * 0.73 + Math.sin(t * 0.4 + tAnim) * 7 * (1.2 + side * 0.22);
+          let y = centerY + (i / segs - 0.5) * H * 0.76 + Math.sin(t * 0.5 + tAnim) * 7 * (1.12 + side * 0.15);
           if (i === 0) ctx.moveTo(x, y); else ctx.lineTo(x, y);
         }
         ctx.stroke();
         ctx.restore();
       }
       // base pairs
-      for (let i = 0; i < segs; i += 9) {
+      for (let i = 0; i < segs; i += 8) {
         let t = i / segs * Math.PI * helixTurns + tAnim;
-        let y = centerY + (i / segs - 0.5) * H * 0.73;
+        let y = centerY + (i / segs - 0.5) * H * 0.76;
         let x1 = W / 2 + Math.cos(t) * helixRadius;
         let x2 = W / 2 + Math.cos(t + Math.PI) * helixRadius;
         ctx.save();
         ctx.strokeStyle = color;
-        ctx.globalAlpha = 0.42;
+        ctx.globalAlpha = 0.38;
         ctx.lineWidth = 2;
         ctx.beginPath(); ctx.moveTo(x1, y); ctx.lineTo(x2, y); ctx.stroke();
         ctx.restore();
@@ -77,10 +77,10 @@ window.addEventListener('DOMContentLoaded', () => {
       // center sphere
       ctx.save();
       ctx.beginPath();
-      ctx.arc(W/2, centerY, helixRadius * 1.04 + Math.sin(tAnim) * 3, 0, Math.PI*2);
+      ctx.arc(W/2, centerY, helixRadius * 1.011 + Math.sin(tAnim) * 3, 0, Math.PI*2);
       ctx.shadowColor = color;
-      ctx.shadowBlur = 16 + Math.abs(Math.sin(tAnim) * 18);
-      ctx.globalAlpha = 0.12 + 0.1 * Math.abs(Math.sin(tAnim * 0.59));
+      ctx.shadowBlur = 15 + Math.abs(Math.sin(tAnim) * 13);
+      ctx.globalAlpha = 0.15 + 0.08 * Math.abs(Math.sin(tAnim * 0.68));
       ctx.fillStyle = color;
       ctx.fill();
       ctx.restore();
@@ -91,10 +91,10 @@ window.addEventListener('DOMContentLoaded', () => {
   }
 
   // éléphant : gris allongé
-  animateADN("adn-elephant", "#bfc3ca", 0.38, 6.1);
+  animateADN("adn-elephant", "#bfc3ca", 0.31, 7.5);
   // tortue & axolotl : couleurs d'origine
-  animateADN("adn-turtle", "#45e696", 0.38, 6.1);
-  animateADN("adn-axolotl", "#df74ef", 0.38, 6.1);
+  animateADN("adn-turtle", "#45e696", 0.31, 7.5);
+  animateADN("adn-axolotl", "#df74ef", 0.31, 7.5);
 
   // SVG animaux : éléphant = gris
   function svgAnimal(containerId, animal) {
