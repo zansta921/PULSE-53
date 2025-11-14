@@ -62,24 +62,31 @@
   position: relative;
 }
 
+/* Ensure canvas is visible, sized responsively and above SVG */
 .adn-canvas {
-  width: 110px;
-  height: 110px;
+  width: 110px;           /* displayed size */
+  height: 110px;          /* displayed size */
   margin-bottom: -28px;
   background: transparent;
-  z-index: 2;
-  transition: filter 0.34s;
-  will-change: filter;
+  z-index: 9;             /* above animal SVG */
+  position: relative;
+  pointer-events: none;
+  display: block;
   filter: drop-shadow(0 0 12px var(--cyan));
 }
-#adn-turtle .adn-canvas { filter: drop-shadow(0 0 12px var(--green)); }
-#adn-axolotl .adn-canvas { filter: drop-shadow(0 0 12px var(--purple)); }
+
+/* color-specific glow fallback on parent block (kept for style) */
+#adn-elephant { }
+#adn-turtle { }
+#adn-axolotl { }
 
 .animal-svg {
   width: 80px;
   height: 80px;
-  position: static;
+  position: relative;
+  z-index: 6; /* under canvas */
   margin-bottom: 7px;
+  pointer-events: none;
 }
 
 .adn-animal-label {
