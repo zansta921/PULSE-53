@@ -322,6 +322,27 @@ main#content { padding:40px 20px; max-width:1000px; margin:0 auto; position:rela
   opacity: 0.93;
 }
 
+/* DEBUG PRINT POUR PHASES */
+.phase-card, .phases-visible .phase-card {
+  opacity: 1 !important;
+  transform: none !important;
+  background: #10242b !important;
+  color: #fff !important;
+}
+.phase-card-content, .phase-card * {
+  display: block !important;
+  color: #fff !important;
+  background: none !important;
+  font-size: 1em !important;
+  position: static !important;
+  height: auto !important;
+  width: 96% !important;
+  margin: 0 !important;
+  z-index: auto !important;
+  opacity: 1 !important;
+}
+.phase-card-content ul,
+.phase-card-content li { background: none !important; color: #fff !important; }
 /* small-screen adjustments for phase card content */
 @media (max-width: 1000px) {
   .phase-card-content { width: 96%; padding-top: 6px; gap:6px; }
