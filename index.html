@@ -8,6 +8,11 @@
   <link rel="stylesheet" href="styles.css" />
 </head>
 <body>
+  <!-- Morphing SVG section background (premium) -->
+  <svg id="morph-bg" viewBox="0 0 1440 500" preserveAspectRatio="none">
+    <path id="morph-shape" d="" fill="#071a24"/>
+  </svg>
+
   <!-- Écran de lancement -->
   <div id="launch-screen">
     <canvas id="virus-animation"></canvas>
@@ -15,41 +20,41 @@
   </div>
 
   <!-- Section Héros -->
-  <section id="hero">
+  <section id="hero" class="section premium-section">
     <canvas id="starfield" aria-hidden="true"></canvas>
     <header id="topbar">
       <img id="logo-img" src="logo.png" alt="Logo PULSE-53" />
     </header>
     <div id="overlay" class="parallax-layer" data-speed="0.22">
-      <h1 id="title">PULSE-53</h1>
-      <p id="subtitle">Une exploration visuelle du p53 — pulsations, particules et ADN en mouvement.</p>
+      <h1 id="title" class="mask-reveal">PULSE-53</h1>
+      <p id="subtitle" class="mask-reveal">Une exploration visuelle du p53 — pulsations, particules et ADN en mouvement.</p>
     </div>
     <img src="silhouette.png" id="silhouette" alt="biologiste regardant le ciel" class="parallax-layer" data-speed="0.6" />
     <button id="goSlider" aria-label="Voir les informations">En savoir plus ↑</button>
   </section>
 
   <!-- Section ADN animaux -->
-  <section id="adn-animals-section">
+  <section id="adn-animals-section" class="section premium-section">
     <div class="adn-animals-bg">
       <div class="adn-animals-reveal" id="adn-animals-reveal">
         <div class="adn-animal-wrap">
           <div class="adn-animal" id="elephant-adn-block">
             <canvas class="adn-canvas" id="adn-elephant"></canvas>
             <div class="animal-svg" id="elephant-svg"></div>
-            <div class="adn-animal-label">Éléphant</div>
+            <div class="adn-animal-label mask-reveal">Éléphant</div>
           </div>
           <div class="adn-animal" id="turtle-adn-block">
             <canvas class="adn-canvas" id="adn-turtle"></canvas>
             <div class="animal-svg" id="turtle-svg"></div>
-            <div class="adn-animal-label">Tortue</div>
+            <div class="adn-animal-label mask-reveal">Tortue</div>
           </div>
           <div class="adn-animal" id="axolotl-adn-block">
             <canvas class="adn-canvas" id="adn-axolotl"></canvas>
             <div class="animal-svg" id="axolotl-svg"></div>
-            <div class="adn-animal-label">Axolotl</div>
+            <div class="adn-animal-label mask-reveal">Axolotl</div>
           </div>
         </div>
-        <div class="adn-animals-desc">
+        <div class="adn-animals-desc mask-reveal">
           <p>Les doubles hélices colorées représentent l'ADN de trois animaux d'exception, chacun accompagné de sa silhouette et son ciel étoilé signature.</p>
         </div>
       </div>
@@ -57,96 +62,96 @@
   </section>
 
   <!-- NOUVELLE SECTION : Parcours en 7 phases -->
- <section id="phases-section" class="phases-section">
+ <section id="phases-section" class="section premium-section">
     <div class="phases-inner">
-      <h2 class="phases-title">Mon parcours — 7 phases</h2>
-      <div class="phases-grid id="phases-grid">
+      <h2 class="phases-title mask-reveal">Mon parcours — 7 phases</h2>
+      <div class="phases-grid" id="phases-grid">
         <div class="phase-card" data-index="1">
           <div class="phase-card-content">
-            <span class="phase-num">1</span>
-            <h3 class="phase-title">La Genèse</h3>
-            <div class="phase-period">2022</div>
-            <ul class="phase-list">
+            <span class="phase-num mask-reveal">1</span>
+            <h3 class="phase-title mask-reveal">La Genèse</h3>
+            <div class="phase-period mask-reveal">2022</div>
+            <ul class="phase-list mask-reveal">
               <li>Premières idées autour de Pulse-53</li>
               <li>Recherche sur les animaux inspirants</li>
               <li>Croquis sur carnet</li>
             </ul>
-            <div class="phase-tech"><span>Idéation, veille, croquis</span></div>
+            <div class="phase-tech mask-reveal"><span>Idéation, veille, croquis</span></div>
           </div>
         </div>
         <div class="phase-card" data-index="2">
           <div class="phase-card-content">
-            <span class="phase-num">2</span>
-            <h3 class="phase-title">Esquisses & Inspirations</h3>
-            <div class="phase-period">2022</div>
-            <ul class="phase-list">
+            <span class="phase-num mask-reveal">2</span>
+            <h3 class="phase-title mask-reveal">Esquisses & Inspirations</h3>
+            <div class="phase-period mask-reveal">2022</div>
+            <ul class="phase-list mask-reveal">
               <li>Découverte de l’axolotl et des codes couleurs</li>
               <li>Débuts graphiques sur Figma</li>
               <li>Éléments artistiques définis</li>
             </ul>
-            <div class="phase-tech"><span>Figma, moodboards</span></div>
+            <div class="phase-tech mask-reveal"><span>Figma, moodboards</span></div>
           </div>
         </div>
         <div class="phase-card" data-index="3">
           <div class="phase-card-content">
-            <span class="phase-num">3</span>
-            <h3 class="phase-title">Premiers Pixels</h3>
-            <div class="phase-period">2023</div>
-            <ul class="phase-list">
+            <span class="phase-num mask-reveal">3</span>
+            <h3 class="phase-title mask-reveal">Premiers Pixels</h3>
+            <div class="phase-period mask-reveal">2023</div>
+            <ul class="phase-list mask-reveal">
               <li>Structure HTML/CSS montée</li>
               <li>Animations canvas testées</li>
               <li>Parallax intégré</li>
             </ul>
-            <div class="phase-tech"><span>HTML, CSS, JS (Parallax)</span></div>
+            <div class="phase-tech mask-reveal"><span>HTML, CSS, JS (Parallax)</span></div>
           </div>
         </div>
         <div class="phase-card" data-index="4">
           <div class="phase-card-content">
-            <span class="phase-num">4</span>
-            <h3 class="phase-title">Effets & ADN</h3>
-            <div class="phase-period">2023-2024</div>
-            <ul class="phase-list">
+            <span class="phase-num mask-reveal">4</span>
+            <h3 class="phase-title mask-reveal">Effets & ADN</h3>
+            <div class="phase-period mask-reveal">2023-2024</div>
+            <ul class="phase-list mask-reveal">
               <li>Dessins d’hélices animés</li>
               <li>Ajout de la starfield Pulse</li>
             </ul>
-            <div class="phase-tech"><span>Canvas, animation JS</span></div>
+            <div class="phase-tech mask-reveal"><span>Canvas, animation JS</span></div>
           </div>
         </div>
         <div class="phase-card" data-index="5">
           <div class="phase-card-content">
-            <span class="phase-num">5</span>
-            <h3 class="phase-title">Silhouettes</h3>
-            <div class="phase-period">2024</div>
-            <ul class="phase-list">
+            <span class="phase-num mask-reveal">5</span>
+            <h3 class="phase-title mask-reveal">Silhouettes</h3>
+            <div class="phase-period mask-reveal">2024</div>
+            <ul class="phase-list mask-reveal">
               <li>SVG des animaux stylisés & glow</li>
               <li>Recherches sur les effets lumineux</li>
             </ul>
-            <div class="phase-tech"><span>SVG, Filtres CSS</span></div>
+            <div class="phase-tech mask-reveal"><span>SVG, Filtres CSS</span></div>
           </div>
         </div>
         <div class="phase-card" data-index="6">
           <div class="phase-card-content">
-            <span class="phase-num">6</span>
-            <h3 class="phase-title">Finitions Responsive</h3>
-            <div class="phase-period">2024</div>
-            <ul class="phase-list">
+            <span class="phase-num mask-reveal">6</span>
+            <h3 class="phase-title mask-reveal">Finitions Responsive</h3>
+            <div class="phase-period mask-reveal">2024</div>
+            <ul class="phase-list mask-reveal">
               <li>Adaptation mobile et tablette</li>
               <li>Refonte du color scheme</li>
             </ul>
-            <div class="phase-tech"><span>CSS Grid, media queries</span></div>
+            <div class="phase-tech mask-reveal"><span>CSS Grid, media queries</span></div>
           </div>
         </div>
         <div class="phase-card" data-index="7">
           <div class="phase-card-content">
-            <span class="phase-num">7</span>
-            <h3 class="phase-title">Lancement & Diffusion</h3>
-            <div class="phase-period">2024</div>
-            <ul class="phase-list">
+            <span class="phase-num mask-reveal">7</span>
+            <h3 class="phase-title mask-reveal">Lancement & Diffusion</h3>
+            <div class="phase-period mask-reveal">2024</div>
+            <ul class="phase-list mask-reveal">
               <li>Mise en ligne Pulse-53</li>
               <li>Partage du site & feedbacks</li>
               <li>Bugs corrigés au fil de l’eau</li>
             </ul>
-            <div class="phase-tech"><span>Web, réseaux, user feedback</span></div>
+            <div class="phase-tech mask-reveal"><span>Web, réseaux, user feedback</span></div>
           </div>
         </div>
       </div>
@@ -161,7 +166,6 @@
       <p>Créateur : Bryan Maison — <a href="mailto:maisonbryan92@gmail.com">maisonbryan92@gmail.com</a></p>
       <p>PULSE-53 est né d'une idée inspirée par l'éléphant, la tortue et l'axolotl — mémoire, longévité et régénération.</p>
     </section>
-
     <section class="card" id="what-you-see">
       <h2>Ce que vous voyez</h2>
       <ul>
@@ -169,17 +173,16 @@
         <li>Ciel étoilé avec dégradé et silhouette de biologiste.</li>
       </ul>
     </section>
-
     <section class="card">
       <h2>Contact</h2>
       <p>Email : <a href="mailto:maisonbryan92@gmail.com">maisonbryan92@gmail.com</a></p>
     </section>
-
     <footer class="card small">
       <p>© Bryan Maison — Inspiré par l'éléphant, la tortue et l'axolotl</p>
     </footer>
   </main>
-
-  <script src="script.js"></script>
+  <script src="https://unpkg.com/gsap@3/dist/gsap.min.js"></script>
+  <script src="https://unpkg.com/gsap@3/dist/ScrollTrigger.min.js"></script>
+  <script src="script-premium.js"></script>
 </body>
 </html>
