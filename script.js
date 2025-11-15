@@ -1,5 +1,5 @@
 window.addEventListener('DOMContentLoaded', () => {
-  /* BUG FIX : Écran de lancement responsive mobile */
+  /* =================== Launch screen (veines organiques) =================== */
   const launch = document.getElementById('launch-screen');
   const virusCanvas = document.getElementById('virus-animation');
   let vCtx = virusCanvas && virusCanvas.getContext ? virusCanvas.getContext('2d') : null;
@@ -8,12 +8,10 @@ window.addEventListener('DOMContentLoaded', () => {
     if (!virusCanvas) return;
     virusCanvas.width = window.innerWidth;
     virusCanvas.height = window.innerHeight;
-    // On doit re-centrer les veines si resize change
-    if (veines.length) {
-      veines.length = 0;
-      for (let i = 0; i < 100; i++) veines.push(new Veine(window.innerWidth/2, window.innerHeight/2));
-      allVeinesStarted = false;
-    }
+    // re-create veines around center on resize
+    veines.length = 0;
+    for (let i = 0; i < 100; i++) veines.push(new Veine(window.innerWidth/2, window.innerHeight/2));
+    allVeinesStarted = false;
   }
 
   class Veine {
@@ -52,7 +50,6 @@ window.addEventListener('DOMContentLoaded', () => {
     }
   }
 
-  // bugfix mobile: veines doivent être "rafraichies" au resize
   const veines = [];
   let allVeinesStarted = false;
   function startVeines() {
@@ -79,21 +76,21 @@ window.addEventListener('DOMContentLoaded', () => {
     requestAnimationFrame(animateVeines);
   }
 
-  // Resize support sur mobile
-  window.addEventListener('resize', function() {
+  window.addEventListener('resize', () => {
     resizeVirusCanvas();
     vCtx = virusCanvas.getContext('2d');
   });
+
   resizeVirusCanvas();
   startVeines();
   animateVeines();
 
   /* =================== Starfield =================== */
-  const canvas=document.getElementById('starfield');
-  const ctx=canvas && canvas.getContext ? canvas.getContext('2d') : null;
-  let W=window.innerWidth,H=window.innerHeight;
-  if (canvas) { canvas.width=W; canvas.height=H; }
-  const stars=[];
+  const canvas = document.getElementById('starfield');
+  const ctx = canvas && canvas.getContext ? canvas.getContext('2d') : null;
+  let W = window.innerWidth, H = window.innerHeight;
+  if (canvas) { canvas.width = W; canvas.height = H; }
+  const stars = [];
   for(let i=0;i<200;i++) stars.push({x:Math.random()*W,y:Math.random()*H,r:Math.random()*1.5+0.5,alpha:Math.random(),speed:0.05+Math.random()*0.1});
   function drawStars(){
     if(!ctx) return;
@@ -106,61 +103,39 @@ window.addEventListener('DOMContentLoaded', () => {
     requestAnimationFrame(drawStars);
   }
   drawStars();
+  window.addEventListener('resize', () => {
+    W = window.innerWidth; H = window.innerHeight;
+    if (canvas) { canvas.width = W; canvas.height = H; }
+  }, {passive:true});
 
   /* =================== Parallax =================== */
-  const layers=Array.from(document.querySelectorAll('.parallax-layer'));
+  const layers = Array.from(document.querySelectorAll('.parallax-layer'));
   function parallaxLoop(){
-    const sc=window.scrollY;
+    const sc = window.scrollY;
     layers.forEach(el=>{
-      const speed=parseFloat(el.dataset.speed||'0.3');
-      if(el.id==='overlay'){ el.style.transform=`translate(-50%,-50%) translateY(${sc*speed}px)`; }
-      else{ el.style.transform=`translateX(-50%) translateY(${sc*speed}px)`; }
+      const speed = parseFloat(el.dataset.speed||'0.3');
+      if(el.id==='overlay'){ el.style.transform = `translate(-50%,-50%) translateY(${sc*speed}px)`; }
+      else{ el.style.transform = `translateX(-50%) translateY(${sc*speed}px)`; }
     });
     requestAnimationFrame(parallaxLoop);
   }
   parallaxLoop();
 
-  /* =================== Scroll vers slider =================== */
+  /* =================== goSlider -> scroll to phases section (slider removed) =================== */
   const goBtn = document.getElementById('goSlider');
   if (goBtn) {
-    goBtn.addEventListener('click',()=>{
-      const slider=document.getElementById('cell-slider');
-      if(!slider) return;
-      const sliderPos=slider.offsetTop;
-      window.scrollTo({top:sliderPos,behavior:'smooth'});
+    goBtn.addEventListener('click', ()=>{
+      const target = document.getElementById('phases-section') || document.getElementById('content');
+      if (!target) return;
+      const pos = target.offsetTop;
+      window.scrollTo({ top: pos, behavior: 'smooth' });
     });
   }
 
-  /* =================== Slider tunnel centré =================== */
-  const slides=document.querySelectorAll('#cell-slider .slide');
-  let current=0, canSlide=true;
-  function updateSlides(){
-    if(!slides || slides.length===0) return;
-    slides.forEach((s,i)=>{
-      s.classList.remove('active','prev','next');
-      if(i===current) s.classList.add('active');
-      if(i===current-1||(current===0&&i===slides.length-1)) s.classList.add('prev');
-      if(i===current+1||(current===slides.length-1&&i===0)) s.classList.add('next');
-    });
+  /* =================== (removed slider logic) =================== */
+  // slider markup and JS removed per request
 
-    // Centrer la slide active
-    const slider = document.getElementById('cell-slider');
-    const activeSlide = slides[current];
-    if (slider && activeSlide) {
-      const sliderWidth = slider.offsetWidth;
-      const slideWidth = activeSlide.offsetWidth;
-      const offset = activeSlide.offsetLeft + slideWidth / 2 - sliderWidth / 2;
-      slider.scrollTo({ left: offset, behavior: 'smooth' });
-    }
-  }
-  function throttleSlide(cb){ if(!canSlide) return; canSlide=false; cb(); setTimeout(()=>canSlide=true,700);}
-  const nextBtn = document.querySelector('.nav.next');
-  const prevBtn = document.querySelector('.nav.prev');
-  if (nextBtn) nextBtn.addEventListener('click',()=>throttleSlide(()=>{current=(current+1)%slides.length;updateSlides();}));
-  if (prevBtn) prevBtn.addEventListener('click',()=>throttleSlide(()=>{current=(current-1+slides.length)%slides.length;updateSlides();}));
-  updateSlides();
-
-  // Utilitaire: setup canvas for high-DPI et responsif
+  /* =================== Canvas helpers (high-DPI) =================== */
   function setupCanvasForDrawing(canvasEl) {
     if(!canvasEl) return null;
     const rect = canvasEl.getBoundingClientRect();
@@ -169,74 +144,72 @@ window.addEventListener('DOMContentLoaded', () => {
     canvasEl.height = Math.max(1, Math.round(rect.height * DPR));
     canvasEl.style.width = rect.width + "px";
     canvasEl.style.height = rect.height + "px";
-    const ctx = canvasEl.getContext('2d');
-    if(!ctx) return null;
-    ctx.setTransform(DPR, 0, 0, DPR, 0, 0);
-    return {ctx, W: rect.width, H: rect.height};
+    const cctx = canvasEl.getContext('2d');
+    if(!cctx) return null;
+    cctx.setTransform(DPR, 0, 0, DPR, 0, 0);
+    return {ctx: cctx, W: rect.width, H: rect.height};
   }
 
-  // Anim ADN: plus allongé et couleurs exactes demandées
-  function animateADN(canvasSelector, color = "#12ffff", helixRadiusRatio=0.32, helixTurns=7.4) {
-    const c = document.getElementById(canvasSelector);
-    if (!c) return;
+  /* =================== ADN animation (double helix) =================== */
+  function animateADN(canvasId, color = "#12ffff", helixRadiusRatio = 0.31, helixTurns = 7.5) {
+    const c = document.getElementById(canvasId);
+    if(!c) return;
     let setup = setupCanvasForDrawing(c);
-    if (!setup) {
-      console.warn('Canvas context not available for', canvasSelector);
-      return;
-    }
+    if(!setup) return;
     let ctx = setup.ctx;
     let W = setup.W, H = setup.H;
     const segs = 66;
     let helixRadius = Math.max(10, Math.min(W, H) * helixRadiusRatio);
     const centerY = H / 2;
-    let tAnim = Math.random() * 50;
+    let tAnim = Math.random()*50;
 
     window.addEventListener('resize', () => {
       setup = setupCanvasForDrawing(c);
-      if (!setup) return;
-      ctx = setup.ctx;
-      W = setup.W; H = setup.H;
+      if(!setup) return;
+      ctx = setup.ctx; W = setup.W; H = setup.H;
       helixRadius = Math.max(10, Math.min(W, H) * helixRadiusRatio);
     }, {passive:true});
 
-    function draw() {
-      ctx.clearRect(0,0, W, H);
+    function draw(){
+      ctx.clearRect(0,0,W,H);
       tAnim += 0.017;
-      for (let side = 0; side < 2; side++) {
+      for (let side=0; side<2; side++){
         ctx.save();
         ctx.strokeStyle = color;
         ctx.shadowColor = color;
-        ctx.shadowBlur = 8 - side * 3;
-        ctx.lineWidth = Math.max(1.5, 7 - (side * 2));
-        ctx.globalAlpha = 0.33 + side * 0.34;
+        ctx.shadowBlur = 10 - side * 4;
+        ctx.lineWidth = Math.max(1.8, 9 - (side*3));
+        ctx.globalAlpha = 0.31 + side*0.34;
         ctx.beginPath();
-        for (let i = 0; i <= segs; i++) {
-          const t = i / segs * Math.PI * helixTurns + tAnim + (side ? Math.PI : 0);
-          let x = W / 2 + Math.cos(t) * helixRadius;
-          let y = centerY + (i / segs - 0.5) * H * 0.76 + Math.sin(t * 0.5 + tAnim) * 7 * (1.12 + side * 0.15);
-          if (i === 0) ctx.moveTo(x, y); else ctx.lineTo(x, y);
+        for (let i=0;i<=segs;i++){
+          const t = i/segs*Math.PI*helixTurns + tAnim + (side?Math.PI:0);
+          const x = W/2 + Math.cos(t) * helixRadius;
+          const y = centerY + (i/segs - 0.5) * H * 0.76 + Math.sin(t*0.5 + tAnim) * 7 * (1.12 + side*0.15);
+          if(i===0) ctx.moveTo(x,y); else ctx.lineTo(x,y);
         }
         ctx.stroke();
         ctx.restore();
       }
-      for (let i = 0; i < segs; i += 8) {
-        let t = i / segs * Math.PI * helixTurns + tAnim;
-        let y = centerY + (i / segs - 0.5) * H * 0.76;
-        let x1 = W / 2 + Math.cos(t) * helixRadius;
-        let x2 = W / 2 + Math.cos(t + Math.PI) * helixRadius;
+      // base pairs
+      for (let i=0;i<segs;i+=8){
+        const t = i/segs*Math.PI*helixTurns + tAnim;
+        const y = centerY + (i/segs - 0.5) * H * 0.76;
+        const x1 = W/2 + Math.cos(t) * helixRadius;
+        const x2 = W/2 + Math.cos(t + Math.PI) * helixRadius;
         ctx.save();
         ctx.strokeStyle = color;
         ctx.globalAlpha = 0.38;
         ctx.lineWidth = 2;
-        ctx.beginPath(); ctx.moveTo(x1, y); ctx.lineTo(x2, y); ctx.stroke();
+        ctx.beginPath(); ctx.moveTo(x1,y); ctx.lineTo(x2,y); ctx.stroke();
         ctx.restore();
       }
+      // central sphere
       ctx.save();
       ctx.beginPath();
-      ctx.arc(W/2, centerY, helixRadius * 1.011 + Math.sin(tAnim) * 3, 0, Math.PI*2);
+      ctx.arc(W/2, centerY, helixRadius * 1.01 + Math.sin(tAnim)*3, 0, Math.PI*2);
       ctx.shadowColor = color;
-      ctx.shadowBlur = 15 + Math.abs(Math.sin(tAnim) * 13);
-      ctx.globalAlpha = 0.15 + 0.08 * Math.abs(Math.sin(tAnim * 0.68));
+      ctx.shadowBlur = 16 + Math.abs(Math.sin(tAnim)*13);
+      ctx.globalAlpha = 0.15 + 0.08 * Math.abs(Math.sin(tAnim*0.68));
       ctx.fillStyle = color;
       ctx.fill();
       ctx.restore();
@@ -246,12 +219,12 @@ window.addEventListener('DOMContentLoaded', () => {
     draw();
   }
 
-  // Éléphant = gris (helix ET silhouette)
+  // start ADN animations (elephant gray, turtle green, axolotl purple)
   animateADN("adn-elephant", "#bfc3ca", 0.31, 7.5);
   animateADN("adn-turtle", "#45e696", 0.31, 7.5);
   animateADN("adn-axolotl", "#df74ef", 0.31, 7.5);
 
-  // SVG animaux : éléphant = gris
+  /* =================== animal SVGs (contour) =================== */
   function svgAnimal(containerId, animal) {
     const div = document.getElementById(containerId);
     if(!div) return;
@@ -268,7 +241,74 @@ window.addEventListener('DOMContentLoaded', () => {
     }
     div.innerHTML = svg;
   }
-  svgAnimal("elephant-svg", "elephant");
-  svgAnimal("turtle-svg", "turtle");
-  svgAnimal("axolotl-svg", "axolotl");
+  svgAnimal("elephant-svg","elephant");
+  svgAnimal("turtle-svg","turtle");
+  svgAnimal("axolotl-svg","axolotl");
+
+  /* =================== PHASES: reveal on scroll + cosmos background =================== */
+  function phasesRevealAndCosmos() {
+    const section = document.getElementById('phases-section');
+    const grid = document.getElementById('phases-grid');
+    const canvas = document.getElementById('phases-cosmos');
+    if (!section || !grid || !canvas) return;
+
+    // Reveal on scroll
+    function reveal(){
+      const rect = section.getBoundingClientRect();
+      if (rect.top < window.innerHeight - 120) {
+        grid.classList.add('phases-visible');
+      } else {
+        grid.classList.remove('phases-visible');
+      }
+    }
+    window.addEventListener('scroll', reveal, {passive:true});
+    setTimeout(reveal, 300);
+
+    // Cosmos (subtle starfield)
+    let W = canvas.parentNode.offsetWidth;
+    let H = 220;
+    let ctx2 = canvas.getContext('2d');
+    function resizeCanvas() {
+      W = canvas.width = canvas.offsetWidth = canvas.parentNode.offsetWidth;
+      H = canvas.height = H;
+    }
+    let stars = [];
+    function makeStars(){
+      stars = [];
+      for (let i=0;i<48;i++){
+        stars.push({
+          x: Math.random()*W,
+          y: Math.random()*H,
+          r: Math.random()*1.4 + 0.4,
+          alpha: Math.random()*0.85 + 0.15,
+          speed: 0.08 + Math.random()*0.16
+        });
+      }
+    }
+    function drawStars(){
+      ctx2.clearRect(0,0,W,H);
+      for (let s of stars){
+        s.y += s.speed;
+        if (s.y > H) s.y = -8;
+        ctx2.save();
+        ctx2.globalAlpha = s.alpha;
+        ctx2.beginPath();
+        ctx2.fillStyle = Math.random()>0.94 ? "#12ffff" : "#23c9ea";
+        ctx2.arc(s.x, s.y, s.r, 0, Math.PI*2);
+        ctx2.shadowColor = "#12ffff";
+        ctx2.shadowBlur = 10;
+        ctx2.fill();
+        ctx2.restore();
+      }
+      requestAnimationFrame(drawStars);
+    }
+    function initCosmos(){
+      resizeCanvas(); makeStars(); drawStars();
+    }
+    window.addEventListener('resize', () => { initCosmos(); }, {passive:true});
+    setTimeout(initCosmos, 160);
+  }
+  phasesRevealAndCosmos();
+
+  /* =================== End DOMContentLoaded =================== */
 });
