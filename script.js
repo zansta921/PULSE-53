@@ -246,13 +246,13 @@ window.addEventListener('DOMContentLoaded', () => {
   svgAnimal("axolotl-svg","axolotl");
 
   /* =================== PHASES: reveal on scroll + cosmos background =================== */
-  function phasesRevealAndCosmos() {
+   function phasesRevealAndCosmos() {
     const section = document.getElementById('phases-section');
     const grid = document.getElementById('phases-grid');
     const canvas = document.getElementById('phases-cosmos');
     if (!section || !grid || !canvas) return;
 
-    // Reveal on scroll
+    // Reveal on scroll (révélation progressive au scroll)
     function reveal(){
       const rect = section.getBoundingClientRect();
       if (rect.top < window.innerHeight - 120) {
@@ -261,8 +261,10 @@ window.addEventListener('DOMContentLoaded', () => {
         grid.classList.remove('phases-visible');
       }
     }
+    // AJOUT ici : reveal dès le chargement SI la section est déjà visible
     window.addEventListener('scroll', reveal, {passive:true});
-    setTimeout(reveal, 300);
+    window.addEventListener('resize', reveal, {passive:true}); // au cas où resize fait apparaître/disparaître la section
+    reveal(); // tout de suite au chargement
 
     // Cosmos (subtle starfield)
     let W = canvas.parentNode.offsetWidth;
