@@ -356,3 +356,21 @@ main#content { padding:40px 20px; max-width:1000px; margin:0 auto; position:rela
   .phase-title { font-size: 0.85rem; }
   .phase-list { font-size: 0.82rem; max-height: 4.6rem; }
 }
+/* === PREMIUM ANIMATION LAYER === */
+#morph-bg {
+  position:fixed; pointer-events:none; left:0;top:0;width:100vw;height:60vh;min-height:220px;z-index:-2;
+  filter:blur(1px) brightness(1.01) saturate(1.14) drop-shadow(0 30px 100px #0dfaf899);
+  transition:.9s filter cubic-bezier(.6,0,.39,1.18);
+}
+#morph-shape { transition:fill .95s cubic-bezier(.5,.08,.3,1.2);}
+html[data-section="hero"] #morph-shape { fill:#0b202a;}
+html[data-section="adn"] #morph-shape { fill:#083040;}
+html[data-section="phases"] #morph-shape { fill:#182950;}
+html[data-section="about"] #morph-shape { fill:#110720;}
+
+/* PREMIUM section fade/zoom + reveal */
+.section.premium-section { opacity:0; transform:scale(1.08) translateY(24px); transition:opacity 0.8s, transform 0.8s;}
+.section.premium-section.is-revealed { opacity:1; transform:scale(1) translateY(0); transition-delay:.1s; }
+.mask-reveal { opacity:0; transform: translateY(42px) scale(1.08); filter:blur(1.5px);transition:opacity .7s, transform .8s;}
+.mask-reveal.is-visible { opacity:1; transform:translateY(0) scale(1); filter:none; transition-delay:.09s;}
+/* .phases-grid .phase-card can have .phases-visible parent from JS */
